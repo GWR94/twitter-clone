@@ -1,0 +1,61 @@
+.button {
+    background: $blue;
+    border: none;
+    color: white;
+    display: inline-block;
+    font-weight: 300;
+    font-size: $font-size-large;
+    line-height: 1;
+    padding: $s-size;
+    text-decoration: none;
+}
+
+.button__twitter {
+    border: 1px solid $blue !important;
+    color: $blue;
+    font-weight: 600 !important;
+    background: white;
+    border-radius: 50px !important;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    &:hover {
+        background: #EAF5FD;
+        color: $blue;
+        text-decoration: none;
+    }
+}
+
+.button__signup {
+    border: 1px solid $blue !important;
+    color: white;
+    font-weight: 600 !important;
+    background: $blue;
+    border-radius: 20px !important;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    float: right;
+    &:hover {
+        background: #006DBF;
+    }
+}
+
+.button__link {
+    background: none;
+}
+
+.button__secondary {
+    @extend .button;
+    background: #888;
+    margin-top: -58px;
+    display: block;
+    right: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.button__container {
+    max-width: 77rem;
+    margin: 0 auto;
+    position: relative;
+    background: blue;
+}
