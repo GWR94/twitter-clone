@@ -3,7 +3,7 @@
     font-size: 40px;
 }
 
-.row {
+.landing__container > .row {
     height: 100vh !important;
     @media (max-width: 768px) {
         flex-direction: column-reverse;

@@ -10,7 +10,7 @@ class Landing extends React.Component {
 
     render() {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid landing__container">
                 <div className="row">
                     <div className="col-md-6 information">
                         <div className="background-container">

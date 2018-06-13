@@ -13,3 +13,11 @@ button:disabled {
 .is-active {
   font-weight: bold;
 }
+
+.link {
+  color: #1DA1F2;
+  &:hover {
+    color: #1DA1F2;
+    text-decoration: none;
+  }
+}

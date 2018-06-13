@@ -7,7 +7,7 @@
   "scripts": {
     "build:dev": "webpack",
     "build:prod": "webpack -p --env production",
-    "dev": "webpack-dev-server",
+    "dev-server": "webpack-dev-server",
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json --watch",
     "start": "node server/server.js",
     "heroku-postbuild": "yarn run build:prod"
@@ -45,7 +45,7 @@
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",
     "uuid": "3.1.0",
-    "validator": "8.0.0",
+    "validator": "^8.0.0",
     "webpack": "3.1.0"
   },
   "devDependencies": {
