@@ -1,18 +1,37 @@
-.header {
-    background: $dark-blue;
+.active > i  {
+    color: $blue;
 }
 
-.header__title {
-    color: white;
-    text-decoration: none;
-    h1 {
-        margin: 0;
+.active {
+    border-bottom: 2px solid $blue;
+}
+
+.navbar {
+    display: block !important;
+    height: 50px;
+    margin: 0 !important;
+}
+
+.navbar--link {
+    display: inline-block;
+    padding: 10px;
+    margin: 0 !important;
+    font-family: 'Cabin', sans-serif;
+    &:hover {
+        border-bottom: 2px solid $blue;
+        text-decoration: none;
     }
 }
 
-.header__content {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    padding: $s-size 0;
+.icon--nav {
+    margin-right: 8px;
+    font-size: 22px;
+    top: 2px;
+    position: relative;
+}
+
+.navbar--text {
+    margin-top: 4px;
+    display: inline-block;
+    font-size: 16px;
 }

@@ -1,12 +1,23 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import * as actions from '../actions';
+import {connect} from 'react-redux';
 
 class Landing extends React.Component {
     constructor() {
         super();
 
-        this.state = {};
+        this.state = {
+            username: '',
+            password: ''
+        };
     }
+
+    
+    componentWillMount() {
+        this.props.fetchUser();
+    }
+    
 
     render() {
         return (
@@ -29,12 +40,19 @@ class Landing extends React.Component {
                     </div>
                     <div className="col-md-6 signUp">
                         <div className="d-none d-lg-flex signUp__container">
-                            <input
-                                type="text"
-                                className="loginInput"
-                                placeholder="Phone, email or username"/>
-                            <input type="text" className="loginInput" placeholder="Password"/>
-                            <Link to="/login" className="btn button__twitter">Log in</Link>
+                            <form action="/auth/login" method="post">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    className="loginInput"
+                                    placeholder="Phone, email or username"/>
+                                <input
+                                    type="password"
+                                    className="loginInput"
+                                    placeholder="Password"
+                                    name="password"/>
+                                <button className="btn button__twitter" type="submit">Log in</button>
+                            </form>
                         </div>
                         <div className="join__container">
                             <i className="icon fab fa-twitter"/>
@@ -64,4 +82,8 @@ class Landing extends React.Component {
     }
 };
 
-export default Landing;
+const mapStateToProps = ({auth}) => {
+    return {auth};
+}
+
+export default connect(mapStateToProps, actions)(Landing);

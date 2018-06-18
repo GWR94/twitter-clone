@@ -1,12 +1,10 @@
-export default (state = {}, action) => {
-  switch (action.type) {
-    case 'LOGIN':
-      return {
-        uid: action.uid
-      };
-    case 'LOGOUT':
-      return {};
-    default:
-      return state;
-  }
-};
+import { FETCH_USER } from '../actions/types';
+
+export default (state = null, action) => {
+    switch(action.type) {
+        case FETCH_USER:
+            return action.payload || false;
+        default:
+            return state;
+    }
+}

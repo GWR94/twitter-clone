@@ -51,6 +51,20 @@
     }
 }
 
+.modal__password {
+    box-sizing: border-box;
+    border: 1px solid white;
+    border-bottom: 1px solid #657786;
+    height: 50px;
+    width: 100%;
+    font-size: 20px;
+    margin-top: 12px;
+    &:focus {
+        outline: none;
+        border-bottom: 2px solid #1DA1F2;
+    }
+}
+
 .modal__error {
     color: red;
     margin: 0;
@@ -110,4 +124,16 @@ input[type="checkbox"]+span {
 .terms__text {
     margin-top: 50px;
     font-size: 15px;
+}
+
+.medium__password {
+    border-bottom: 2px solid orange !important;
+}
+
+.strong__password {
+    border-bottom: 2px solid green !important;
+}
+
+.invalid__password {
+    border-bottom: 2px solid red !important;
 }

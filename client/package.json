@@ -12,7 +12,16 @@
     "start": "node server/server.js",
     "heroku-postbuild": "yarn run build:prod"
   },
+  "proxy": {
+    "/api/*": {
+      "target": "http://localhost:5000"
+    },
+    "auth/*": {
+      "target": "http://localhost:5000"
+    }
+  },
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-cli": "6.24.1",
     "babel-core": "6.25.0",
     "babel-loader": "7.1.1",
@@ -40,8 +49,9 @@
     "react-router-dom": "4.1.2",
     "reactstrap": "^6.1.0",
     "redux": "3.7.2",
+    "redux-devtools-extension": "^2.13.2",
     "redux-mock-store": "1.2.3",
-    "redux-thunk": "2.2.0",
+    "redux-thunk": "^2.3.0",
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",
     "uuid": "3.1.0",

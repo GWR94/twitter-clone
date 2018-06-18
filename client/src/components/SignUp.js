@@ -2,6 +2,11 @@ import React from 'react';
 import Modal from 'react-modal';
 import validator from 'validator';
 import { Link } from 'react-router-dom';
+import { Tooltip } from 'reactstrap';
+import * as actions from '../actions';
+import { connect } from 'react-redux';
+
+// ! Setup validation for no spaces or special characters in username
 
 const desktopStyles = {
     overlay: {
@@ -37,21 +42,18 @@ class SignUp extends React.Component {
             name: '',
             email: '',
             modalIsOpen: true,
-            emailInput: true,
             nameError: false,
             emailError: false,
             mobile: window.innerWidth <= 600,
-            currentPage: 2,
+            currentPage: 1,
             activityChecked: false,
             connectChecked: false,
             adsChecked: false,
+            passwordStrength: 0,
         }
 
         this.openModal = this
             .openModal
-            .bind(this);
-        this.closeModal = this
-            .closeModal
             .bind(this);
     }
 
@@ -65,10 +67,6 @@ class SignUp extends React.Component {
 
     openModal() {
         this.setState({modalIsOpen: true});
-    }
-
-    closeModal() {
-        this.setState({modalIsOpen: false});
     }
 
     updateWindowDimensions = () => {
@@ -116,38 +114,18 @@ class SignUp extends React.Component {
                                     ? 'email'
                                     : 'text'}
                                     className={this.state.emailError ? 'input__error modal__input' : 'modal__input'}
-                                    placeholder={this.state.emailInput
-                                    ? 'Email'
-                                    : 'Phone'}
+                                    placeholder='Email'
                                     onBlur={(e) => {
                                     if (e.target.value.trim().length === 0) {
                                         this.setState({emailError: true});
                                     } else {
-                                        if (this.state.emailInput) {
                                             if (validator.isEmail(e.target.value)) {
                                                 this.setState({email: e.target.value, phoneNum: null, emailError: false});
                                             } else {
                                                 this.setState({emailError: true});
                                             }
-                                        } else {
-                                            if (validator.isMobilePhone(e.target.value, 'en-GB')) {
-                                                this.setState({phoneNum: e.target.value, email: null, emailError: false})
-                                            } else {
-                                                this.setState({emailError: true});
-                                            }
-                                        }
                                     }
-                            }}/> {this.state.emailError && <p className="modal__error" id="email__error">Please enter a valid {this.state.emailInput
-                                    ? 'email address.'
-                                    : 'phone number.'}</p>}
-                            <p
-                                className="modal__changeInput"
-                                onClick={() => this.setState({
-                                emailInput: !this.state.emailInput
-                            })}>Use {this.state.emailInput
-                                    ? 'phone '
-                                    : 'email '}
-                            instead</p>
+                            }}/> {this.state.emailError && <p className="modal__error" id="email__error">Please enter a valid email address.</p>}
                         </div>
                     </div>
                     }
@@ -164,28 +142,25 @@ class SignUp extends React.Component {
                             <div className="modal__content">
                                 <h4 className="modal__title" style={{marginBottom: '40px'}}>Customise your experience</h4>
                                 <div className="row row__inputs">
-                                        <div className="col-11">
-                                            <h5 className="modal__subtitle">Connect with people you know</h5>
-                                            <p>Let others find your Twitter account by your {this.state.emailInput ? 'email address' : 'phone number'}</p>
-                                        </div>
-                                        <div className="col-1 checkbox__container" onClick={() => this.setState({ connectChecked: !this.state.connectChecked})}>
-                                            <input type="checkbox" checked={this.state.connectChecked} />
-                                            <span>✓</span>
-                                        </div>
+                                    <div className="col-11">
+                                        <h5 className="modal__subtitle">Connect with people you know</h5>
+                                        <p>Let others find your Twitter account by your email address</p>
                                     </div>
-                                
-                                {this.state.emailInput && 
-                                    <div className="row row__inputs">
-                                        <div className="col-11">
-                                            <h5 className="modal__subtitle">Get more out of Twitter</h5>
-                                            <p className="input__label">Receive email about your Twitter activity and recommendations</p>
-                                        </div>
-                                        <div className="col-1 checkbox__container" onClick={() => this.setState({ activityChecked: !this.state.activityChecked})}>
-                                            <input type="checkbox" checked={this.state.activityChecked} />
-                                            <span>✓</span>
-                                        </div>
+                                    <div className="col-1 checkbox__container" onClick={() => this.setState({ connectChecked: !this.state.connectChecked})}>
+                                        <input type="checkbox" checked={this.state.connectChecked} />
+                                        <span>✓</span>
                                     </div>
-                                }
+                                </div>
+                                <div className="row row__inputs">
+                                    <div className="col-11">
+                                        <h5 className="modal__subtitle">Get more out of Twitter</h5>
+                                        <p className="input__label">Receive email about your Twitter activity and recommendations</p>
+                                    </div>
+                                    <div className="col-1 checkbox__container" onClick={() => this.setState({ activityChecked: !this.state.activityChecked})}>
+                                        <input type="checkbox" checked={this.state.activityChecked} />
+                                        <span>✓</span>
+                                    </div>
+                                </div>
                                 <div className="row row__inputs">
                                     <div className="col-11">
                                         <h5 className="modal__subtitle">See better ads</h5>
@@ -219,20 +194,82 @@ class SignUp extends React.Component {
                                 <input 
                                     type="text" 
                                     className="modal__input" 
-                                    value={this.state.emailInput ? this.state.email : this.state.phoneNum } 
+                                    value={this.state.email} 
                                     onClick={() => this.setState({ currentPage: 1})} 
                                 />
                                 <p className="terms__text">
                                     By signing up, you agree to our <Link to="/terms" className="link">Terms</Link>, <Link to="/privacy" className="link">Privacy Policy</Link>, and <Link to="/cookies" className="link">Cookie Use</Link>. You also agree that you’re over 13 years of age.
                                 </p>
-                                <button className="btn button__signup" style={{width: '100%', fontSize: '20px'}}>Sign Up</button>
+                                <button className="btn button__signup" style={{width: '100%', fontSize: '20px'}} onClick={() => this.setState({currentPage: 4})}>Sign Up</button>
                             </div>
                         </div>
-
+                    }
+                    {
+                        this.state.currentPage === 4 &&
+                        <div>
+                            <div className="icon__container">
+                                <i className="icon__twitter fab fa-twitter"></i>
+                                <button
+                                    disabled={this.state.passwordStrength <= 1} 
+                                    className="btn button__modal button__signup" 
+                                    onClick={() => {
+                                        const values = {
+                                            username: this.state.name,
+                                            password: this.state.password,
+                                            email: this.state.email,
+                                        }
+                                        this.props.createUser({username: this.state.name, password: this.state.password, email: this.state.email}, this.props.history)}
+                                    }>
+                                    Next
+                                </button>
+                            </div>
+                            <div className="modal__content">
+                            <h4 className="modal__title">You'll need a password</h4>
+                            <p>Make sure it's 6 characters or more</p>
+                                <input 
+                                    type="password" 
+                                    className="modal__password" 
+                                    value={this.state.password}
+                                    id="password"
+                                    placeholder="Password"
+                                    onChange={(e) => {
+                                        var strongPW = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+                                        let password = e.target.value.trim();
+                                        if(strongPW.test(password)) {
+                                            this.setState({ password: e.target.value, passwordStrength: 3})
+                                            document.getElementById('password').classList.add('strong__password');
+                                            document.getElementById('password').classList.remove('medium__password');
+                                            document.getElementById('password').classList.remove('invalid__password');
+                                        } else if(!strongPW.test(password) && password.length >= 8) {
+                                            this.setState({ password: e.target.value, passwordStrength: 2});
+                                            document.getElementById('password').classList.add('medium__password');
+                                            document.getElementById('password').classList.remove('strong__password');
+                                            document.getElementById('password').classList.remove('invalid__password');
+                                        }  else {
+                                            this.setState({ password: null, passwordStrength: 1});
+                                            document.getElementById('password').classList.add('invalid__password');
+                                            document.getElementById('password').classList.remove('medium__password');
+                                            document.getElementById('password').classList.remove('strong__password');
+                                        }
+                                    }}
+                                />
+                                <Tooltip placement="bottom" isOpen={this.state.passwordStrength > 0 && this.state.passwordStrength !== 3} target="password">
+                                    {
+                                        this.state.passwordStrength === 1 && <p style={{paddingTop: '10px'}}>Invalid password.<br />Password must be at least 8 characters</p> ||
+                                        this.state.passwordStrength === 2 && <p style={{paddingTop: '10px'}}>OK password. Try adding a mix of numeric, lower, upper & special characters.</p>
+                                    }
+                                </Tooltip>
+                            </div>
+                        </div>
                     }
                 </Modal>
             </div>
         )
     }
 }
-export default SignUp;
+
+const mapStateToProps = ({ auth }) => {
+    return { auth };
+}
+
+export default connect(mapStateToProps, actions)(SignUp);

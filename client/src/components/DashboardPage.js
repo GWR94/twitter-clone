@@ -1,9 +1,23 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import Header from './NavBar';
 
-const DashboardPage = () => (
-  <div>
-    Dashboard Page Content!
-  </div>
-);
+class DashboardPage extends React.Component {
+  constructor() {
+    super();
+  }
 
-export default DashboardPage;
+  render() {
+    return (
+      <div>
+        Dashboard Page Content!
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = ({auth}) => {
+  return {auth}
+}
+
+export default connect(mapStateToProps)(DashboardPage);
