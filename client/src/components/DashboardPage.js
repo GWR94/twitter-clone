@@ -9,7 +9,7 @@ class DashboardPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="dashboard--container">
         Dashboard Page Content!
       </div>
     );
