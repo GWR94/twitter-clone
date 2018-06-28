@@ -50,6 +50,7 @@ class SignUp extends React.Component {
             connectChecked: false,
             adsChecked: false,
             passwordStrength: 0,
+            password: '',
         }
 
         this.openModal = this

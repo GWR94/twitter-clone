@@ -1,0 +1,21 @@
+.profile--header {
+    width: 100%;
+    background: white;
+    height: 260px;
+}
+
+.profile--headerImg {
+    background: $blue;
+    width: 100%;
+    height: 100px;
+}
+
+.profile--displayImg {
+    border-radius: 50%;
+    border: 2px solid white;
+    height: 70px;
+    width: 70px;
+    margin-top: -35px;
+    margin-left: 20px;
+    background: white;
+}

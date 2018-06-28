@@ -1,24 +1,26 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Route, Redirect} from 'react-router-dom';
 import Header from '../components/NavBar';
 
-export const PrivateRoute = ({ isAuthenticated, component: Component, ...rest}) => (
-    <Route {...rest} component={(props) => (
-        isAuthenticated ? (
+export const PrivateRoute = ({
+    isAuthenticated,
+    component: Component,
+    ...rest
+}) => (
+    <Route
+        {...rest}
+        component={(props) => (isAuthenticated
+        ? (
             <div>
-                <Header />
-                <Component {...props} />
+                <Header/>
+                <Component {...props}/>
             </div>
-        ) : (
-            <Redirect to="/"/>
-        ) 
-    )}/>
+        )
+        : (<Redirect to="/"/>))}/>
 );
 
-const mapStateToProps = ({auth}) => (
-    console.log(auth), {
-    //!! changes from true & undefined to true and false values
+const mapStateToProps = ({auth}) => ({
     isAuthenticated: !!auth
 });
 

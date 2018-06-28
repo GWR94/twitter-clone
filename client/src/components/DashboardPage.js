@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Header from './NavBar';
+import Profile from './Profile';
 
 class DashboardPage extends React.Component {
   constructor() {
@@ -9,8 +9,17 @@ class DashboardPage extends React.Component {
 
   render() {
     return (
-      <div className="dashboard--container">
-        Dashboard Page Content!
+      <div className="dashboard--background">
+        <div className="dashboard--container">
+          <div className='dashboard--grid-container'>
+            <div className="dashboard--profile">
+              <Profile/>
+            </div>
+            <div className="dashboard--feed"></div>
+            <div className="dashboard--ads"></div>
+          </div>
+
+        </div>
       </div>
     );
   }

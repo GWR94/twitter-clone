@@ -20,10 +20,12 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false);
       }
-      if (user.password !== password) {
+      const match = bcrypt.compareSync(password, user.password);
+      if(match) {
+        return done(null, user);
+      } else {
         return done(null, false);
       }
-      return done(null, user);
     });
   }
 ));

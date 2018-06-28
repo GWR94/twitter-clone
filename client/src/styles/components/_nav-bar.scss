@@ -7,12 +7,21 @@
     width: 50%;
 }
 
+.navbar--container {
+    width: 1260px;
+    margin: 0 auto;
+    display: inline-flex;
+    @media (max-width: 936px) {
+        width: 890px;
+    }
+}
+
 .navbar--nav {
     display: inline-flex;
     height: 48px;
     padding: 0px 10px;
     width: 100%;
-    justify-content: center;
+    justify-content: left;
 }
 
 .navbar--link {
@@ -64,6 +73,8 @@
 
 .navbar--details {
     display: inline-block;
+    width: 50%;
+    justify-content: right;
 }
 
 .navbar__container {
@@ -96,20 +107,92 @@
 }
 
 .navbar--details {
-    width: 300px;
-    margin: auto;
+    width: 100%;
     display: inline-flex;
-    justify-content: center;
+    margin-top: 4px;
+    justify-content: flex-end;
 }
 
 .navbar--details__container {
-    margin: auto;
+    width: 50%;
+    float: right;
+    align-content: flex-end;
 }
 
 .navbar--searchBtn {
     position: relative;
     right: 28px;
-    top: 2px;
+    top: 13px;
     cursor: pointer;
     color: #6D7D86;
+}
+//! DROPDOWN MENU
+.dropdown-menu {
+    margin-left: -120px !important;
+    margin-top: 20px !important;
+}
+
+.dropdown-menu:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid #C4C9CC;
+    right: 5%;
+    top: -24px;
+}
+
+.dropdown-menu:after {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid #fff;
+    right: 5%;
+    top: -23px;
+}
+
+.dropdown--profile-name {
+    padding: 0 24px;
+    height: 20px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.dropdown--profile-handle {
+    padding: 0 24px;
+    color: #8996A2;
+    font-size: 14px;
+    margin-top: -4px;
+}
+
+.icon-dropdown {
+    padding-right: 14px;
+    text-align: center;
+    width: 40px;
+}
+
+.dropdown-item {
+    padding: 4px 0;
+    &:hover {
+        background: #1B95E0 !important;
+        color: white !important;
+    }
+    &:hover > .icon-darkmode {
+        color: white;
+    }
+}
+
+.icon-darkmode {
+    color: #1B95E0;
+    position: relative;
+    right: 5px;
+    top: 4px;
+    float: right;
 }
