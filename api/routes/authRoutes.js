@@ -13,7 +13,8 @@ module.exports = app => {
                 _id: req.user._id,
                 username: req.user.username,
                 email: req.user.email,
-                photo: req.user.photo || 'https://muraltown.com/wp-content/uploads/Headshot-Placeholder-male.png'
+                profileImg: req.user.profileImg || 'https://muraltown.com/wp-content/uploads/Headshot-Placeholder-male.png',
+                headerImg: req.user.headerImg || null
             }
             return res.send(data);
         }

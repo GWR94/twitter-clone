@@ -6,34 +6,47 @@
 
 .dashboard--container {
     padding-top: 10px !important;
-    width: 1260px;
-    margin: 0 auto;  
-    border: 1px solid powderblue;
+    max-width: 1260px;
+    margin: 0 auto;
+    padding-top: 10px;
     @media screen and (max-width: 1250px) {
-        width: 890px;
-        grid-template-columns: 288px auto 0px;
+        max-width: 890px;
     }
 }
 
-.dashboard--grid-container {
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: 288px auto 288px;
-    @media screen and (max-width: 1250px) {
-        grid-template-columns: 288px auto 0px;
-    }
-}
 
 .dashboard--profile {
     border: none;
-    margin-right: 10px;
+    grid-area: profile;
 }
 
 .dashboard--feed {
-    border: 1px solid red;
+    height: 100vh;
+    background: white;
+    grid-area: feed;
+    width: auto;
 }
 
 .dashboard--ads {
-    margin-left: 10px;
-    border: 1px solid orange;
+    background: white;
+}
+
+.dashboard--whoToFollow {
+    grid-area: follow;
+}
+
+.dashboard--grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-areas: 'profile feed follow';
+    grid-template-columns: 288px auto 288px;
+    grid-template-rows: 226px auto auto auto;
+    grid-gap: 10px;
+    @media screen and (max-width: 1250px) {
+        grid-template-areas: 'profile feed' 'follow feed';
+        grid-template-columns: 288px auto;
+        grid-template-rows: 226px  auto auto auto;
+    }
+
+
 }

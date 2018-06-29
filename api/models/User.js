@@ -6,8 +6,8 @@ const userSchema = new Schema({
     email: { type: String, unique: true },
     isVerified: { type: Boolean, default: false },
     password: String,
-    profileImg: { data: Buffer, contentType: String },
-    headerImg: { data: Buffer, contentType: String }
+    profileImg: { type: String },
+    headerImg: { type: String }
 });
 
 mongoose.model('users', userSchema);

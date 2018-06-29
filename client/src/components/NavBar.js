@@ -61,7 +61,7 @@ class NavBar extends Component {
                                         data-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false">
-                                        <img src={this.props.auth.photo} className="navbar--img"/>
+                                        <img src={this.props.auth.profileImg} className="navbar--img"/>
                                     </a>
                                     <button className="btn button__signup">Tweet</button>
 
