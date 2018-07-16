@@ -2,9 +2,16 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Profile from './Profile';
 import WhoToFollow from './WhoToFollow';
+import Trends from './Trends';
+import Feed from './Feed';
+
 class DashboardPage extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      
+    }
   }
 
   render() {
@@ -15,10 +22,15 @@ class DashboardPage extends React.Component {
             <div className="dashboard--profile">
               <Profile/>
             </div>
-            <div className="dashboard--feed"></div>
+            <div className="dashboard--feed">
+              <Feed />
+            </div>
             <div className="dashboard--ads"></div>
             <div className="dashboard--whoToFollow">
               <WhoToFollow />
+            </div>
+            <div className="dashboard--trends">
+              <Trends />
             </div>
           </div>
 

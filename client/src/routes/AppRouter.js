@@ -23,9 +23,9 @@ class AppRouter extends React.Component {
     return (
       <Router history={history}>
         <Switch>
-          <PublicRoute path="/" component={Landing} exact/>
+          <PublicRoute path="/login" component={Landing} />
           <PublicRoute path="/i/flow/signup" component={SignUp}/>
-          <PrivateRoute path="/dashboard" component={DashboardPage}/>
+          <PrivateRoute path="/" component={DashboardPage} exact/>
           <Route component={NotFoundPage}/>
         </Switch>
       </Router>

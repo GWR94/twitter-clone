@@ -2,8 +2,8 @@ const passport = require('passport');
 
 module.exports = app => {
     app.post('/auth/login', passport.authenticate('local', {
-        successRedirect: '/dashboard',
-        failureRedirect: '/'
+        successRedirect: '/',
+        failureRedirect: '/login'
     }));
 
     app.get('/api/current_user', (req, res) => {

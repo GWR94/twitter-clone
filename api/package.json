@@ -27,6 +27,7 @@
     "passport-local-mongoose": "^5.0.0",
     "request": "^2.87.0",
     "sendgrid": "^5.2.3",
-    "twilio": "^3.17.2"
+    "twilio": "^3.17.2",
+    "twitter": "^1.7.1"
   }
 }
