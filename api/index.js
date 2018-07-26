@@ -27,6 +27,7 @@ app.use(passport.session());
 require('./routes/verifyRoutes')(app);
 require('./routes/authRoutes')(app);
 require('./routes/databaseRoutes')(app);
+require('./routes/twitterRoutes')(app);
 
 
 if (process.env.NODE_ENV === 'production') {
