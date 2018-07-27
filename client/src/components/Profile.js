@@ -1,23 +1,28 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 class Profile extends React.Component {
     constructor() {
         super();
-
         this.state = {};
     }
+
     render() {
+        const {auth} = this.props;
+
         return (
             <div>
                 <div className="profile--header">
                     <div className="profile--headerContainer">
-                        <img className="profile--headerImg" src={this.props.auth.headerImg}/>
+                        <img className="profile--headerImg" src={auth.headerImg} alt="Header Img"/>
                     </div>
-                    <img src={this.props.auth.profileImg} className="profile--displayImg"/>
+                    <img src={auth.profileImg} className="profile--displayImg" alt="Display Img"/>
                     <div className="profile--nameContainer">
-                        <h5 className="profile--name">JG 🦁🦁🦁</h5>
-                        <h6 className="profile--handle">@{this.props.auth.username}</h6>
+                        <h5 className="profile--name">JG
+                            <span role="img" aria-label="emoji">🦁🦁🦁</span>
+                        </h5>
+                        <h6 className="profile--handle">@{auth.username}</h6>
                     </div>
                     <div className="profile--followingsContainer">
                         <div className="profile--tweets">
@@ -42,11 +47,15 @@ class Profile extends React.Component {
                 </div>
             </div>
         )
-    }
+    };
 }
 
-const mapStateToProps = ({auth}) => {
-    return {auth}
+const mapStateToProps = ({auth}) => ({auth});
+
+Profile.propTypes = {
+    auth: PropTypes
+        .shape({isVerified: PropTypes.bool, profileImg: PropTypes.string})
+        .isRequired
 }
 
 export default connect(mapStateToProps)(Profile);

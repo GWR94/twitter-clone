@@ -1,47 +1,38 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import Profile from './Profile';
-import WhoToFollow from './WhoToFollow';
-import Trends from './Trends';
-import Feed from './Feed';
+import React from "react";
+import {connect} from "react-redux";
+import Profile from "./Profile";
+import WhoToFollow from "./WhoToFollow";
+import Trends from "./Trends";
+import Feed from "./Feed";
+import * as actions from "../actions";
+import NavBar from "./NavBar";
 
-class DashboardPage extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      
-    }
-  }
-
-  render() {
-    return (
-      <div className="dashboard--background">
-        <div className="dashboard--container">
-          <div className='dashboard--grid-container'>
-            <div className="dashboard--profile">
-              <Profile/>
+// ! Sort out search bars' outline
+const DashboardPage = () => (
+    <div>
+        <NavBar/>
+        <div className='dashboard--background'>
+            <div className='dashboard--container'>
+                <div className='dashboard--grid-container'>
+                    <div className='dashboard--profile'>
+                        <Profile/>
+                    </div>
+                    <div className='dashboard--feed'>
+                        <Feed/>
+                    </div>
+                    <div className='dashboard--ads'/>
+                    <div className='dashboard--whoToFollow'>
+                        <WhoToFollow/>
+                    </div>
+                    <div className='dashboard--trends'>
+                        <Trends/>
+                    </div>
+                </div>
             </div>
-            <div className="dashboard--feed">
-              <Feed />
-            </div>
-            <div className="dashboard--ads"></div>
-            <div className="dashboard--whoToFollow">
-              <WhoToFollow />
-            </div>
-            <div className="dashboard--trends">
-              <Trends />
-            </div>
-          </div>
-
         </div>
-      </div>
-    );
-  }
-}
+    </div>
+);
 
-const mapStateToProps = ({auth}) => {
-  return {auth}
-}
+const mapStateToProps = ({auth, twitter}) => ({auth, twitter});
 
-export default connect(mapStateToProps)(DashboardPage);
+export default connect(mapStateToProps, actions)(DashboardPage);

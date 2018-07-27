@@ -1,65 +1,108 @@
 .button {
-    background: $blue;
-    border: none;
-    color: white;
-    display: inline-block;
-    font-weight: 300;
-    font-size: $font-size-large;
-    line-height: 1;
-    padding: $s-size;
-    text-decoration: none;
+	background: $blue;
+	border: none;
+	color: white;
+	display: inline-block;
+	font-weight: 300;
+	font-size: $font-size-large;
+	line-height: 1;
+	padding: $s-size;
+	text-decoration: none;
 }
 
 .button__twitter {
-    border: 1px solid $blue !important;
-    color: $blue;
-    font-weight: 600 !important;
-    background: white;
-    border-radius: 50px !important;
-    font-family: "Segoe UI", Arial, sans-serif;
+	border: 1px solid $blue !important;
+	color: $blue;
+	font-weight: 600 !important;
+	background: white;
+	border-radius: 50px !important;
+	font-family: 'Segoe UI', Arial, sans-serif;
     font-size: 12px;
-    &:hover {
-        background: #EAF5FD;
-        color: $blue;
-        text-decoration: none;
-    }
+    transition: background 0.35s;
+	-webkit-transition: background 0.35s;
+	-moz-transition: background 0.35s;
+	-ms-transition: background 0.35s;
+	-o-transition: background 0.35s;
+	&:hover {
+		background: #eaf5fd;
+		color: $blue;
+		text-decoration: none;
+	}
+}
+
+.button__twitterLarge {
+	@extend .button__twitter;
+	padding: 8px 12px;
 }
 
 .button__signup {
-    border: 1px solid $blue !important;
-    color: white;
-    font-weight: 600 !important;
-    background: $blue;
-    border-radius: 20px !important;
-    font-family: "Segoe UI", Arial, sans-serif;
-    font-size: 12px;
+	border: 1px solid $blue !important;
+	color: white;
+	font-weight: 600 !important;
+	background: $blue;
+	border-radius: 20px !important;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	font-size: 12px;
     float: right;
-    &:hover {
-        background: #006DBF;
-    }
+    transition: background 0.35s;
+	-webkit-transition: background 0.35s;
+	-moz-transition: background 0.35s;
+	-ms-transition: background 0.35s;
+	-o-transition: background 0.35s;
+	&:hover {
+		background: #006dbf;
+		text-decoration: none;
+		color: white;
+	}
+}
+
+.button__signupLarge {
+	@extend.button__signup;
+	padding: 6px 12px;
+	font-size: 16px;
+	margin-right: 16px;
+    margin-top: 16px;
+	background: #48aae6;
+	transition: background 0.35s;
+	-webkit-transition: background 0.35s;
+	-moz-transition: background 0.35s;
+	-ms-transition: background 0.35s;
+	-o-transition: background 0.35s;
+	&:hover {
+		background: $blue;
+	}
 }
 
 .button__link {
-    background: none;
+	background: none;
 }
 
 .button__secondary {
-    @extend .button;
-    background: #888;
-    margin-top: -58px;
-    display: block;
-    right: 0;
-    position: absolute;
-    z-index: 1;
+	@extend .button;
+	background: #888;
+	margin-top: -58px;
+	display: block;
+	right: 0;
+	position: absolute;
+	z-index: 1;
 }
 
 .button__container {
-    max-width: 77rem;
-    margin: 0 auto;
-    position: relative;
-    background: blue;
+	max-width: 77rem;
+	margin: 0 auto;
+	position: relative;
+	background: blue;
 }
 
 button:disabled {
-    cursor: not-allowed;
+	cursor: not-allowed;
+}
+
+.button__loginLarge {
+	@extend .button__signupLarge;
+	background: $blue;
+	border: 0;
+	&:hover {
+		background: #006DBF;
+	}
 }

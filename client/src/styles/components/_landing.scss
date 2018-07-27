@@ -1,16 +1,16 @@
-.icon {
+.landing--twitterIcon {
     color: $blue;
     font-size: 40px;
 }
 
-.landing__container > .row {
+.landing--container>.row {
     height: 100vh !important;
     @media (max-width: 768px) {
         flex-direction: column-reverse;
     }
 }
 
-.signUp {
+.landing--signUpContainer {
     background: white;
     z-index: 2;
     height: 100vh;
@@ -19,7 +19,7 @@
     }
 }
 
-.information {
+.landing--infoContainer {
     background: $blue;
     height: 100vh;
     @media (max-width: 767px) {
@@ -27,18 +27,18 @@
     }
 }
 
-.signUp__container {
+.landing--signUpInnerContainer {
     display: flex;
     flex-direction: row;
     margin: 30px auto;
-    width: 480px;   
+    width: 480px;
     justify-content: space-around;
     @media (max-width: 767px) {
         margin: 0 auto;
     }
 }
 
-.loginInput {
+.landing--loginInput {
     font-size: 13px;
     width: 180px;
     padding-left: 10px;
@@ -48,10 +48,10 @@
     margin-right: 10px;
 }
 
-.background-container {
+.landing--bgContainer {
     z-index: 1;
     position: absolute;
-    overflow: hidden !important; 
+    overflow: hidden !important;
     height: 100vh;
     width: 100%;
     @media (max-width: 767px) {
@@ -59,12 +59,12 @@
     }
 }
 
-.background-img {
+.landing--backgroundImg {
     margin-top: -35%;
-    width: 180%; 
+    width: 180%;
 }
 
-.tag-lines {
+.landing--tagLinesContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -81,7 +81,7 @@
     }
 }
 
-.icon-tag {
+.landing--tagIcon {
     font-size: 30px;
     color: white;
     width: 20%;
@@ -89,17 +89,42 @@
     margin: 20px 0;
 }
 
-.tag-info {
+.landing--tagInfo {
     width: 80%;
     line-height: 30px;
     font-weight: 600;
-    margin: 20px 0;    
+    margin: 20px 0;
 }
 
-.join__container {
+.landing--joinContainer {
     margin: 26vh auto;
     width: 400px;
     @media (max-width: 767px) {
         margin: 16% auto;
+    }
+}
+
+.landing--tagLineText,
+.landing--subTagLineText {
+    font-weight: 600;
+    color: black;
+    font-family: 'Sergoe UI Bold', sans-serif;
+}
+
+.landing--tagLineText {
+    margin: 18px 0 50px 0;
+    font-size: 28px;
+}
+
+.landing--subTagLineText {
+    font-size: 18px;
+}
+
+.landing--lostPasswordLink {
+    font-size: 14px;
+    color: #AAB8C2;
+    margin-left: 194px;
+    &:hover {
+        color: #AAB8C2;
     }
 }

@@ -1,9 +1,10 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import * as actions from '../actions';
-import {Circle} from 'rc-progress';
-import autosize from 'autosize';
-import {Tooltip} from 'reactstrap';
+import React from "react";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
+import {Circle} from "rc-progress";
+import autosize from "autosize";
+import {Tooltip} from "reactstrap";
+import * as actions from "../actions";
 
 class Feed extends React.Component {
     constructor() {
@@ -11,13 +12,13 @@ class Feed extends React.Component {
 
         this.state = {
             percent: 0,
-            tweetText: '',
+            tweetText: "",
             photoToolTipOpen: false,
             gifToolTipOpen: false,
             pollToolTipOpen: false,
-            locationToolTipOpen: false,
+            locationToolTipOpen: false
         };
-        
+
         this.togglePhoto = this
             .togglePhoto
             .bind(this);
@@ -33,124 +34,141 @@ class Feed extends React.Component {
     }
 
     togglePhoto() {
+        const {photoToolTipOpen} = this.state;
         this.setState({
-            photoToolTipOpen: !this.state.photoToolTipOpen
+            photoToolTipOpen: !photoToolTipOpen
         });
     }
 
     toggleGif() {
+        const {gifToolTipOpen} = this.state;
         this.setState({
-            gifToolTipOpen: !this.state.gifToolTipOpen
+            gifToolTipOpen: !gifToolTipOpen
         });
     }
+
     togglePoll() {
+        const {pollToolTipOpen} = this.state;
         this.setState({
-            pollToolTipOpen: !this.state.pollToolTipOpen
+            pollToolTipOpen: !pollToolTipOpen
         });
     }
+
     toggleLocation() {
+        const {locationToolTipOpen} = this.state;
         this.setState({
-            locationToolTipOpen: !this.state.locationToolTipOpen
+            locationToolTipOpen: !locationToolTipOpen
         });
     }
 
     render() {
-
-        autosize(document.getElementById('tweet-textbox'));
-
+        autosize(document.getElementById("tweet-textbox"));
+        const {
+            active,
+            tweetText,
+            percent,
+            gifToolTipOpen,
+            locationToolTipOpen,
+            photoToolTipOpen,
+            pollToolTipOpen
+        } = this.state;
+        const {auth} = this.props;
         return (
             <div className="feed--container">
                 <div
-                    className={this.state.active
+                    className={active
                     ? "feed--tweetContainerLarge"
                     : "feed--tweetContainer"}
                     id="tweet-container">
                     <div className="input--container">
-                        <img src={this.props.auth.profileImg} className="tweet--displayImg"/>
+                        <img
+                            src={auth.profileImg}
+                            alt="User Display Img"
+                            className="tweet--displayImg"/>
                         <textarea
                             type="text"
                             id="tweet-textbox"
-                            className={this.state.active
+                            className={active
                             ? "feed--tweetInputLarge"
                             : "feed--tweetInput"}
                             onClick={() => {
                             this.setState({active: true});
                         }}
-                            onChange={e => {
+                            onChange={(e) => {
                             this.setState({
-                                tweetText: e.target.value || ''
+                                tweetText: e.target.value || ""
                             });
                             this.setState({
-                                percent: this.state.tweetText.length / 280 * 100
+                                percent: tweetText.length / 280 * 100
                             });
                         }}
                             placeholder="What's happening?"/>
                     </div>
                     <i
                         id="tweet-icon"
-                        className={this.state.active
+                        className={active
                         ? "far fa-smile icon--emoji"
-                        : "far fa-image icon--tweet"}/> {this.state.active && (
-
+                        : "far fa-image icon--tweet"}/> {" "}
+                    {active && (
                         <div>
                             <Circle
                                 strokeWidth="10"
-                                strokeColor={this.state.percent >= 100
+                                strokeColor={percent >= 100
                                 ? "#DC3545"
                                 : "#1DA1F2"}
                                 trailColor="#bac0c4"
                                 trailWidth="6"
-                                percent={this.state.percent}
+                                percent={percent}
                                 className="tweet--progressbar"/>
 
                             <div className="tweet--mediaContainer">
                                 <div className="tweet--iconsContainer">
                                     <div className="media--container">
-                                        <i className="far fa-image icon--media" id="photoTooltip"></i>
+                                        <i className="far fa-image icon--media" id="photoTooltip"/>
                                     </div>
                                     <div className="media--container">
-                                        <i className="fas fa-file-image icon--media" id="gifTooltip"></i>
+                                        <i className="fas fa-file-image icon--media" id="gifTooltip"/>
                                     </div>
                                     <div className="media--container">
-                                        <i className="fas fa-chart-bar icon--media" id="pollTooltip"></i>
+                                        <i className="fas fa-chart-bar icon--media" id="pollTooltip"/>
                                     </div>
                                     <div className="media--container">
-                                        <i className="fas fa-map-marker-alt icon--media" id="locationTooltip"></i>
+                                        <i className="fas fa-map-marker-alt icon--media" id="locationTooltip"/>
                                     </div>
                                 </div>
                                 <div className="tweet--mediaControlsContainer">
-                                    <i className="fas fa-plus-circle icon--addTweet"></i>
-                                    <button className="btn button__signup">Tweet</button>
+                                    <i className="fas fa-plus-circle icon--addTweet"/>
+                                    <button type="button" className="btn button__signup">Tweet</button>
                                 </div>
                             </div>
                             <Tooltip
                                 placement="top"
-                                isOpen={this.state.photoToolTipOpen}
-                                target={"photoTooltip"}
+                                isOpen={photoToolTipOpen}
+                                target="photoTooltip"
                                 toggle={this.togglePhoto}
                                 delay={250}>
                                 Add photos or video
                             </Tooltip>
                             <Tooltip
                                 placement="top"
-                                isOpen={this.state.gifToolTipOpen}
-                                target={"gifTooltip"}
+                                isOpen={gifToolTipOpen}
+                                target="gifTooltip"
                                 toggle={this.toggleGif}
                                 delay={250}>
                                 Add a GIF
                             </Tooltip>
                             <Tooltip
                                 placement="top"
-                                isOpen={this.state.pollToolTipOpen}
-                                target={"pollTooltip"}
+                                isOpen={pollToolTipOpen}
+                                target="pollTooltip"
                                 toggle={this.togglePoll}
                                 delay={250}>
                                 Add poll
                             </Tooltip>
                             <Tooltip
                                 placement="top"
-                                isOpen={this.state.locationToolTipOpen}
-                                target={"locationTooltip"}
+                                isOpen={locationToolTipOpen}
+                                target="locationTooltip"
                                 toggle={this.toggleLocation}
                                 delay={250}>
                                 Add location
@@ -159,11 +177,19 @@ class Feed extends React.Component {
                     )}
                 </div>
             </div>
-        )
+        );
     }
 }
 
-const mapStateToProps = ({auth}) => {
-    return {auth}
-}
+Feed.propTypes = {
+    auth: PropTypes
+        .shape({
+            isVerified: PropTypes.bool,
+            profileImg: PropTypes.string
+        })
+        .isRequired,
+};
+
+const mapStateToProps = ({auth}) => ({auth});
+
 export default connect(mapStateToProps, actions)(Feed);

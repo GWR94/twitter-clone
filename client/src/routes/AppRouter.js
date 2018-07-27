@@ -1,36 +1,67 @@
-import React from 'react';
-import {Router, Route, Switch, Link, NavLink} from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
-import DashboardPage from '../components/DashboardPage';
-import NotFoundPage from '../components/NotFoundPage';
-import PrivateRoute from './PrivateRoute';
-import PublicRoute from './PublicRoute';
-import Landing from '../components/Landing';
-import SignUp from '../components/SignUp';
-
-import * as actions from '../actions';
-import {connect} from 'react-redux';
+import React from "react";
+import {Router, Route, Switch} from "react-router-dom";
+import createHistory from "history/createBrowserHistory";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
+import DashboardPage from "../components/DashboardPage";
+import NotFoundPage from "../components/NotFoundPage";
+// import Private from "./PrivateRoute";
+import Public from "./PublicRoute";
+import Landing from "../components/Landing";
+import SignUp from "../components/SignUp";
+import Login from "../components/Login";
+import * as actions from "../actions";
 
 export const history = createHistory();
 
 class AppRouter extends React.Component {
-  componentWillMount() {
-    this
-      .props
-      .fetchUser();
-  }
-  render() {
-    return (
-      <Router history={history}>
-        <Switch>
-          <PublicRoute path="/login" component={Landing} />
-          <PublicRoute path="/i/flow/signup" component={SignUp}/>
-          <PrivateRoute path="/" component={DashboardPage} exact/>
-          <Route component={NotFoundPage}/>
-        </Switch>
-      </Router>
-    )
-  }
+    componentWillMount() {
+        const {fetchUser} = this.props;
+        fetchUser();
+    }
+
+    render() {
+        const {auth} = this.props;
+        const isAuthenticated = !!auth;
+
+        return (
+            <Router history={history}>
+                <Switch>
+                    <Public path="/login" component={Login}/>
+                    <Public path="/i/flow/signup" component={SignUp}/>
+                    <Route
+                        path="/"
+                        component={isAuthenticated
+                        ? DashboardPage
+                        : Landing}
+                        exact
+                    />
+                    <Route component={NotFoundPage}/>
+                </Switch>
+            </Router>
+        )
+    }
 };
 
-export default connect(null, actions)(AppRouter);
+AppRouter.propTypes = {
+    fetchUser: PropTypes.func.isRequired,
+    auth: PropTypes.oneOfType([
+        PropTypes.shape({
+            isVerified: PropTypes.bool,
+            _id: PropTypes.string,
+            email: PropTypes.string,
+            headerImg: PropTypes.any,
+            profileImg: PropTypes.string,
+            username: PropTypes.string
+        }),
+        PropTypes.string])
+}
+
+AppRouter.defaultProps = {
+    auth: false
+}
+
+
+const mapStateToProps = ({auth}) => ({auth});
+
+export default connect(mapStateToProps, actions)(AppRouter);
