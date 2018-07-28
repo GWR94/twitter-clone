@@ -9,8 +9,6 @@
     "build:prod": "webpack -p --env production",
     "dev-server": "webpack-dev-server",
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json --watch",
-    "heroku-prebuild": "npm install --prefix api | npm install",
-    "heroku-postbuild": "npm run build:prod",
     "start": "node api/index.js"
   },
   "engines": {
@@ -58,12 +56,12 @@
     "style-loader": "0.18.2",
     "uuid": "3.1.0",
     "validator": "^8.0.0",
+    "dotenv": "4.0.0",
     "webpack": "3.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
     "cross-env": "5.0.5",
-    "dotenv": "4.0.0",
     "enzyme": "2.9.1",
     "enzyme-to-json": "1.5.1",
     "eslint": "^4.19.1",
