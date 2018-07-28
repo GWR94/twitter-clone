@@ -14,6 +14,9 @@
     "heroku-prebuild": "concurrently \"npm install\" \"npm run install --prefix api\"",
     "heroku-postbuild": "npm run build"
   },
+  "engines": {
+    "node": "v9.5.0"
+  },
   "dependencies": {
     "autosize": "^4.0.2",
     "axios": "^0.18.0",
