@@ -1,5 +1,5 @@
 **/**/node_modules/
-public/dist/
+client/public/dist/
 .env.test
 env.development
-api/config/dev.js
+config/dev.js
