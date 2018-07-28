@@ -5,6 +5,7 @@ const keys = require('./config/keys');
 const passport = require('passport');
 const session = require('express-session');
 const cookieSession = require('cookie-session');
+const path = require('path');
 
 require('./models/User');
 require('./config/passport');
@@ -33,11 +34,10 @@ require('./routes/twitterRoutes')(app);
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up production assets like our main.js file, or main.css
     // file!
-    app.use(express.static(__dirname + 'client/public/'));
+    app.use(express.static(path.join(__dirname + 'client/public/dist')));
 
     // Express will serve up the index.html file if it doesn't recognize the route
-    const path = require('path');
-    app.get('*', (req, res) => {
+    app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, 'client', 'public', 'index.html'));
     });
 }
