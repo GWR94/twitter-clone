@@ -8,6 +8,9 @@
     "client": "npm run dev-server --prefix ../client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
+  "engines": {
+    "node": "v9.5.0"
+  },
   "author": "James Gower",
   "license": "ISC",
   "dependencies": {
