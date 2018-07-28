@@ -37,8 +37,8 @@ if (process.env.NODE_ENV === 'production') {
 
     // Express will serve up the index.html file if it doesn't recognize the route
     const path = require('path');
-    app.get('/*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'public', 'dist', 'index.html'));
     });
 }
 
@@ -46,4 +46,4 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
     console.log(`Server is up at port ${port}`);
-})
+});
