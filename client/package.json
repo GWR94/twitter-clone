@@ -1,7 +1,7 @@
 {
   "name": "twitter-clone",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "author": "James Gower",
   "license": "MIT",
   "scripts": {
