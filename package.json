@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "dev": "concurrently \"npm run start\" \"npm run build:prod --prefix ./client\"",
-    "heroku:postbuild": "npm run dev"
+    "build": "concurrently \"npm run start\" \"npm run build:prod --prefix ./client\"",
+    "heroku:postbuild": "npm run build",
+    "client": "npm run dev-server --prefix client",
+    "dev": "concurrently \"npm run client\" \"nodemon index.js\""
   },
   "engines": {
     "node": "v9.5.0"
