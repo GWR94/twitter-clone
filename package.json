@@ -9,7 +9,8 @@
     "build:prod": "webpack -p --env production | nodemon api/index.js",
     "dev-server": "webpack-dev-server",
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json --watch",
-    "heroku-postbuild": " npm install --prefix api | npm run build" 
+    "heroku-postbuild": " npm install --prefix api | npm run build:prod",
+    "start": "nodemon api/index.js"
   },
   "engines": {
     "node": "v9.5.0"
