@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"nodemon index.js\" \"npm run build:prod --prefix client\"",
-    "heroku:postbuild": "npm run build",
     "client": "npm run dev-server --prefix client",
     "dev": "concurrently \"npm run client\" \"nodemon index.js\""
   },
