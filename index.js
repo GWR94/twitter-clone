@@ -31,10 +31,13 @@ require('./routes/databaseRoutes')(app);
 require('./routes/twitterRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.resolve(__dirname, '/client/public/dist')));
+
     // Express will serve up the index.html file if it doesn't recognize the route
     app.get('*', (req, res) => {
-        const dir = path.resolve(__dirname, 'client/public/index.html');
-        res.sendFile(dir);
+        let directory = path.resolve(__dirname, '/client/public/index.html');
+        console.log(directory);
+        res.sendFile(directory);
     });
 }
 
