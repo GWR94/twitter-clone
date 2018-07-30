@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'client/public/dist')));
 
     app.get('*', (req, res) => {
-        const dir = path.resolve(__dirname, 'client/public/index.html');
+        const dir = path.resolve(__dirname, 'client/public/dist/index.html');
         res.sendFile(dir);
     });
 }
