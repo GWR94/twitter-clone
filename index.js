@@ -30,23 +30,13 @@ require('./routes/authRoutes')(app);
 require('./routes/databaseRoutes')(app);
 require('./routes/twitterRoutes')(app);
 
-
 if (process.env.NODE_ENV === 'production') {
-<<<<<<< HEAD
-    app.use(express.static(path.resolve(__dirname, '/public/dist')));
+    const publicPath = path.join(__dirname, "public");
+    app.use(express.static(publicPath));
 
     // Express will serve up the index.html file if it doesn't recognize the route
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '/public/index.html'));
-=======
-    // Express will serve up production assets like our main.js file, or main.css
-    // file!
-    app.use(express.static(path.join(__dirname + 'client/public/dist')));
-
-    // Express will serve up the index.html file if it doesn't recognize the route
-    app.get('/*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client', 'public', 'index.html'));
->>>>>>> parent of c62b4c4... updated index.js
+        res.sendFile(path.join(publicPath, "index.html"));
     });
 }
 
