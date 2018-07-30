@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"nodemon index.js\" \"npm run build:prod --prefix client\"",
     "client": "npm run dev-server --prefix client",
-    "heroku-prebuild": "npm install | npm install --prefix client",
+    "heroku-prebuild": "npm install",
     "dev": "concurrently \"npm run client\" \"nodemon index.js\""
   },
   "engines": {
