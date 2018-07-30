@@ -28,19 +28,19 @@ class Profile extends React.Component {
                         <div className="profile--tweets">
                             <h6 className="profile--names">Tweets</h6>
                             <h4 className="profile--numbers">
-                                {Number(6395).toLocaleString()}
+                                {Number(0).toLocaleString()}
                             </h4>
                         </div>
                         <div className="profile--following">
                             <h6 className="profile--names">Following</h6>
                             <h4 className="profile--numbers">
-                                {Number(269).toLocaleString()}
+                                {Number(0).toLocaleString()}
                             </h4>
                         </div>
                         <div className="profile--followers">
                             <h6 className="profile--names">Followers</h6>
                             <h4 className="profile--numbers">
-                                {Number(2148).toLocaleString()}
+                                {Number(0).toLocaleString()}
                             </h4>
                         </div>
                     </div>
