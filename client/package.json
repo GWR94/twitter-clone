@@ -8,8 +8,7 @@
     "build:dev": "webpack",
     "build:prod": "webpack -p --env production",
     "dev-server": "webpack-dev-server",
-    "test": "cross-env NODE_ENV=test jest --config=jest.config.json --watch",
-    "start": "node api/index.js"
+    "test": "cross-env NODE_ENV=test jest --config=jest.config.json --watch"
   },
   "engines": {
     "node": "v9.5.0"

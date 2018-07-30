@@ -7,9 +7,13 @@ import {Tooltip} from "reactstrap";
 import * as actions from "../actions";
 
 class Feed extends React.Component {
+
+    /*
+        TODO
+        [ ] check circle progress bar for errors when too much
+    */
     constructor() {
         super();
-
         this.state = {
             percent: 0,
             tweetText: "",
@@ -19,18 +23,6 @@ class Feed extends React.Component {
             locationToolTipOpen: false
         };
 
-        this.togglePhoto = this
-            .togglePhoto
-            .bind(this);
-        this.toggleGif = this
-            .toggleGif
-            .bind(this);
-        this.togglePoll = this
-            .togglePoll
-            .bind(this);
-        this.toggleLocation = this
-            .toggleLocation
-            .bind(this);
     }
 
     togglePhoto() {
@@ -70,9 +62,11 @@ class Feed extends React.Component {
             gifToolTipOpen,
             locationToolTipOpen,
             photoToolTipOpen,
-            pollToolTipOpen
+            pollToolTipOpen,
+            tweetError
         } = this.state;
         const {auth} = this.props;
+
         return (
             <div className="feed--container">
                 <div
@@ -137,42 +131,42 @@ class Feed extends React.Component {
                                     </div>
                                 </div>
                                 <div className="tweet--mediaControlsContainer">
+                                    <Tooltip
+                                        placement="top"
+                                        isOpen={photoToolTipOpen}
+                                        target="photoTooltip"
+                                        toggle={this.togglePhoto}
+                                        delay={250}>
+                                        Add photos or video
+                                    </Tooltip>
+                                    <Tooltip
+                                        placement="top"
+                                        isOpen={gifToolTipOpen}
+                                        target="gifTooltip"
+                                        toggle={this.toggleGif}
+                                        delay={250}>
+                                        Add a GIF
+                                    </Tooltip>
+                                    <Tooltip
+                                        placement="top"
+                                        isOpen={pollToolTipOpen}
+                                        target="pollTooltip"
+                                        toggle={this.togglePoll}
+                                        delay={250}>
+                                        Add poll
+                                    </Tooltip>
+                                    <Tooltip
+                                        placement="top"
+                                        isOpen={locationToolTipOpen}
+                                        target="locationTooltip"
+                                        toggle={this.toggleLocation}
+                                        delay={250}>
+                                        Add location
+                                    </Tooltip>
                                     <i className="fas fa-plus-circle icon--addTweet"/>
-                                    <button type="button" className="btn button__signup">Tweet</button>
+                                    <button type="button" className="btn button__signup" disabled={tweetError}>Tweet</button>
                                 </div>
                             </div>
-                            <Tooltip
-                                placement="top"
-                                isOpen={photoToolTipOpen}
-                                target="photoTooltip"
-                                toggle={this.togglePhoto}
-                                delay={250}>
-                                Add photos or video
-                            </Tooltip>
-                            <Tooltip
-                                placement="top"
-                                isOpen={gifToolTipOpen}
-                                target="gifTooltip"
-                                toggle={this.toggleGif}
-                                delay={250}>
-                                Add a GIF
-                            </Tooltip>
-                            <Tooltip
-                                placement="top"
-                                isOpen={pollToolTipOpen}
-                                target="pollTooltip"
-                                toggle={this.togglePoll}
-                                delay={250}>
-                                Add poll
-                            </Tooltip>
-                            <Tooltip
-                                placement="top"
-                                isOpen={locationToolTipOpen}
-                                target="locationTooltip"
-                                toggle={this.toggleLocation}
-                                delay={250}>
-                                Add location
-                            </Tooltip>
                         </div>
                     )}
                 </div>
@@ -183,11 +177,8 @@ class Feed extends React.Component {
 
 Feed.propTypes = {
     auth: PropTypes
-        .shape({
-            isVerified: PropTypes.bool,
-            profileImg: PropTypes.string
-        })
-        .isRequired,
+        .shape({isVerified: PropTypes.bool, profileImg: PropTypes.string})
+        .isRequired
 };
 
 const mapStateToProps = ({auth}) => ({auth});
