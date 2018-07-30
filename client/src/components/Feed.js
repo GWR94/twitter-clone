@@ -22,7 +22,10 @@ class Feed extends React.Component {
             pollToolTipOpen: false,
             locationToolTipOpen: false
         };
-
+        this.togglePhoto = this.togglePhoto.bind(this);
+        this.toggleGif = this.toggleGif.bind(this);
+        this.togglePoll = this.togglePoll.bind(this);
+        this.toggleLocation = this.toggleLocation.bind(this);
     }
 
     togglePhoto() {
