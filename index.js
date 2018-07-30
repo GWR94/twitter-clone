@@ -32,7 +32,7 @@ require('./routes/twitterRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     // Express will serve up the index.html file if it doesn't recognize the route
-    app.use(express.static(path.resolve(__dirname, 'client/public')));
+    app.use(express.static(path.resolve(__dirname, 'client/public/dist')));
 
     app.get('*', (req, res) => {
         const dir = path.resolve(__dirname, 'client/public/index.html');
