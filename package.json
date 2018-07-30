@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"nodemon index.js\" \"npm run build:prod --prefix client\"",
+    "start": "npm install |concurrently \"nodemon index.js\" \"npm run build:prod --prefix client\"",
     "client": "npm run dev-server --prefix client",
     "dev": "concurrently \"npm run client\" \"nodemon index.js\""
   },
