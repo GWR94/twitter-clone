@@ -3,22 +3,39 @@
         "es6": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended"],
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "arrowFunctions": true,
+            "blockBindings": true,
+            "defaultParams": true,
+            "destructuring": true,
+            "forOf": true,
+            "objectLiteralComputedProperties": true,
+            "objectLiteralShorthandMethods": true,
+            "objectLiteralShorthandProperties": true,
+            "restParams": true,
+            "spread": true,
+            "templateStrings": true,
+            "modules": true,
+            "classes": true
+        }
     },
+    "parser": "babel-eslint",
     "rules": {
         "indent": [
-            "warn",
-            "tab"
+            "error",
+            4
         ],
         "linebreak-style": [
-            0,
-            "unix"
+            "error",
+            "windows"
         ],
         "quotes": [
-            "warn",
-            "single"
+            "error",
+            "double"
         ],
         "semi": [
             "error",

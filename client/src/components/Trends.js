@@ -221,13 +221,13 @@ class Trends extends React.Component {
     }
 
     renderTrends() {
-        const {twitter} = this.props;
-        if (!this.props || twitter === undefined) {
+        const {trends} = this.props;
+        if (!this.props || trends === undefined) {
             return <div/>;
         }
         return (
             <div>
-                {twitter
+                {trends
                     .slice(0, 10)
                     .map((trend, i) => (
                         <div className="trends--trendContainer" key={i}>
@@ -409,12 +409,12 @@ class Trends extends React.Component {
 }
 
 Trends.propTypes = {
-    twitter: PropTypes
+    trends: PropTypes
         .arrayOf(PropTypes.object)
         .isRequired,
     fetchTrends: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({auth, twitter}) => ({auth, twitter});
+const mapStateToProps = ({auth, trends}) => ({auth, trends});
 
 export default connect(mapStateToProps, actions)(Trends);

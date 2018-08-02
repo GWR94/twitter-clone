@@ -1,5 +1,8 @@
 **/**/node_modules/
-/client/public/dist
+client/public/bundle.js/
+client/public/bundle.js.map/
+client/public/styles.css
+client/public/styles.css.map/
 .env.test
 env.development
 config/dev.js

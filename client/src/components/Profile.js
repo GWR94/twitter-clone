@@ -10,19 +10,18 @@ class Profile extends React.Component {
 
     render() {
         const {auth} = this.props;
+        const { isVerified, handle, displayName, displayImgSrc, headerImgSrc } = auth;
 
         return (
             <div>
                 <div className="profile--header">
                     <div className="profile--headerContainer">
-                        <img className="profile--headerImg" src={auth.headerImg} alt="Header Img"/>
+                        <img className="profile--headerImg" src={headerImgSrc} alt="Header Img"/>
                     </div>
-                    <img src={auth.profileImg} className="profile--displayImg" alt="Display Img"/>
+                    <img src={displayImgSrc} className="profile--displayImg" alt="Display Img"/>
                     <div className="profile--nameContainer">
-                        <h5 className="profile--name">JG
-                            <span role="img" aria-label="emoji">🦁🦁🦁</span>
-                        </h5>
-                        <h6 className="profile--handle">@{auth.username}</h6>
+                        <h5 className="profile--name">{displayName}</h5>
+                        <h6 className="profile--handle">@{handle}</h6>
                     </div>
                     <div className="profile--followingsContainer">
                         <div className="profile--tweets">

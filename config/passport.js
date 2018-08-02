@@ -8,25 +8,26 @@ passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async(id, done) => {
     const user = await User.findById(id);
     done(null, user);
 });
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false);
-      }
-      const match = bcrypt.compareSync(password, user.password);
-      if(match) {
-        return done(null, user);
-      } else {
-        return done(null, false);
-      }
+passport.use(new LocalStrategy(function (handle, password, done) {
+    User.findOne({
+        handle
+    }, function (err, user) {
+        if (err) {
+            return done(err);
+        }
+        if (!user) {
+            return done(null, false);
+        }
+        const match = bcrypt.compareSync(password, user.password);
+        if (match) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+        }
     });
-  }
-));
-
+}));
