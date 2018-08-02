@@ -1,1 +1,0 @@
-export const selectTweets = (tweets) => tweets.sort((a,b) => a.postedAt < b.postedAt ? 1 : -1);

@@ -9,7 +9,7 @@ class Profile extends React.Component {
     }
 
     render() {
-        const {auth} = this.props;
+        const { auth, tweets } = this.props;
         const { isVerified, handle, displayName, displayImgSrc, headerImgSrc } = auth;
 
         return (
@@ -27,7 +27,7 @@ class Profile extends React.Component {
                         <div className="profile--tweets">
                             <h6 className="profile--names">Tweets</h6>
                             <h4 className="profile--numbers">
-                                {Number(0).toLocaleString()}
+                                {Number(tweets.length).toLocaleString()}
                             </h4>
                         </div>
                         <div className="profile--following">
@@ -49,7 +49,7 @@ class Profile extends React.Component {
     };
 }
 
-const mapStateToProps = ({auth}) => ({auth});
+const mapStateToProps = ({auth, tweets}) => ({auth, tweets});
 
 Profile.propTypes = {
     auth: PropTypes

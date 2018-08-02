@@ -40,7 +40,7 @@ module.exports = (app) => {
             setTweets.push(currentTweet);
             user.tweets = setTweets;
             user.save();
-            res.send(currentTweet);
+            res.send(user);
         }).catch((err) => {
             res.send(err);
         });
@@ -49,11 +49,11 @@ module.exports = (app) => {
     app.get("/api/fetch_tweets/:username", async(req, res) => {
         const username = req.params.username;
         try {
-            await User.findOne({
+            await Tweet.find({
                 handle: username
-            }, async(err, user) => {
+            }, async(err, tweets) => {
                 try {
-                    return res.send(user.tweets);
+                    return res.send(tweets);
                 } catch(e) {
                     return res.send(null);
                 } 
