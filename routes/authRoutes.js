@@ -1,28 +1,30 @@
-const passport = require('passport');
+const passport = require("passport");
 
 module.exports = app => {
-    app.post('/auth/login', passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login'
+    app.post("/auth/login", passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/login"
     }));
 
-    app.get('/api/current_user', (req, res) => {
+    app.get("/api/current_user", (req, res) => {
         if (req.user) {
             const data = {
                 isVerified: req.user.isVerified,
                 _id: req.user._id,
-                username: req.user.username,
+                handle: req.user.handle,
+                displayName: req.user.displayName,
                 email: req.user.email,
-                profileImg: req.user.profileImg || 'https://muraltown.com/wp-content/uploads/Headshot-Placeholder-male.png',
-                headerImg: req.user.headerImg || undefined
-            }
+                displayImgSrc: req.user.displayImgSrc,
+                headerImgSrc: req.user.headerImgSrc,
+                tweets: req.user.tweets
+            };
             return res.send(data);
         }
-        res.send();
+        res.send(undefined);
     });
 
-    app.get('/api/logout', (req, res) => {
+    app.get("/api/logout", (req, res) => {
         req.logout();
-        res.redirect('/');
-    })
-}
+        res.redirect("/");
+    });
+};

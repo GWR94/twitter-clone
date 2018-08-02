@@ -22,6 +22,7 @@ class NavBar extends Component {
 
     render() {
         const {auth} = this.props;
+        const {displayImgSrc} = auth;
         const {searchInput} = this.state;
 
         return (
@@ -67,7 +68,7 @@ class NavBar extends Component {
                                         data-toggle="dropdown"
                                         aria-haspopup="true"
                                         aria-expanded="false">
-                                        <img src={auth.profileImg} alt="Profile Img" className="navbar--img"/>
+                                        <img src={displayImgSrc} alt="Profile Img" className="navbar--img"/>
                                     </a>
                                     <button type="button" className="btn button__signup">Tweet</button>
 

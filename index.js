@@ -8,6 +8,7 @@ const cookieSession = require('cookie-session');
 const path = require('path');
 
 require('./models/User');
+require('./models/Tweet');
 require('./config/passport');
 
 mongoose.Promise = global.Promise;
@@ -32,8 +33,6 @@ require('./routes/twitterRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
     const publicPath = path.join(__dirname, "./client", "public");
-    app.use(express.static(publicPath));
-
     // Express will serve up the index.html file if it doesn't recognize the route
     app.get('*', (req, res) => {
         res.sendFile(path.join(publicPath, "index.html"));

@@ -5,12 +5,14 @@ import {Circle} from "rc-progress";
 import autosize from "autosize";
 import {Tooltip} from "reactstrap";
 import * as actions from "../actions";
+import Tweet from "./Tweet";
+import {selectTweets} from "../selectors/tweets";
 
 class Feed extends React.Component {
 
     /*
         TODO
-        [ ] check circle progress bar for errors when too much
+        [ ] check circle progress bar for errors when length is 0 after typing
     */
     constructor() {
         super();
@@ -22,10 +24,30 @@ class Feed extends React.Component {
             pollToolTipOpen: false,
             locationToolTipOpen: false
         };
-        this.togglePhoto = this.togglePhoto.bind(this);
-        this.toggleGif = this.toggleGif.bind(this);
-        this.togglePoll = this.togglePoll.bind(this);
-        this.toggleLocation = this.toggleLocation.bind(this);
+        this.togglePhoto = this
+            .togglePhoto
+            .bind(this);
+        this.toggleGif = this
+            .toggleGif
+            .bind(this);
+        this.togglePoll = this
+            .togglePoll
+            .bind(this);
+        this.toggleLocation = this
+            .toggleLocation
+            .bind(this);
+    }
+
+    async componentDidMount() {
+        const {fetchTweets, auth}  = this.props;
+        await fetchTweets(auth.handle);
+    }
+
+    componentWillReceiveProps(newProps) {
+        const { tweets } = this.props;
+        if(tweets.length !== newProps.tweets.length) {
+            this.renderTweets(newProps.tweets);
+        }
     }
 
     togglePhoto() {
@@ -56,6 +78,24 @@ class Feed extends React.Component {
         });
     }
 
+    async handleNewTweet() {
+        const {tweetText} = this.state;
+        const {postTweet, auth, tweets} = this.props;
+        this.setState({tweetError: true});
+        await postTweet({tweet: tweetText, username: auth.handle});
+        this.renderTweets(tweets);
+        this.forceUpdate();
+        this.setState({tweetText: "", tweetError: false});
+    }
+
+    /* eslint-disable */
+    renderTweets(tweets) {
+        return tweets.sort((a, b) => a.postedAt > b.postedAt
+            ? -1
+            : 1).map((tweet, i) => <Tweet key={i} {...tweet}/>);
+    }
+    /* eslint-enable */
+
     render() {
         autosize(document.getElementById("tweet-textbox"));
         const {
@@ -68,7 +108,9 @@ class Feed extends React.Component {
             pollToolTipOpen,
             tweetError
         } = this.state;
-        const {auth} = this.props;
+
+        const {auth, tweets} = this.props;
+        const {displayImgSrc} = auth;
 
         return (
             <div className="feed--container">
@@ -78,13 +120,11 @@ class Feed extends React.Component {
                     : "feed--tweetContainer"}
                     id="tweet-container">
                     <div className="input--container">
-                        <img
-                            src={auth.profileImg}
-                            alt="User Display Img"
-                            className="tweet--displayImg"/>
+                        <img src={displayImgSrc} alt="User Display Img" className="tweet--displayImg"/>
                         <textarea
                             type="text"
                             id="tweet-textbox"
+                            value={tweetText}
                             className={active
                             ? "feed--tweetInputLarge"
                             : "feed--tweetInput"}
@@ -92,10 +132,14 @@ class Feed extends React.Component {
                             this.setState({active: true});
                         }}
                             onChange={(e) => {
+                            const tweet = e.target.value;
+                            if (tweet.length > 240) {
+                                this.setState({tweetError: true})
+                            } else {
+                                this.setState({tweetError: false})
+                            }
                             this.setState({
-                                tweetText: e.target.value || ""
-                            });
-                            this.setState({
+                                tweetText: tweet || "",
                                 percent: tweetText.length / 280 * 100
                             });
                         }}
@@ -167,11 +211,23 @@ class Feed extends React.Component {
                                         Add location
                                     </Tooltip>
                                     <i className="fas fa-plus-circle icon--addTweet"/>
-                                    <button type="button" className="btn button__signup" disabled={tweetError}>Tweet</button>
+                                    <button
+                                        type="button"
+                                        className="btn button__signup"
+                                        onClick={() => this.handleNewTweet()}
+                                        disabled={tweetError}>
+                                        Tweet
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     )}
+                </div>
+                <div className="feed--tweetFeedContainer" id="tweetFeed">
+                    {tweets.length === 0
+                        ? <span>No Tweets</span>
+                        : this.renderTweets(tweets)
+}
                 </div>
             </div>
         );
@@ -181,9 +237,18 @@ class Feed extends React.Component {
 Feed.propTypes = {
     auth: PropTypes
         .shape({isVerified: PropTypes.bool, profileImg: PropTypes.string})
-        .isRequired
+        .isRequired,
+    tweets: PropTypes.arrayOf(PropTypes.shape),
+    postTweet: PropTypes.func.isRequired,
+    fetchTweets: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({auth}) => ({auth});
+Feed.defaultProps = {
+    tweets: []
+}
 
+const mapStateToProps = ({auth}) => ({
+    auth,
+    tweets: selectTweets(auth.tweets)
+});
 export default connect(mapStateToProps, actions)(Feed);
