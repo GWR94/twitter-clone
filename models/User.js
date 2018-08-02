@@ -28,6 +28,14 @@ const userSchema = new Schema({
     tweets: {
         type: Array,
         default: []
+    },
+    followers: {
+        type: Number,
+        default: 0
+    },
+    following: {
+        type: Number,
+        default: 0
     }
 });
 

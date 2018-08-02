@@ -6,7 +6,6 @@ import autosize from "autosize";
 import {Tooltip} from "reactstrap";
 import * as actions from "../actions";
 import Tweet from "./Tweet";
-import {selectTweets} from "../selectors/tweets";
 
 class Feed extends React.Component {
 
@@ -24,6 +23,7 @@ class Feed extends React.Component {
             pollToolTipOpen: false,
             locationToolTipOpen: false
         };
+
         this.togglePhoto = this
             .togglePhoto
             .bind(this);
@@ -39,15 +39,8 @@ class Feed extends React.Component {
     }
 
     async componentDidMount() {
-        const {fetchTweets, auth}  = this.props;
+        const {fetchTweets, auth, tweets} = this.props;
         await fetchTweets(auth.handle);
-    }
-
-    componentWillReceiveProps(newProps) {
-        const { tweets } = this.props;
-        if(tweets.length !== newProps.tweets.length) {
-            this.renderTweets(newProps.tweets);
-        }
     }
 
     togglePhoto() {
@@ -80,11 +73,11 @@ class Feed extends React.Component {
 
     async handleNewTweet() {
         const {tweetText} = this.state;
-        const {postTweet, auth, tweets} = this.props;
+        const {postTweet, auth, tweets, fetchTweets} = this.props;
         this.setState({tweetError: true});
         await postTweet({tweet: tweetText, username: auth.handle});
+        await fetchTweets(auth.handle);
         this.renderTweets(tweets);
-        this.forceUpdate();
         this.setState({tweetText: "", tweetError: false});
     }
 
@@ -247,8 +240,5 @@ Feed.defaultProps = {
     tweets: []
 }
 
-const mapStateToProps = ({auth}) => ({
-    auth,
-    tweets: selectTweets(auth.tweets)
-});
+const mapStateToProps = ({auth, tweets}) => ({auth, tweets});
 export default connect(mapStateToProps, actions)(Feed);
