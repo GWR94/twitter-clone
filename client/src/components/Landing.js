@@ -27,7 +27,7 @@ const Landing = () => (
                     <form action="/auth/login" method="post">
                         <input
                             type="text"
-                            name="username"
+                            name="handle"
                             className="landing--loginInput"
                             placeholder="Phone, email or username"/>
                         <input

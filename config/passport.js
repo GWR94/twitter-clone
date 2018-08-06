@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('users');
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id);
 });
 
 passport.deserializeUser(async(id, done) => {
@@ -15,7 +15,7 @@ passport.deserializeUser(async(id, done) => {
 
 passport.use(new LocalStrategy(function (handle, password, done) {
     User.findOne({
-        handle
+        handle: handle
     }, function (err, user) {
         if (err) {
             return done(err);

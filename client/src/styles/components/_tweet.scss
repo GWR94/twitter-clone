@@ -1,17 +1,36 @@
 //: Containers
 .tweet--container {
-    padding: 5px;
+    padding: 10px 5px;
     width: 100%;
     display: flex;
+    border-bottom: 1px solid #E6ECF0;
+    &:hover {
+        background: #F5F8FA;
+        cursor: pointer;
+    }
 }
 
 .tweet--displayImgContainer {
     display: inline-flex;
-    padding: 0 8px;
+    padding: 0 10px;
 }
 
 .tweet--textContainer {
-    display: inline-flex;
+    display: inline-block;
+    margin-top: -4px;
+}
+
+.tweet--tweetContainer {
+    display: block;
+    margin-top: -4px;
+}
+
+.tweet--interactionsContainer {
+    display: flex;
+}
+
+.tweet--iconContainer {
+    width: 80px;
 }
 
 //: Images
@@ -25,11 +44,96 @@
     -o-border-radius: 50%;
 }
 
+.tweet--verifiedIcon {
+    height: 20px;
+    width: 20px;
+    margin-top: -5px;
+}
+
 //: Text
 .tweet--nameText {
     display: inline;
+    font-weight: 700;
+    margin-right: 4px;
+    &:hover {
+        color: $blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
 
 .tweet--handleText {
     display: inline;
+    color: #657786;
+    font-weight: 200;
+}
+
+//: Icons
+.tweet--interaction {
+    color: #657786;
+    display: inline-block;
+    vertical-align: baseline;
+    padding-right: 10px;
+}
+
+.tweet--userLiked {
+    @extend .tweet--like;
+    color: $like;
+    >i {
+        color: $like;
+    }
+}
+
+.tweet--userRetweet {
+    @extend .tweet--retweet;
+    color: $retweet;
+    >i {
+        color: $retweet;
+    }
+
+}
+
+.tweet--comment {
+    width: 80px;
+    &:hover {
+        color: $blue;
+        >i {
+            color: $blue;
+        }
+    }
+}
+
+.tweet--retweet {
+    width: 80px;
+    &:hover {
+        color: $retweet;
+        >i {
+            color: $retweet;
+        }
+    }
+}
+
+.tweet--like {
+    width: 80px;
+    &:hover {
+        color: $like;
+        >i {
+            color: $like;
+        }
+    }
+}
+
+.tweet--message {
+    width: 80px;
+    &:hover {
+        color: $blue;
+        >i {
+            color: $blue;
+        }
+    }
+}
+
+.tweet--interactionText {
+    font-size: 14px;
+    font-weight: 700;
 }

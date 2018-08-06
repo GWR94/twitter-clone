@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import Modal from "react-modal";
 import * as actions from "../actions";
-import twitterLocations from "../twitterLocations.json";
-import countryList from "../twitterCountryLists";
+import twitterLocations from "../services/twitterLocations.json";
+import countryList from "../services/twitterCountryLists";
 
 class Trends extends React.Component {
     constructor() {

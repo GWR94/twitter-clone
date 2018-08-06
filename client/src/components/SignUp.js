@@ -315,7 +315,7 @@ class SignUp extends React.Component {
                                     className="btn button__modal button__signup"
                                     type="button"
                                     onClick={() => createUser({
-                                        username: name,
+                                        handle: name,
                                         password,
                                         email
                                     }, history)}

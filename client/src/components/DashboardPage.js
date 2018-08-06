@@ -4,7 +4,6 @@ import Profile from "./Profile";
 import WhoToFollow from "./WhoToFollow";
 import Trends from "./Trends";
 import Feed from "./Feed";
-import * as actions from "../actions";
 import NavBar from "./NavBar";
 
 // ! Sort out search bars' outline
@@ -35,4 +34,4 @@ const DashboardPage = () => (
 
 const mapStateToProps = ({auth, twitter}) => ({auth, twitter});
 
-export default connect(mapStateToProps, actions)(DashboardPage);
+export default connect(mapStateToProps)(DashboardPage);

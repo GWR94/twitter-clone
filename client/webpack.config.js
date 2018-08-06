@@ -38,6 +38,10 @@ module.exports = (env) => {
               }
             ]
           })
+        }, {
+          test: /\.(jpg|png|svg)$/,
+          loader: "file-loader",
+          include: path.join(__dirname, "public")
         }
       ]
     },

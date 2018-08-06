@@ -25,18 +25,23 @@ const userSchema = new Schema({
         default: "http://www.tweetbrander.com/wp-content/uploads/2013/01/twitter-header-post-640x3" +
                 "60.png"
     },
-    tweets: {
+    followers: {
         type: Array,
         default: []
     },
-    followers: {
-        type: Number,
-        default: 0
-    },
     following: {
-        type: Number,
-        default: 0
+        type: Array,
+        default: []
+    },
+    favouritedTweets: {
+        type: Array,
+        default: [],
+    },
+    retweetedTweets: {
+        type: Array,
+        default: []
     }
+
 });
 
 mongoose.model("users", userSchema);
