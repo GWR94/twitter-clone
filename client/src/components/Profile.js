@@ -9,8 +9,10 @@ class Profile extends React.Component {
     }
 
     render() {
-        const { auth, tweets } = this.props;
-        const { isVerified, handle, displayName, displayImgSrc, headerImgSrc } = auth;
+        const {auth, tweets} = this.props;
+        const {handle, displayName, displayImgSrc, headerImgSrc, following, followers} = auth;
+        // ? Add isVerfied later.
+        console.log(followers);
 
         return (
             <div>
@@ -33,13 +35,13 @@ class Profile extends React.Component {
                         <div className="profile--following">
                             <h6 className="profile--names">Following</h6>
                             <h4 className="profile--numbers">
-                                {Number(0).toLocaleString()}
+                                {Number(following.length).toLocaleString()}
                             </h4>
                         </div>
                         <div className="profile--followers">
                             <h6 className="profile--names">Followers</h6>
                             <h4 className="profile--numbers">
-                                {Number(0).toLocaleString()}
+                                {Number(followers.length).toLocaleString()}
                             </h4>
                         </div>
                     </div>

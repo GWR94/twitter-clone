@@ -19,7 +19,7 @@ module.exports = app => {
             }
             const hash = bcyrpt.hashSync(password, 10);
             const user = await new User({handle, email, password: hash}).save(); //saving hashed password
-            return res.send({user});
+            return res.send(user);
         } catch (e) {
             console.log(e);
             res.send(e);

@@ -73,10 +73,9 @@ class Feed extends React.Component {
 
     async handleNewTweet() {
         const {tweetText} = this.state;
-        const {postTweet, auth, tweets, fetchTweets} = this.props;
+        const {postTweet, auth, tweets} = this.props;
         this.setState({tweetError: true});
-        await postTweet({tweet: tweetText, username: auth.handle});
-        await fetchTweets(auth.handle);
+        await postTweet({tweet: tweetText, handle: auth.handle, postedAt: Date.now()});
         this.renderTweets(tweets);
         this.setState({tweetText: "", tweetError: false});
     }
@@ -113,7 +112,7 @@ class Feed extends React.Component {
                     : "feed--tweetContainer"}
                     id="tweet-container">
                     <div className="input--container">
-                        <img src={displayImgSrc} alt="User Display Img" className="tweet--displayImg"/>
+                        <img src={displayImgSrc} alt="User Display Img" className="feed--displayImg"/>
                         <textarea
                             type="text"
                             id="tweet-textbox"
@@ -122,20 +121,20 @@ class Feed extends React.Component {
                             ? "feed--tweetInputLarge"
                             : "feed--tweetInput"}
                             onClick={() => {
-                            this.setState({active: true});
-                        }}
+                                this.setState({active: true});
+                            }}
                             onChange={(e) => {
-                            const tweet = e.target.value;
-                            if (tweet.length > 240) {
-                                this.setState({tweetError: true})
-                            } else {
-                                this.setState({tweetError: false})
-                            }
-                            this.setState({
-                                tweetText: tweet || "",
-                                percent: tweetText.length / 280 * 100
-                            });
-                        }}
+                                const tweet = e.target.value;
+                                if (tweet.length > 240) {
+                                    this.setState({tweetError: true})
+                                } else {
+                                    this.setState({tweetError: false})
+                                }
+                                this.setState({
+                                    tweetText: tweet || "",
+                                    percent: tweetText.length / 280 * 100
+                                });
+                            }}
                             placeholder="What's happening?"/>
                     </div>
                     <i
@@ -217,10 +216,11 @@ class Feed extends React.Component {
                     )}
                 </div>
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {tweets.length === 0
-                        ? <span>No Tweets</span>
-                        : this.renderTweets(tweets)
-}
+                    {
+                        tweets.length === 0
+                            ? <span>No Tweets</span>
+                            : this.renderTweets(tweets)
+                    }
                 </div>
             </div>
         );
