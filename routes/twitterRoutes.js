@@ -60,7 +60,7 @@ module.exports = (app) => {
             const latestTweet = await new Tweet({
                 tweetText: tweet,
                 taggedUsers: taggedUsers,
-                handle: username,
+                handle,
                 displayImgSrc: user.displayImgSrc,
                 postedAt: postedAt,
                 isVerified: user.isVerified,
