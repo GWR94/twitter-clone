@@ -6,6 +6,7 @@ import autosize from "autosize";
 import {Tooltip} from "reactstrap";
 import * as actions from "../actions";
 import Tweet from "./Tweet";
+import defaultDisplayImg from "../../public/images/displayPicturePlaceholder.png";
 
 class Feed extends React.Component {
 
@@ -112,7 +113,7 @@ class Feed extends React.Component {
                     : "feed--tweetContainer"}
                     id="tweet-container">
                     <div className="input--container">
-                        <img src={displayImgSrc} alt="User Display Img" className="feed--displayImg"/>
+                        <img src={displayImgSrc || defaultDisplayImg} alt="User Display Img" className="feed--displayImg"/>
                         <textarea
                             type="text"
                             id="tweet-textbox"

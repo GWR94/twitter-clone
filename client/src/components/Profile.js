@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
+import defaultDisplayImg from '../../public/images/displayPicturePlaceholder.png';
+import defaultHeaderImg from '../../public/images/headerPlaceholder.jpg';
 
 class Profile extends React.Component {
     constructor() {
@@ -18,9 +20,9 @@ class Profile extends React.Component {
             <div>
                 <div className="profile--header">
                     <div className="profile--headerContainer">
-                        <img className="profile--headerImg" src={headerImgSrc} alt="Header Img"/>
+                        <img className="profile--headerImg" src={headerImgSrc || defaultHeaderImg} alt="Header Img"/>
                     </div>
-                    <img src={displayImgSrc} className="profile--displayImg" alt="Display Img"/>
+                    <img src={displayImgSrc || defaultDisplayImg} className="profile--displayImg" alt="Display Img"/>
                     <div className="profile--nameContainer">
                         <h5 className="profile--name">{displayName}</h5>
                         <h6 className="profile--handle">@{handle}</h6>

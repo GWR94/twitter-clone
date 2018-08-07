@@ -6,7 +6,9 @@ import TimeAgo from "timeago-react";
 import {connect} from "react-redux";
 import * as actions from "../actions";
 import verifiedIcon from "../../public/images/twitterVerified.png";
+import defaultDisplayImg from "../../public/images/displayPicturePlaceholder.png";
 import twitterLocale from "../services/twitterLocale";
+
 
 /*
     TODO
@@ -43,7 +45,7 @@ class Tweet extends React.Component {
         return (
             <div className="tweet--container">
                 <div className="tweet--displayImgContainer">
-                    <img src={displayImgSrc} alt="Display Img" className="tweet--displayImg"/>
+                    <img src={displayImgSrc || defaultDisplayImg} alt="Display Img" className="tweet--displayImg"/>
                 </div>
                 <div className="tweet--textContainer">
                     <div className="tweet--nameTextContainer">

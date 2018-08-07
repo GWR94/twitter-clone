@@ -18,12 +18,11 @@ const userSchema = new Schema({
     password: String,
     displayImgSrc: {
         type: String,
-        default: "https://pbs.twimg.com/media/C8SFjSYWAAA6452.jpg:large"
+        default: null
     },
     headerImgSrc: {
         type: String,
-        default: "http://www.tweetbrander.com/wp-content/uploads/2013/01/twitter-header-post-640x3" +
-                "60.png"
+        default: null,
     },
     followers: {
         type: Array,

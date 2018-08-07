@@ -16,7 +16,6 @@ const tweetSchema = new Schema({
     },
     displayImgSrc: {
         type: String,
-        required: true
     },
     likes: {
         amount: {

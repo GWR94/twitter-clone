@@ -1,8 +1,8 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
-const User = mongoose.model('users');
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const User = mongoose.model("users");
 
 passport.serializeUser((user, done) => {
     done(null, user._id);

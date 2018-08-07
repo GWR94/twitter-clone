@@ -33,7 +33,8 @@ module.exports = app => {
     app.post("/api/signup", async (req, res) => {
         try {
             const {handle, email, password } = req.body;
-            const existingUser = await User.findOne({handle});
+            console.log(handle, email);
+            const existingUser = await User.findOne({handle: handle});
             if (existingUser) {
                 console.log("Username already taken");
                 return res
@@ -42,6 +43,7 @@ module.exports = app => {
             }
             const hash = bcyrpt.hashSync(password, 10);
             const user = await new User({handle, email, password: hash}).save(); //saving hashed password
+            console.log(user);
             return res.send(user);
         } catch (e) {
             console.log(e);
