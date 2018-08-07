@@ -30,7 +30,7 @@ require("./routes/databaseRoutes")(app);
 require("./routes/twitterRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
-    const publicPath = path.join(__dirname, "../../dist");
+    const publicPath = path.join(__dirname, "dist");
     console.log(publicPath);
     app.use(express.static(publicPath));
     // Express will serve up the index.html file if it doesn"t recognize the route
