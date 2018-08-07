@@ -7,6 +7,12 @@ import Feed from "./Feed";
 import NavBar from "./NavBar";
 
 // ! Sort out search bars' outline
+
+/*
+    TODO
+    [ ] Fix Heroku login process.
+    !! NO EMAIL WHEN SIGNUP ON HEROKU - CHECK LOCAL & FIX.
+*/
 const DashboardPage = () => (
     <div>
         <NavBar/>
