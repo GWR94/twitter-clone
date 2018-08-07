@@ -56,6 +56,6 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({template: "./public/index.html", favicon: "./public/favicon.png"}),
-    new MiniCssExtractPlugin({filename: "[name].css", chunkFilename: "[id].css"})
+    new MiniCssExtractPlugin({filename: "styles.css", chunkFilename: "styleid.css"})
   ]
 };
