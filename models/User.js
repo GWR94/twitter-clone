@@ -35,7 +35,7 @@ const userSchema = new Schema({
     },
     favouritedTweets: {
         type: Array,
-        default: [],
+        default: []
     },
     retweetedTweets: {
         type: Array,
