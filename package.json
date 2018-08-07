@@ -4,7 +4,7 @@
   "description": "Clone of Twitter built with React, Webpack & Express (Node.JS)",
   "main": "src/server/index.js",
   "scripts": {
-    "start": "node src/server/index.js",
+    "start": "webpack --mode production && node src/server/index.js",
     "build": "webpack --mode production",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js",
