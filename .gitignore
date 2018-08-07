@@ -5,4 +5,4 @@ client/public/styles.css
 client/public/styles.css.map/
 .env.test
 env.development
-config/dev.js
+src/server/config/dev.js

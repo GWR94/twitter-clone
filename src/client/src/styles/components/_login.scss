@@ -1,0 +1,128 @@
+.icon--twitterLogin {
+    display: inline-block;
+    font-size: 20px;
+    color: $blue;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.navbar--background {
+    background: #FFF;
+}
+.navbar--Logincontainer {
+    @extend .navbar--container;
+    width: 860px;
+}
+
+.navbar--linkLogin {
+    margin: 0 1px;
+    padding: 0 20px 0 10px;
+    align-items: center;
+    line-height: 55px;
+    font-weight: 700;
+    color: #6f7d86;
+    font-size: 14px;
+    &:hover {
+        color: $blue;
+        text-decoration: none;
+        border-bottom: 2px solid #1C94E0;
+        transition: border-bottom .2s;
+        -webkit-transition: border-bottom .2s;
+        -moz-transition: border-bottom .2s;
+        -ms-transition: border-bottom .2s;
+        -o-transition: border-bottom .2s;
+    }
+}
+
+.navbar--linkText {
+    display: inline-block;
+    line-height: 45px;
+    position: relative;
+    bottom: 3px;
+}
+
+.login--container {
+    background: #E6ECF0;
+    height: 100vh;
+    width: 100vw;
+}
+
+.login--boxContainer {
+    background: #FFF;
+    margin: 10px auto 0 auto;
+    width: 860px;
+    border: 1px solid #CFD4D8;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+
+.login--innerContainer {
+    margin: 30px auto 4px auto;
+    width: 70%;
+}
+
+.login--textInput {
+    margin: 15px 0;
+    display: block;
+    padding: 7px;
+    border: 1px solid $border-gray;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    width: 350px;
+}
+
+.login--checkbox {
+    margin-left: 10px;
+    border: 1px solid red;
+    margin-top: 30px;
+    margin-right: 5px;
+}
+
+.login--checkboxLabel {
+    font-size: 14px;
+    position: relative;
+    bottom: 2px;
+}
+
+.login--forgotText {
+    font-size: 14px;
+    position: relative;
+    bottom: 2px;
+}
+
+.login--title {
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.login--bottomContainer {
+    background:#F5F8FA;
+    width: 100%;
+}
+
+.login--bottomInnerContainer {
+    width: 70%;
+    margin: 0 auto;
+    padding: 10px 0 4px 0;
+}
+
+.login--signUpText {
+    color: #8794A1;
+    display: inline-block;
+    font-size: 14px;
+    padding-right: 5px;
+}
+
+.login--signUpLink {
+    @extend .login--signUpText;
+    color: $blue;
+    &:hover {
+        color: $blue;
+    }
+}

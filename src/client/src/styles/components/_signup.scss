@@ -1,0 +1,139 @@
+.icon__twitter {
+    position: absolute;
+    color: $blue;
+    font-size: 22px;
+    margin: auto;
+    top: 20px;
+    left: 0;
+    right: 0;
+    width: 22px;
+    display: inline-block;
+}
+
+.icon__back {
+    color: $blue;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.icon__container {
+    width: 100%;
+}
+
+.button__modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 30px;
+    line-height: 0px !important;
+}
+
+.modal__title {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.modal__content {
+    padding: 16px;
+}
+
+.modal__input {
+    box-sizing: border-box;
+    border: 1px solid white;
+    border-bottom: 1px solid #657786;
+    height: 50px;
+    width: 100%;
+    font-size: 20px;
+    margin-top: 12px;
+    &:focus {
+        outline: none;
+        border-bottom: 2px solid #1DA1F2 !important;
+    }
+}
+
+.modal__password {
+    box-sizing: border-box;
+    border: 1px solid white;
+    border-bottom: 1px solid #657786;
+    height: 50px;
+    width: 100%;
+    font-size: 20px;
+    margin-top: 12px;
+    &:focus {
+        outline: none;
+        border-bottom: 2px solid #1DA1F2;
+    }
+}
+
+.modal__error {
+    color: red;
+    margin: 0;
+}
+
+.input__error {
+    border-bottom: 1px solid red;
+}
+
+.modal__changeInput {
+    box-sizing: border-box;
+    margin-top: 16px;
+    color: #1B95E0;
+}
+
+.checkbox__container > input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox__container > input[type="checkbox"]+span {
+    display: inline-block;
+    position: relative;
+    top: 30px;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    margin: -1px 0px 0 0;
+    vertical-align: middle;
+    background: white left top no-repeat;
+    border: 2px solid #657786;
+    border-radius: 5px;
+    cursor: pointer;
+    line-height: 16px;
+    color: white;
+}
+
+.checkbox__container > input[type="checkbox"]:checked+span {
+    background: $blue -19px top no-repeat;
+    border: 2px solid $blue;
+    color: white;
+    font-size: 14px;
+    padding-left: 3px;
+}
+
+.checkbox__container > input[type="checkbox"]+span {
+    margin-right: 20px;
+}
+
+.row__inputs {
+    margin: 10px 0;
+}
+
+.information__text {
+    color: #657796;
+}
+
+.terms__text {
+    margin-top: 50px;
+    font-size: 15px;
+}
+
+.medium__password {
+    border-bottom: 2px solid orange !important;
+}
+
+.strong__password {
+    border-bottom: 2px solid green !important;
+}
+
+.invalid__password {
+    border-bottom: 2px solid red !important;
+}

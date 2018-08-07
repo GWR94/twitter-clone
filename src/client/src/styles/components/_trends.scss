@@ -1,0 +1,224 @@
+//: Containers
+.trends--container {
+    background: white;
+    padding: 20px;
+}
+
+.trends--trendContainer {
+    margin-bottom: 6px;
+    padding: 0;
+}
+
+.trends--textContainer {
+    display: inline-block;
+}
+
+//: Text
+.trends--headerText {
+    display: inline;
+    font-size: 18px;
+}
+
+.trends--changeText {
+    display: inline;
+    font-size: 12px;
+    color: $blue;
+    &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.trends--topTrendsName {
+    color: $blue !important;
+    font-weight: 700;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+}
+
+.trends--topTrendsName > a {
+    color: $blue;
+    &:hover {
+        text-decoration: underline;
+        color: $blue;
+    };
+}
+
+.trends--topTrendsCount {
+    color: #8996A2;
+    font-size: 13px;
+    margin: 0;
+}
+
+.trends--textSeperator {
+    padding: 0 4px;
+    color: #808183;
+}
+
+//: Modal
+.trends--titleContainer {
+    width: 100%;
+    display: absolute;
+}
+
+.trends--modalTitle {
+    font-size: 20px;
+    font-weight: 700;
+    padding-bottom: 4px;
+}
+
+.trends--closeModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #808183;
+    cursor: pointer;
+}
+
+.trends--modalInputContainer {
+    width: 100%;
+    border: 1px solid #E6ECF0;
+    padding: 10px;
+}
+
+.trends--searchTrendsInput {
+    width: 40%;
+    margin: 3px auto;
+    border-radius: 30px;
+    display: block;
+    border: 1px solid #E6ECF0;
+    padding: 5px 10px;
+    outline: none;
+    &:focus {
+        box-shadow: 0 0 1px 1px rgb(24, 159, 243);
+    }
+    &::placeholder {
+        color: #8E9CA8;
+    }
+}
+
+.trends--currentLocationContainer {
+    width: 100%;
+    padding: 10px 20px;
+    border-bottom: 1px solid #E6ECF0;
+    height: 50px;
+}
+
+.trends--currentLocation {
+    line-height: 30px;
+}
+
+.trends--searchResults {
+    width: 60%;
+    background: white;
+    left: 30%;
+    position: absolute;
+    margin-top: 10px;
+    border: 1px solid #E6ECF0;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.trends--searchResultItem {
+    display: inline-block;
+    width: 100%;
+    padding: 5px 12px;
+    font-size: 16px;
+    &:hover {
+        background: #E8F4FB;
+        text-decoration: underline;
+        cursor: pointer;
+        color: $blue;
+    }
+}
+
+.trends--recentLocationActive {
+    background: #F5F8FA;
+    padding: 3px 5px;
+    border: 1px solid #E6ECF0;
+    display: inline-block;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #87939C;
+    margin: 8px 0;
+    cursor: pointer; 
+    &:hover {
+        text-decoration: underline;
+    }   
+}
+
+.trends--recentLocation {
+    font-size: 13px;
+    padding: 3px 5px;
+    margin: 8px 0;
+    color: $blue;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.trends--recentLocationsContainer, .trends--nearbyLocationsContainer, .trends--searchLocationContainer {
+    padding: 5px 20px 0 20px;
+}
+
+.trends--row {
+    width: 85%;
+}
+
+.trends--recentLocationsTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #6F7D86;
+    display: inline-block;
+}
+
+.trends--nearbyLocationsTitle, .trends--searchLocationsTitle {
+    @extend .trends--recentLocationsTitle;
+    margin-top: 4px;
+}
+
+.trends--searchLocation {
+    display: inline-block;
+    color: $blue !important;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.trends--nearbyLocationsTitleContainer {
+    height: 30px;
+}
+
+.trends--dropdown {
+    display: inline-block;
+    padding: 3px 4px;
+    font-size: 14px;
+    width: 210px;
+    border: 1px solid #E6ECF0;
+}
+
+.trends--dropdownText {
+    text-align: right;
+    width: 120px;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.trends--dropdownContainer {
+    margin-bottom: 8px;
+}
+.trends--searchDropdownContainer {
+    margin: 10px 0 14px 0;
+}
+
+.trends--buttonContainer {
+    border-top: 1px solid #E6ECF0;
+    width: 100%;
+}
