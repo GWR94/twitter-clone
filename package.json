@@ -5,11 +5,11 @@
   "main": "src/server/index.js",
   "scripts": {
     "start": "node src/server/index.js",
-    "build": "webpack --mode production",
+    "build": "webpack -p",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "webpack --mode production"
+    "heroku-postbuild": "webpack -p"
   },
   "repository": {
     "type": "git",
