@@ -1,8 +1,9 @@
 import React from "react";
-import {Router, Route, Switch} from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import createHistory from "history/createBrowserHistory";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from "axios";
 import DashboardPage from "../components/DashboardPage";
 import NotFoundPage from "../components/NotFoundPage";
 // import Private from "./PrivateRoute";
@@ -11,37 +12,46 @@ import Landing from "../components/Landing";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import * as actions from "../actions";
+import Profile from "../components/Profile";
 
 export const history = createHistory();
 
 class AppRouter extends React.Component {
-    componentWillMount() {
-        const {fetchUser} = this.props;
-        fetchUser();
+    constructor() {
+        super();
+
+        this.state = {
+            users: null,
+        };
+    }
+
+    async componentWillMount() {
+        const { fetchUser } = this.props;
+        await fetchUser();
     }
 
     render() {
-        const {auth} = this.props;
+        const { auth } = this.props;
+        const { users } = this.state;
         const isAuthenticated = !!auth;
 
         return (
             <Router history={history}>
                 <Switch>
-                    <Public path="/login" component={Login}/>
-                    <Public path="/i/flow/signup" component={SignUp}/>
+                    <Public path="/login" component={Login} />
+                    <Public path="/i/flow/signup" component={SignUp} />
+                    <Route path="/profile/:handle" component={Profile} />
                     <Route
                         path="/"
-                        component={isAuthenticated
-                        ? DashboardPage
-                        : Landing}
+                        component={isAuthenticated ? DashboardPage : Landing}
                         exact
                     />
-                    <Route component={NotFoundPage}/>
+                    <Route component={NotFoundPage} />
                 </Switch>
             </Router>
-        )
+        );
     }
-};
+}
 
 AppRouter.propTypes = {
     fetchUser: PropTypes.func.isRequired,
@@ -52,16 +62,19 @@ AppRouter.propTypes = {
             email: PropTypes.string,
             headerImg: PropTypes.any,
             profileImg: PropTypes.string,
-            username: PropTypes.string
+            username: PropTypes.string,
         }),
-        PropTypes.string])
-}
+        PropTypes.string,
+    ]),
+};
 
 AppRouter.defaultProps = {
-    auth: false
-}
+    auth: false,
+};
 
+const mapStateToProps = ({ auth }) => ({ auth });
 
-const mapStateToProps = ({auth}) => ({auth});
-
-export default connect(mapStateToProps, actions)(AppRouter);
+export default connect(
+    mapStateToProps,
+    actions,
+)(AppRouter);

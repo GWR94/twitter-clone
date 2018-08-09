@@ -2,8 +2,8 @@ const passport = require("passport");
 const bcyrpt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
-const {Schema} = mongoose; //eslint-disable-line
-
+const {Schema} = mongoose;
+ 
 module.exports = app => {
     app.post("/auth/login", passport.authenticate("local", {
         successRedirect: "/",
@@ -16,7 +16,7 @@ module.exports = app => {
                 isVerified: req.user.isVerified,
                 _id: req.user._id,
                 handle: req.user.handle,
-                displayName: req.user.displayName,
+                displayName: req.user.displayName || req.user.handle,
                 email: req.user.email,
                 displayImgSrc: req.user.displayImgSrc,
                 headerImgSrc: req.user.headerImgSrc,
@@ -28,6 +28,31 @@ module.exports = app => {
             return res.send(data);
         }
         res.send(undefined);
+    });
+
+    app.get("/api/get_users", (req, res) => {
+        try {
+            User.find({}, (err, users) => {
+                const usersArr = [];
+                users.map(user => {
+                    return usersArr.push({
+                        displayImgSrc: user.displayImgSrc,
+                        headerImgSrc: user.headerImgSrc,
+                        followers: user.followers,
+                        following: user.following,
+                        favouritedTweets: user.favouritedTweets,
+                        retweetedTweets: user.retweetedTweets,
+                        _id: user._id,
+                        displayName: user.displayName,
+                        handle: user.handle,
+                        email: user.email
+                    });
+                });
+                res.send(usersArr);
+            })
+        } catch (e) {
+            res.send(e);
+        }
     });
 
     app.post("/api/signup", async (req, res) => {
