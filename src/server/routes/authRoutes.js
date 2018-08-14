@@ -2,16 +2,24 @@ const passport = require("passport");
 const bcyrpt = require("bcrypt");
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
-const {Schema} = mongoose;
- 
-module.exports = app => {
-    app.post("/auth/login", passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/login"
-    }));
+const { Schema } = mongoose;
+const Tweets = mongoose.model("tweets");
 
-    app.get("/api/current_user", (req, res) => {
+module.exports = app => {
+    app.post(
+        "/auth/login",
+        passport.authenticate("local", {
+            successRedirect: "/",
+            failureRedirect: "/login",
+        }),
+    );
+
+    app.get("/api/current_user", async (req, res) => {
         if (req.user) {
+            const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
+                if (err) return res.send(err);
+                return tweets;
+            });
             const data = {
                 isVerified: req.user.isVerified,
                 _id: req.user._id,
@@ -23,7 +31,10 @@ module.exports = app => {
                 favouritedTweets: req.user.favouritedTweets,
                 retweetedTweets: req.user.retweetedTweets,
                 followers: req.user.followers,
-                following: req.user.following
+                following: req.user.following,
+                lists: req.user.lists,
+                moments: req.user.moments,
+                tweets: tweets,
             };
             return res.send(data);
         }
@@ -45,11 +56,11 @@ module.exports = app => {
                         _id: user._id,
                         displayName: user.displayName,
                         handle: user.handle,
-                        email: user.email
+                        email: user.email,
                     });
                 });
                 res.send(usersArr);
-            })
+            });
         } catch (e) {
             res.send(e);
         }
@@ -57,23 +68,44 @@ module.exports = app => {
 
     app.post("/api/signup", async (req, res) => {
         try {
-            const {handle, email, password } = req.body;
-            console.log(handle, email);
-            const existingUser = await User.findOne({handle: handle});
+            const { handle, email, password } = req.body;
+            const existingUser = await User.findOne({ handle: handle });
             if (existingUser) {
-                console.log("Username already taken");
-                return res
-                    .status(409)
-                    .send("Email already taken");
+                console.log("Invalid credentials. Email/Username already taken");
+                return res.status(409).send(false);
             }
             const hash = bcyrpt.hashSync(password, 10);
-            const user = await new User({handle, email, password: hash}).save(); //saving hashed password
-            console.log(user);
+            const user = await new User({ handle, email, password: hash }).save(); //saving hashed password
             return res.send(user);
         } catch (e) {
-            console.log(e);
-            res.send(e);
+            res.status(400).send(e);
         }
+    });
+
+    app.get("/api/check_handle/:handle", async (req, res) => {
+        const { handle } = req.params;
+        await User.findOne(
+            {
+                handle: handle.toLowerCase(),
+            },
+            (err, user) => {
+                if (user) return res.send(false);
+                return res.send(true);
+            },
+        );
+    });
+
+    app.get("/api/check_email/:email", async (req, res) => {
+        const { email } = req.params;
+        await User.findOne(
+            {
+                email: email.toLowerCase(),
+            },
+            (err, user) => {
+                if (user) return res.send(false);
+                return res.send(true);
+            },
+        );
     });
 
     app.get("/api/logout", (req, res) => {

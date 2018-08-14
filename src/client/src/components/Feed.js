@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import Tweet from "./Tweet";
 import * as actions from "../actions";
 import TweetInput from "./TweetInput";
-import { Link } from 'react-router-dom';
+
 class Feed extends React.Component {
     /*
         TODO
@@ -34,13 +35,9 @@ class Feed extends React.Component {
             <div className="feed--container">
                 <TweetInput />
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {tweets.length === 0 ? (
-                        <span>No Tweets</span>
-                    ) : (
-                        this.renderTweets(tweets)
-                    )}
-                    <Link to="/profile/james_gower">CLICK</Link>
+                    {tweets.length === 0 ? <span>No Tweets</span> : this.renderTweets(tweets)}
                 </div>
+                <Link to="/profile/james_gower">CLICK</Link>
             </div>
         );
     }

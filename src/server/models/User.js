@@ -39,6 +39,14 @@ const userSchema = new Schema({
     retweetedTweets: {
         type: Array,
         default: []
+    },
+    lists: {
+        type: Array,
+        default: [],
+    },
+    moments: {
+        type: Array,
+        default: [],
     }
 
 });

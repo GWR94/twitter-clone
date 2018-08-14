@@ -83,6 +83,9 @@
     width: 100%;
     border-bottom: 1px solid #ACB1B4;
     height: 48px;
+    position: fixed;
+    z-index: 10;
+    background: #fff;
 }
 
 .navbar--search {

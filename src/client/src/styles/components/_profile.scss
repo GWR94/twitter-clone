@@ -1,0 +1,161 @@
+$scroll-factor: 0.5;
+$background: #333;
+$header-height: 50px;
+$image: "../../../../public/images/headerPlaceholder.jpg";
+
+.profile--container {
+    background: #e6ecf0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden !important;
+}
+
+.profile--container {
+    height: 150vh;
+    max-height: 100%;
+    overflow-x: hidden;
+    perspective: 1px;
+    perspective-origin: center top;
+    transform-style: preserve-3d;
+}
+
+.profile--header {
+    top: 96px;
+    height: 30vw;
+    background: url($image);
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    vertical-align: top;
+    transform-origin: center top;
+    padding: 0;
+    z-index: -1;
+    transform: translateZ(-#{$scroll-factor * 2}px) scale(1 + $scroll-factor * 2);
+}
+
+.profile--section {
+    min-height: 200vh;
+    transform: translateZ(0);
+    padding: 10px 0;
+    z-index: 1;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+}
+
+.profile--displayImg {
+    width: 212px;
+    height: 212px;
+    border: 8px solid white;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    margin-top: -140px;
+    z-index: 1;
+}
+
+.profile--info {
+    display: inline-block;
+    text-align: center;
+    width: 70px;
+    padding-bottom: 2px;
+    &:hover {
+        padding-bottom: 0;
+        border-bottom: 2px solid $blue;
+    }
+}
+
+.profile--infoDescription {
+    color: #66686a;
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.profile--infoValue {
+    color: $blue;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.profile--gridContainer {
+    z-index: 2;
+    display: grid;
+    grid-template-areas:
+        "image info info"
+        "overview main activity"
+        "none main follow"
+        "none main trends";
+    grid-template-columns: 288px 600px 288px;
+    grid-template-rows: 60px auto auto;
+    grid-gap: 10px;
+    margin: -54px auto 0 auto;
+    padding: 0 15px;
+    @media screen and (max-width: 1250px) {
+        grid-template-areas:
+            "image info"
+            "overview main"
+            "activity main"
+            "follow main"
+            "trends main";
+        grid-template-columns: 288px 600px;
+        grid-template-rows: 60px 300px auto auto auto;
+    }
+    @media (min-width: 992px) {
+        width: 970px;
+    }
+    @media (min-width: 1200px) {
+        width: 1170px;
+    }
+}
+
+
+.profile--information {
+    grid-area: info;
+}
+
+.profile--overview {
+    grid-area: overview;
+}
+
+.profile--main {
+    grid-area: main;
+}
+
+.profile--activity {
+    grid-area: activity;
+}
+
+.profile--trends {
+    grid-area: trends;
+}
+
+.profile--imgContainer {
+    grid-area: image;
+}
+
+.profile--infoBottomBorder {
+    width: 100%;
+    background: #fff;
+    height: 60px;
+    -webkit-box-shadow: 0px 1px 1px #C0C5C8;
+    -moz-box-shadow: 0px 1px 1px #C0C5C8;
+    box-shadow: 0px 1px 1px #C0C5C8;
+}
+
+.profile--editButton {
+    @extend .button__twitterLarge;
+    color: #66757F;
+    border: 1px solid #66757F !important;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 7px;
+    float: right;
+    padding: 5px 10px !important;
+}

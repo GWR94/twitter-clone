@@ -14,6 +14,7 @@ import twitterLocale from "../services/twitterLocale";
     [x] Add verified option
     [x] Add dot between time ago & handle
     [x] Add tooltips for interactions
+    [ ] Fix retweet & undo retweet
 */
 
 class Tweet extends React.Component {
@@ -35,13 +36,9 @@ class Tweet extends React.Component {
         const { retweets, likes, auth } = this.props;
         if (retweets.users.indexOf(auth.handle) > -1) {
             this.setState({ userRetweeted: true });
-        } else {
-            this.setState({ userRetweeted: false });
         }
         if (likes.users.indexOf(auth.handle) > -1) {
             this.setState({ userLiked: true });
-        } else {
-            this.setState({ userLiked: false });
         }
     }
 
