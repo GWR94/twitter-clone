@@ -159,14 +159,7 @@
     padding: 3px;
 }
 
-.icon--addTweet {
-    font-size: 34px;
-    width: 36px;
-    height: 36px;
-    color: $blue;
-    margin-right: 10px;
-    margin-top: 4px;
-}
+
 
 .tooltip {
     display: inline-block;
@@ -180,8 +173,6 @@
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
-
-    /* Position the tooltip */
     position: absolute;
     z-index: 1;
 }

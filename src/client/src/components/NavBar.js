@@ -32,9 +32,9 @@ class NavBar extends Component {
                 <div className="navbar--container">
                     <div className="navbar--nav__container">
                         <div className="navbar--nav">
-                            <i className="icon--twitter fab fa-twitter" />
+                            <i className="icon__twitter fab fa-twitter" />
                             <NavLink to="/" exact className="navbar--link" activeClassName="active">
-                                <i className="fas fa-home icon--nav" />
+                                <i className="fas fa-home icon__nav" />
                                 <span className="navbar--text">Home</span>
                             </NavLink>
                             <NavLink
@@ -42,7 +42,7 @@ class NavBar extends Component {
                                 className="navbar--link"
                                 activeClassName="active"
                             >
-                                <i className="fas fa-bolt icon--nav" />
+                                <i className="fas fa-bolt icon__nav" />
                                 <span className="navbar--text">Profile</span>
                             </NavLink>
                             <NavLink
@@ -50,7 +50,7 @@ class NavBar extends Component {
                                 className="navbar--link"
                                 activeClassName="active"
                             >
-                                <i className="fas fa-bell icon--nav" />
+                                <i className="fas fa-bell icon__nav" />
                                 <span className="navbar--text">Notifications</span>
                             </NavLink>
                             <NavLink
@@ -58,7 +58,7 @@ class NavBar extends Component {
                                 className="navbar--link"
                                 activeClassName="active"
                             >
-                                <i className="fas fa-envelope icon--nav" />
+                                <i className="fas fa-envelope icon__nav" />
                                 <span className="navbar--text">Messages</span>
                             </NavLink>
                         </div>
@@ -111,25 +111,25 @@ class NavBar extends Component {
                                             }}
                                         />
                                         <a className="dropdown-item">
-                                            <i className="far fa-user icon-dropdown" />Profile
+                                            <i className="far fa-user icon__dropdown" />Profile
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="far fa-list-alt icon-dropdown" />Lists
+                                            <i className="far fa-list-alt icon__dropdown" />Lists
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-bolt icon-dropdown" />Moments
+                                            <i className="fas fa-bolt icon__dropdown" />Moments
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">
-                                            <i className="fas fa-dollar-sign icon-dropdown" />Promote
+                                            <i className="fas fa-dollar-sign icon__dropdown" />Promote
                                             Mode
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-shopping-cart icon-dropdown" />Twitter
+                                            <i className="fas fa-shopping-cart icon__dropdown" />Twitter
                                             Ads
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-chart-bar icon-dropdown" />Analytics
+                                            <i className="fas fa-chart-bar icon__dropdown" />Analytics
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">Settings and privacy</a>
@@ -140,7 +140,7 @@ class NavBar extends Component {
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">
-                                            Night Mode<i className="far fa-moon icon-darkmode" />
+                                            Night Mode<i className="far fa-moon icon__darkmode" />
                                         </a>
                                     </div>
                                 </div>

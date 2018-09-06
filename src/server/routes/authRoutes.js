@@ -35,6 +35,8 @@ module.exports = app => {
                 lists: req.user.lists,
                 moments: req.user.moments,
                 tweets: tweets,
+                profileOverview: req.user.profileOverview,
+                profileCompleted: req.user.profileCompleted,
             };
             return res.send(data);
         }
@@ -104,6 +106,23 @@ module.exports = app => {
             (err, user) => {
                 if (user) return res.send(false);
                 return res.send(true);
+            },
+        );
+    });
+
+    app.post("/api/update_profile", async (req, res) => {
+        const { value, field, user } = req.body;
+        await User.findOneAndUpdate(
+            {
+                handle: user,
+            },
+            {
+                $set: { [field]: value },
+            },
+            (err, user) => {
+                if (err) return res.send(err);
+                user.save();
+                return res.send(user);
             },
         );
     });

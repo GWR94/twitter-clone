@@ -19,14 +19,14 @@
 }
 
 .dashboard--feed {
-    height: 100%;
-    background: white;
+    height: auto;
+    background: #E6ECF0;
     grid-area: feed;
     width: auto;
 }
 
 .dashboard--ads {
-    background: white;
+    background: #fff;
 }
 
 .dashboard--whoToFollow {
@@ -43,11 +43,9 @@
     display: grid;
     grid-template-areas: "profile feed follow" "trends feed contact";
     grid-template-columns: 288px auto 288px;
-    grid-template-rows: 210px auto auto auto;
     grid-gap: 10px;
     @media screen and (max-width: 1250px) {
         grid-template-areas: "profile feed" "follow feed" "trends feed";
         grid-template-columns: 288px auto;
-        grid-template-rows: 210px 300px auto auto;
     }
 }

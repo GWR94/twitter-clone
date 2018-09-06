@@ -75,7 +75,7 @@ class Profile extends React.Component {
                                     <p className="profile--infoValue">{info.value}</p>
                                 </div>
                             ))}
-                            <button className="profile--editButton">Edit Profile</button>
+                            <button className="button__edit">Edit Profile</button>
                         </div>
                         <div className="profile--overview">
                             <h1>Overview</h1>

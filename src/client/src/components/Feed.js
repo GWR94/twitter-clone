@@ -31,11 +31,24 @@ class Feed extends React.Component {
     render() {
         const { tweets } = this.props;
 
+        const NoTweets = () => (
+            <div className="feed--noTweetsContainer">
+                <h3 className="feed--noTweetsTitle">What? No Tweets yet?</h3>
+                <p className="feed--noTweetsText">
+                    This empty timeline won’t be around for long. Start following people and you’ll
+                    see Tweets show up here.
+                </p>
+                <button type="button" className="button__follow">
+                    Find people to follow
+                </button>
+            </div>
+        );
+
         return (
             <div className="feed--container">
                 <TweetInput />
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {tweets.length === 0 ? <span>No Tweets</span> : this.renderTweets(tweets)}
+                    {tweets.length === 0 ? <NoTweets /> : this.renderTweets(tweets)}
                 </div>
                 <Link to="/profile/james_gower">CLICK</Link>
             </div>

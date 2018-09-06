@@ -6,10 +6,17 @@ import Trends from "./Trends";
 import Feed from "./Feed";
 import NavBar from "./NavBar";
 
+/*
+    TODO
+    [ ] Add red bar at top of page to send confirmation email
+    [ ] Add progress bar for setting up profile below ProfileOverview component
+    [ ] Fix Login Component styling (NavBar)
+*/
+
 const DashboardPage = () => (
     <div>
         <NavBar />
-        <div className="dashboard--background">
+        <div className="dashboard--background" id="dashboard">
             <div className="dashboard--container">
                 <div className="dashboard--grid-container">
                     <div className="dashboard--profile">
@@ -18,7 +25,6 @@ const DashboardPage = () => (
                     <div className="dashboard--feed">
                         <Feed />
                     </div>
-                    <div className="dashboard--ads" />
                     <div className="dashboard--whoToFollow">
                         <WhoToFollow />
                     </div>

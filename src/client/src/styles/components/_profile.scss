@@ -1,5 +1,4 @@
 $scroll-factor: 0.5;
-$background: #333;
 $header-height: 50px;
 $image: "../../../../public/images/headerPlaceholder.jpg";
 
@@ -147,15 +146,4 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
     -webkit-box-shadow: 0px 1px 1px #C0C5C8;
     -moz-box-shadow: 0px 1px 1px #C0C5C8;
     box-shadow: 0px 1px 1px #C0C5C8;
-}
-
-.profile--editButton {
-    @extend .button__twitterLarge;
-    color: #66757F;
-    border: 1px solid #66757F !important;
-    font-size: 14px;
-    font-weight: 700;
-    margin-top: 7px;
-    float: right;
-    padding: 5px 10px !important;
 }

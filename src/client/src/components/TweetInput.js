@@ -217,7 +217,7 @@ class TweetInput extends Component {
                                 >
                                     Add location
                                 </Tooltip>
-                                <i className="fas fa-plus-circle icon--addTweet" />
+                                <i className="fas fa-plus-circle icon__addTweet" />
                                 <button
                                     type="button"
                                     className="btn button__signup"

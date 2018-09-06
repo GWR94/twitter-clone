@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
     handle: {
         type: String,
-        unique: true
+        unique: true,
     },
     displayName: String,
     email: {
         type: String,
-        unique: true
+        unique: true,
     },
     isVerified: {
         type: Boolean,
-        default: false
+        default: false,
     },
     password: String,
     displayImgSrc: {
         type: String,
-        default: null
+        default: null,
     },
     headerImgSrc: {
         type: String,
@@ -26,19 +26,19 @@ const userSchema = new Schema({
     },
     followers: {
         type: Array,
-        default: []
+        default: [],
     },
     following: {
         type: Array,
-        default: []
+        default: [],
     },
     favouritedTweets: {
         type: Array,
-        default: []
+        default: [],
     },
     retweetedTweets: {
         type: Array,
-        default: []
+        default: [],
     },
     lists: {
         type: Array,
@@ -47,8 +47,21 @@ const userSchema = new Schema({
     moments: {
         type: Array,
         default: [],
-    }
-
+    },
+    profileOverview: {
+        type: String,
+        default: null,
+    },
+    profileCompleted: {
+        type: Boolean,
+        default: false,
+    },
+    birthday: {
+        type: Object,
+    },
+    birthPlace: {
+        type: String,
+    },
 });
 
 mongoose.model("users", userSchema);

@@ -42,16 +42,6 @@
     }
 }
 
-.icon--nav {
-    margin-right: 8px;
-    font-size: 22px;
-    top: 2px;
-    position: relative;
-    @media (max-width: 936px) {
-        left: 5px;
-    }
-}
-
 .navbar--text {
     margin-top: 9px;
     display: inline-block;
@@ -59,17 +49,6 @@
     @media (max-width: 936px) {
         display: none !important;
     }
-}
-
-.icon--twitter {
-    font-size: 22px;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 13px;
-    position: absolute;
-    width: 1px;
-    color: $blue;
 }
 
 .navbar--details {
@@ -176,27 +155,13 @@
     margin-top: -4px;
 }
 
-.icon-dropdown {
-    padding-right: 14px;
-    text-align: center;
-    width: 40px;
-}
-
 .dropdown-item {
     padding: 4px 0;
     &:hover {
         background: #1B95E0 !important;
         color: white !important;
     }
-    &:hover > .icon-darkmode {
+    &:hover > .icon__darkmode {
         color: white;
     }
-}
-
-.icon-darkmode {
-    color: #1B95E0;
-    position: relative;
-    right: 5px;
-    top: 4px;
-    float: right;
 }

@@ -516,7 +516,7 @@ class SignUp extends React.Component {
                                 <i className="icon__twitter fab fa-twitter" />
                                 <button
                                     type="button"
-                                    className="modal__skipButton"
+                                    className="button__skipModal"
                                     onClick={() => history.push("/")}
                                 >
                                     Skip for now

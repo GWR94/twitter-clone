@@ -8,7 +8,7 @@ const devMode = process.env.NODE_ENV !== "production";
 const outputDirectory = "dist";
 
 module.exports = {
-  entry: ["babel-polyfill", "./src/client/src/app.js"],
+  entry: ["@babel/polyfill", "./src/client/src/app.js"],
   output: {
     path: path.join(__dirname, outputDirectory),
     filename: "bundle.js"
@@ -19,7 +19,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"]
+          }
         }
       },
       {
@@ -33,6 +36,10 @@ module.exports = {
           "css-loader",
           "sass-loader"
         ]
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: "file-loader?name=[name].[ext]"
       }
     ]
   },
@@ -41,7 +48,6 @@ module.exports = {
   },
   devServer: {
     port: 8080,
-    historyApiFallback: true,
     proxy: {
       "/api/*": {
         target: "http://localhost:5000",

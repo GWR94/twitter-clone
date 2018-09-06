@@ -10,3 +10,13 @@ export const createUser = values => async dispatch => {
     const res = await axios.post("/api/signup", values);
     dispatch({ type: FETCH_USER, payload: res.data });
 };
+
+export const fetchProfile = handle => async dispatch => {
+    const res = await axios.get(`/api/fetch_profile/${handle}`);
+    dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const updateProfile = values => async dispatch => {
+    const res = await axios.post("/api/update_profile", values);
+    dispatch({ type: FETCH_USER, payload: res.data });
+};

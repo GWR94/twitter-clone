@@ -16,7 +16,7 @@ const Login = () => (
                     <div className="navbar--nav__container">
                         <div className="navbar--nav">
                             <Link to="/" exact className="navbar--linkLogin text-center">
-                                <i className="icon--twitterLogin fab fa-twitter"/>
+                                <i className="icon__twitterLogin fab fa-twitter"/>
                                 <p className="navbar--linkText">Home</p>
                             </Link>
                             <a
