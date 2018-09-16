@@ -11,10 +11,7 @@ class Feed extends React.Component {
         TODO
         [ ] check circle progress bar for errors when length is 0 after typing
     */
-    constructor() {
-        super();
-        this.state = {};
-    }
+    state = {}
 
     async componentDidMount() {
         const { fetchTweets, auth } = this.props;
@@ -29,7 +26,7 @@ class Feed extends React.Component {
     }
 
     render() {
-        const { tweets } = this.props;
+        const { tweets, showFeed } = this.props;
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">
@@ -46,11 +43,16 @@ class Feed extends React.Component {
 
         return (
             <div className="feed--container">
-                <TweetInput />
+                { showFeed && <TweetInput />}
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {tweets.length === 0 ? <NoTweets /> : this.renderTweets(tweets)}
+                    {
+                        tweets.length === 0 
+                        ? showFeed 
+                            ? <NoTweets /> 
+                            : null 
+                        : this.renderTweets(tweets)
+                    }
                 </div>
-                <Link to="/profile/james_gower">CLICK</Link>
             </div>
         );
     }

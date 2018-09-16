@@ -23,12 +23,12 @@ class NavBar extends Component {
     }
 
     render() {
-        const { auth } = this.props;
+        const { auth, transparent } = this.props;
         const { displayImgSrc, displayName, handle } = auth;
         const { searchInput } = this.state;
 
         return (
-            <div className="navbar__container">
+            <div className={transparent ? "navbar__container transparent" : "navbar__container"}>
                 <div className="navbar--container">
                     <div className="navbar--nav__container">
                         <div className="navbar--nav">

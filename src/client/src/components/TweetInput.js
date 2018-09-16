@@ -28,6 +28,11 @@ class TweetInput extends Component {
         this.toggleTooltip = this.toggleTooltip.bind(this);
     }
 
+    componentDidMount() {
+        const { large } = this.props;
+        if (large) this.setState({ active: true });
+    }
+
     /* eslint-disable-next-line */
     toggleTooltip(tooltip) {
         const {
@@ -87,37 +92,44 @@ class TweetInput extends Component {
             pollToolTipOpen,
             tweetError,
         } = this.state;
-        const { auth } = this.props;
+        const { auth, large } = this.props;
         const { displayImgSrc } = auth;
 
         autosize(document.getElementById("tweetInput-textbox"));
 
         return (
             <div
-                className={
-                    active ? "tweetInput--container" : "tweetInput--containerLarge"
-                }
+                className={active ? "tweetInput--container" : "tweetInput--containerLarge"}
                 id="tweetInput-containerID"
+                style={
+                    large && {
+                        border: "1px solid #A4D9F9",
+                        borderRadius: "5px",
+                        padding: "10px",
+                    }
+                }
             >
                 <div className="tweetInput--innerContainer">
-                    <img
-                        src={displayImgSrc || defaultDisplayImg}
-                        alt="User Display Img"
-                        className="tweetInput--displayImg"
-                    />
+                    {!large && (
+                        <img
+                            src={displayImgSrc || defaultDisplayImg}
+                            alt="User Display Img"
+                            className="tweetInput--displayImg"
+                        />
+                    )}
                     <textarea
                         type="text"
                         id="tweetInput-textbox"
                         value={tweetText}
-                        className={
-                            active ? "tweetInput--inputLarge" : "tweetInput--input"
-                        }
+                        className={active ? "tweetInput--inputLarge" : "tweetInput--input"}
                         onFocus={() => {
-                            this.setState({ active: true });
+                            if (!large) this.setState({ active: true });
                         }}
                         onBlur={() => {
-                            if (tweetText.length === 0) {
-                                this.setState({ active: false });
+                            if (!large) {
+                                if (tweetText.length === 0) {
+                                    this.setState({ active: false });
+                                }
                             }
                         }}
                         onChange={e => {
@@ -133,6 +145,11 @@ class TweetInput extends Component {
                             });
                         }}
                         placeholder="What's happening?"
+                        style={
+                            large && {
+                                margin: "0",
+                            }
+                        }
                     />
                 </div>
                 <i
@@ -236,9 +253,8 @@ class TweetInput extends Component {
 }
 
 TweetInput.propTypes = {
-    auth: PropTypes.shape({
-        displayImgSrc: PropTypes.string,
-    }).isRequired,
+    auth: PropTypes.shape({ displayImgSrc: PropTypes.string }).isRequired,
+    large: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ auth, tweets }) => ({ auth, tweets });

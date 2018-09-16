@@ -3,11 +3,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
+import CropViewer from "rc-cropping";
+import Dialog from "rc-dialog";
+import Upload from "rc-upload";
 import * as actions from "../actions";
 import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 import defaultHeaderImg from "../../../../public/images/headerPlaceholder.jpg";
 import twitterLocations from "../services/twitterLocations.json";
 import oneHundred from "../../../../public/images/oneHundred.png";
+import "rc-cropping/assets/index.css";
+import "rc-dialog/assets/index.css";
 
 /*
     TODO
@@ -35,11 +40,8 @@ class ProfileOverview extends React.Component {
         if (profileCompleted) this.setState({ profileCompleted: true });
     }
 
-    searchLocation = name => {
-        const results = twitterLocations.filter(
-            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
-        );
-        return results;
+    onModalClose = () => {
+        this.setState({ modalIsOpen: false });
     };
 
     formatMonth = month => {
@@ -72,6 +74,39 @@ class ProfileOverview extends React.Component {
                 return "Error";
         }
     };
+
+    searchLocation = name => {
+        const results = twitterLocations.filter(
+            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
+        );
+        return results;
+    };
+
+    beforeUpload(file) {
+        const cropper = this.cropper;
+        console.log(">> cropper", this.cropper);
+        return cropper.selectImage(file).then(image => {
+            console.log(">> selecTImage", image);
+            return image;
+        });
+    }
+
+    handleImageChange(e) {
+        const { imagePreviewUrl } = this.state;
+        e.preventDefault();
+
+        const reader = new FileReader();
+        const file = e.target.files[0];
+
+        reader.onloadend = () => {
+            this.setState({
+                file,
+                imagePreviewUrl: reader.result,
+                modalIsOpen: true,
+            });
+        };
+        reader.readAsDataURL(file);
+    }
 
     renderPrivacy(type) {
         const { monthPrivacy, yearPrivacy } = this.state;
@@ -108,7 +143,28 @@ class ProfileOverview extends React.Component {
             results,
             birthplace,
             profileCompleted,
+            uploadImageDropdownOpen,
+            modalIsOpen,
+            imagePreviewUrl,
         } = this.state;
+
+        let imagePreview = null;
+        if (imagePreviewUrl) {
+            imagePreview = <img alt="Profile Img" src={imagePreviewUrl} />;
+        } else {
+            imagePreview = <div className="previewText">Please select an image to upload</div>;
+        }
+
+        const customStyles = {
+            content: {
+                top: "50%",
+                left: "50%",
+                right: "auto",
+                bottom: "auto",
+                marginRight: "-50%",
+                transform: "translate(-50%, -50%)",
+            },
+        };
 
         const { handle, displayName, displayImgSrc, headerImgSrc, following, followers } = auth;
 
@@ -134,10 +190,12 @@ class ProfileOverview extends React.Component {
                             alt="Header Img"
                         />
                     </div>
+                    <i className="fas fa-camera profile--addIcon" />
                     <img
                         src={displayImgSrc || defaultDisplayImg}
                         className="profileOverview--displayImg"
                         alt="Display Img"
+                        onClick={() => this.setState({ uploadImageDropdownOpen: true })}
                     />
                     <div className="profileOverview--nameContainer">
                         <h5 className="profileOverview--name">{displayName}</h5>
@@ -196,15 +254,13 @@ class ProfileOverview extends React.Component {
                                     >
                                         Skip
                                     </button>
+
                                     <button
-                                        className="btn button__addPhoto"
                                         type="button"
-                                        onClick={() =>
-                                            this.setState({
-                                                showInfo: "profile",
-                                                percent: percent + 18,
-                                            })
-                                        }
+                                        className="btn button__twitterBlue"
+                                        onClick={() => {
+                                            this.setState({ uploadImageDropdownOpen: true });
+                                        }}
                                     >
                                         Add a photo
                                     </button>
@@ -241,7 +297,7 @@ class ProfileOverview extends React.Component {
                                         Skip
                                     </button>
                                     <button
-                                        className="btn button__addPhoto"
+                                        className="btn button__twitterBlue"
                                         type="button"
                                         disabled={!profileText}
                                         onClick={async () => {
@@ -344,7 +400,7 @@ class ProfileOverview extends React.Component {
                                         Skip
                                     </button>
                                     <button
-                                        className="btn button__addPhoto"
+                                        className="btn button__twitterBlue"
                                         type="button"
                                         disabled={!year || !month || !day}
                                         onClick={async () => {
@@ -563,17 +619,23 @@ class ProfileOverview extends React.Component {
                                     <button
                                         className="btn button__skip"
                                         type="button"
-                                        onClick={() => {
+                                        onClick={async () => {
                                             this.setState({
                                                 percent: percent + 18,
                                                 showInfo: "completed",
                                             });
+                                            const profileComplete = {
+                                                field: "profileCompleted",
+                                                value: true,
+                                                user: handle,
+                                            };
+                                            await updateProfile(profileComplete);
                                         }}
                                     >
                                         Skip
                                     </button>
                                     <button
-                                        className="btn button__addPhoto"
+                                        className="btn button__twitterBlue"
                                         type="button"
                                         disabled={!birthplace}
                                         onClick={async () => {
@@ -615,7 +677,7 @@ class ProfileOverview extends React.Component {
                                     later.
                                 </h3>
                                 <Link
-                                    className="btn button__addPhoto"
+                                    className="btn button__twitterBlue"
                                     to="/profile"
                                     style={{
                                         margin: "10px auto 6px auto",
@@ -651,12 +713,53 @@ class ProfileOverview extends React.Component {
                             })}
                         </div>
                     )}
+                {uploadImageDropdownOpen && (
+                    <div className="profileOverview--uploadImageDropdown">
+                        <form action="/api/upload" method="POST" id="formUpload">
+                            <input
+                                type="file"
+                                name="file"
+                                id="file"
+                                className="profileOverview--fileInput"
+                                tabIndex="-1"
+                                title="Add Photo"
+                                accept="image/gif,image/jpeg,image/jpg,image/png"
+                                onChange={e => {
+                                    this.handleImageChange(e);
+                                }}
+                            />
+                            <p
+                                className="profileOverview--dropdownItem"
+                                onClick={() => document.getElementById("file").click()}
+                            >
+                                Upload photo
+                            </p>
+                            <Upload type="drag" beforeUpload={this.beforeUpload} />
+                            <button
+                                type="submit"
+                                value="submit"
+                                id="submitUpload"
+                                style={{ display: "none" }}
+                            />
+                        </form>
+
+                        <hr className="profileOverview--seperator" />
+                        <p className="profileOverview--dropdownItem">Cancel</p>
+                    </div>
+                )}
+                {modalIsOpen && (
+                    <CropViewer
+                        getSpinContent={() => <span>loading...</span>}
+                        renderModal={() => <Dialog />}
+                        circle
+                        locale="en-US"
+                        ref={ele => {this.cropper = ele}}
+                    />
+                )}
             </div>
         );
     }
 }
-
-//* 48 > 65 > 83
 
 const mapStateToProps = ({ auth, tweets }) => ({ auth, tweets });
 

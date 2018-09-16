@@ -1,0 +1,87 @@
+.myFirstTweet--textContainer {
+    padding: 10px;
+}
+
+.myFirstTweet--title {
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.myFirstTweet--subtitle {
+    font-size: 14px;
+    color: $gray-text;
+}
+
+.myFirstTweet--sampleContainer {
+    margin-bottom: 20px;
+}
+
+.myFirstTweet--tweetContainer {
+    width: 80%;
+    background: #fff;
+    display: inline-flex;
+}
+
+.myFirstTweet--buttonContainer {
+    width: 20%;
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.myFirstTweet--displayImgContainer {
+    padding: 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: 70px;
+}
+
+.myFirstTweet--textContainer {
+    display: inline-block;
+    width: 100%;
+}
+
+.myFirstTweet--displayImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.myFirstTweet--displayName {
+    font-weight: 700;
+    display: inline-block;
+    padding-right: 5px;
+    margin: 0;
+}
+
+.myFirstTweet--handle {
+    display: inline-block;
+    color: $gray-text;
+    font-size: 14px;
+    margin: 0;
+}
+
+.myFirstTweet--tweetInfoContainer {
+    margin: 0;
+}
+
+.myFirstTweet--tweetTextContainer {
+    margin: 0;
+}
+
+.myFirstTweet--tweetText {
+    font-size: 22px;
+    margin: 0;
+    padding: 0;
+}
+
+.myFirstTweet--hashtag {
+    color: $blue;
+    &:hover {
+        text-decoration: underline;
+    }
+}

@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const tweetSchema = new Schema({
     tweetText: {
         type: String,
-        required: true
+        required: true,
     },
     taggedUsers: {
         type: String,
-        default: []
+        default: [],
     },
     handle: {
         type: String,
-        required: true
+        required: true,
     },
     displayImgSrc: {
         type: String,
@@ -20,37 +20,41 @@ const tweetSchema = new Schema({
     likes: {
         amount: {
             type: Number,
-            default: 0
+            default: 0,
         },
         users: {
             type: Array,
-            default: []
-        }
+            default: [],
+        },
     },
     retweets: {
         amount: {
             type: Number,
-            default: 0
+            default: 0,
         },
         users: {
             type: Array,
-            default: []
-        }
+            default: [],
+        },
     },
     comments: {
         type: Array,
-        default: []
+        default: [],
     },
     postedAt: {
         type: Date,
-        required: true
+        required: true,
     },
     isVerified: {
         type: Boolean,
-        default: false
+        default: false,
     },
     email: String,
-    displayName: String
+    displayName: String,
+    photos: {
+        type: Buffer,
+        contentType: String,
+    },
 });
 
 mongoose.model("tweets", tweetSchema);

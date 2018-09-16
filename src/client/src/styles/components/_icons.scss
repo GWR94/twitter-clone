@@ -84,3 +84,22 @@
 .icon__profilePrivacy {
     color: #66757F;
 }
+
+.icon__profile {
+    display: inline-block;
+    margin-top: 11px;
+    margin-right: 8px;
+    color: $gray-text;
+}
+
+#file {
+    display: none;
+}
+
+.icon__footer {
+    width: 30px;
+    margin: 0 auto;
+    font-size: 20px;
+    display: block;
+    padding: 20px;
+}

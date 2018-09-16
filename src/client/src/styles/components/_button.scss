@@ -39,7 +39,8 @@
     border: 1px solid $blue !important;
     color: white;
     font-weight: 600 !important;
-    background: $blue;
+    background: #4ab3f4;
+    border: transparent !important;
     border-radius: 20px !important;
     font-family: "Segoe UI", Arial, sans-serif;
     font-size: 12px;
@@ -50,21 +51,50 @@
     -ms-transition: background 0.35s;
     -o-transition: background 0.35s;
     &:hover {
-        background: #006dbf;
+        background: #1da1f2;
         text-decoration: none;
         color: white;
     }
 }
 
-.button__edit {
+.button__themeColor {
+    @extend .themeColor;
     @extend .button__twitterLarge;
-    color: #66757f;
-    border: 1px solid #66757f !important;
     font-size: 14px;
     font-weight: 700;
     margin-top: 7px;
     float: right;
-    padding: 5px 10px !important;
+    padding: 5px 16px !important;
+    &:hover {
+        color: #66757f;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+
+/* Theme Colors */
+.default__color .themeColor {
+    color: $blue !important;
+    border: 1px solid $blue !important;
+}
+
+.orange__color .themeColor {
+    color: #FF691F !important;
+    border: 1px solid #FF691F !important; 
+}
+
+.button__lightBlue {
+    @extend .button__themeColor;
+    color: $blue;
+    border: 1px solid $blue !important;
+    margin-left: 5px;
+    &:hover {
+        color: $blue;
+    }
+    &:focus {
+        outline: none;
+    }
 }
 
 .button__signupLarge {
@@ -102,7 +132,6 @@
     max-width: 77rem;
     margin: 0 auto;
     position: relative;
-    background: blue;
 }
 
 button:disabled {
@@ -118,23 +147,7 @@ button:disabled {
     }
 }
 
-.button__follow {
-    @extend .button;
-    border-radius: 50px;
-    -webkit-border-radius: 50px;
-    -moz-border-radius: 50px;
-    -ms-border-radius: 50px;
-    -o-border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    background: #4ab3f4;
-    padding: 10px 16px;
-    &:hover {
-        background: #1da1f2;
-    }
-}
-
-.button__addPhoto {
+.button__twitterBlue {
     font-weight: 700 !important;
     font-size: 14px !important;
     color: #fff;
@@ -195,3 +208,19 @@ button:disabled {
     float: right;
     font-size: 15px;
 }
+
+.button__tweet {
+    @extend .button__loginLarge;
+    background: #4ab3f4;
+    &:hover {
+        background: #1da1f2;
+    }
+    display: inline-block !important;
+    vertical-align: middle !important;
+    height: 100% !important;
+}
+
+.button__lightBlue {
+    @extend .button__themeColor;
+}
+

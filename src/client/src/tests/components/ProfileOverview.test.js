@@ -3,6 +3,6 @@ import { shallow } from "enzyme";
 import ProfileOverview from "../../components/ProfileOverview";
 
 test("should render ProfileOverview component", () => {
-    const wrapper = shallow(<ProfileOverview />);
-    expect(wrapper).toMatchSnapshot();
+    const component = shallow(<ProfileOverview />);
+    expect(component).toMatchSnapshot();
 });

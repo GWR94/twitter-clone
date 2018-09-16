@@ -62,6 +62,19 @@ const userSchema = new Schema({
     birthPlace: {
         type: String,
     },
+    dateCreated: {
+        type: Date,
+    },
+    location: {
+        type: Object
+    },
+    website: {
+        type: String
+    },
+    themeColor: {
+        type: String,
+        default: "#1DA1F2"
+    }
 });
 
 mongoose.model("users", userSchema);

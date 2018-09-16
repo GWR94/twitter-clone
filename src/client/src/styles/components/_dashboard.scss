@@ -41,7 +41,11 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-areas: "profile feed follow" "trends feed contact";
+    grid-template-areas: 
+        "profile feed follow" 
+        "trends feed follow"
+        "trends feed -"
+        "trends feed contact";
     grid-template-columns: 288px auto 288px;
     grid-gap: 10px;
     @media screen and (max-width: 1250px) {

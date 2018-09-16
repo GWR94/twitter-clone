@@ -27,6 +27,9 @@
     margin-top: -35px;
     margin-left: 20px;
     background: white;
+    &:hover {
+    box-shadow: $blue 0px 0px 4px 0px;
+    }
 }
 
 .profileOverview--nameContainer {
@@ -78,6 +81,21 @@
     font-size: 13px;
 }
 
+.profile--addIcon {
+    color: #fff;
+    font-size: 26px;
+    position: relative;
+    top: 12px;
+    left: 42px;
+    z-index: 10;
+    display: block;
+    &:hover {
+        profileOverview--displayImg {
+            box-shadow: $blue 0px 0px 4px 0px;
+        }
+    }
+}
+
 .profileOverview--completeProfileContainer {
     padding: 15px;
     margin-top: 14px;
@@ -94,6 +112,7 @@
     font-weight: 700;
     font-size: 14px;
     margin-bottom: 4px;
+    margin-top: -24px;
 }
 
 .profileOverview--completeText {
@@ -107,11 +126,13 @@
 
 .profileOverview--completeProfileContainer:before {
     content: " ";
-    position: absolute;
+    position: relative;
     width: 0;
     height: 0;
-    left: 40px;
-    top: 258px;
+    padding: 0;
+    margin-top: -50px;
+    top: -44px;
+    left: 10px;
     border: 8px solid;
     border-color: transparent transparent #fff transparent;
 }
@@ -178,6 +199,7 @@
 
 .profileOverview--switchIcon {
     color: $gray;
+    width: 50px;
 }
 
 .profileOverview--dropdownContainer {
@@ -297,7 +319,7 @@
 .profileOverview--oneHundredImg {
     width: 50px;
     height: 50px;
-    margin: 0 auto;
+    margin: -24px auto 0 auto;
     display: block;
 }
 
@@ -318,4 +340,54 @@
         color: #ccd6dd;
         cursor: pointer;
     }
+}
+
+.profileOverview--uploadImageDropdown {
+    position: relative;
+    background: #fff;
+    width: 220px;
+    top: -300px;
+    left: -58px;
+    padding: 6px 0;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 4px 0px;
+    &:before {
+        content: " ";
+        position: relative;
+        width: 0;
+        height: 0;
+        padding: 0;
+        margin-top: -50px;
+        top: -36px;
+        left: 48%;
+        border: 8px solid;
+        border-color: transparent transparent #fff transparent;
+    }
+}
+
+.profileOverview--dropdownItem {
+    &:hover {
+        color: #fff;
+        background: $blue;
+    }
+    color: $gray-text;
+    padding-top: 4px;
+    font-size: 14px;
+    vertical-align: middle;
+    text-align: center;
+    &:nth-child(1) {
+        margin-top: -20px !important;
+    }
+}
+
+.profileOverview--seperator {
+    margin: 6px 0;
+}
+
+.profileOverview--fileInput {
+    display: none;
 }

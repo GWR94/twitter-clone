@@ -417,6 +417,7 @@ class SignUp extends React.Component {
                                                 handle: name,
                                                 password,
                                                 email,
+                                                dateCreated: Date.now()
                                             });
                                             this.setState({ currentPage: 5 });
                                         } catch (e) {

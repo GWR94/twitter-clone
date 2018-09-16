@@ -23,7 +23,7 @@ const DashboardPage = () => (
                         <ProfileOverview />
                     </div>
                     <div className="dashboard--feed">
-                        <Feed />
+                        <Feed showFeed />
                     </div>
                     <div className="dashboard--whoToFollow">
                         <WhoToFollow />

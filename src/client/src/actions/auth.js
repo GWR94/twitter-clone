@@ -20,3 +20,8 @@ export const updateProfile = values => async dispatch => {
     const res = await axios.post("/api/update_profile", values);
     dispatch({ type: FETCH_USER, payload: res.data });
 };
+
+export const uploadPhoto = values => async dispatch => {
+    const res = await axios.post("/api/upload", values);
+    dispatch({ type: FETCH_USER, payload: res.data });
+}
