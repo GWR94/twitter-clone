@@ -36,9 +36,9 @@ class Profile extends React.Component {
         [ ] Set theme color around all site
     */
 
-    componentDidMount() {
+    async componentWillMount () {
         const { fetchUser, auth } = this.props;
-        fetchUser();
+        await fetchUser();
         this.setState({ numTweets: auth.tweets.length });
     }
 
@@ -122,31 +122,31 @@ class Profile extends React.Component {
         const userInfo = [
             {
                 description: "Tweets",
-                value: auth.tweets.length,
+                value: auth.tweets ? auth.tweets.length : 0,
             },
             {
                 description: "Following",
-                value: auth.following.length,
+                value: auth.following ? auth.following.length : 0,
             },
             {
                 description: "Followers",
-                value: auth.followers.length,
+                value: auth.followers ? auth.followers.length : 0,
             },
             {
                 description: "Likes",
-                value: auth.favouritedTweets.length,
+                value: auth.favouritedTweets ? auth.favouritedTweets.length : 0,
             },
             {
                 description: "Retweets",
-                value: auth.retweetedTweets.length,
+                value: auth.retweetedTweets ? auth.retweetedTweets.length : 0,
             },
             {
                 description: "Lists",
-                value: auth.lists.length,
+                value: auth.lists ? auth.lists.length : 0,
             },
             {
                 description: "Moments",
-                value: auth.moments.length,
+                value: auth.moments ? auth.moments.length : 0,
             },
         ];
 

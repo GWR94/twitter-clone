@@ -37,7 +37,7 @@ class ProfileOverview extends React.Component {
     componentDidMount() {
         const { auth } = this.props;
         const { profileCompleted } = auth;
-        if (profileCompleted) this.setState({ profileCompleted: true });
+        if (profileCompleted) this.setState({ profileCompleted: false }); // ! CHANGE BACK
     }
 
     onModalClose = () => {
@@ -154,17 +154,6 @@ class ProfileOverview extends React.Component {
         } else {
             imagePreview = <div className="previewText">Please select an image to upload</div>;
         }
-
-        const customStyles = {
-            content: {
-                top: "50%",
-                left: "50%",
-                right: "auto",
-                bottom: "auto",
-                marginRight: "-50%",
-                transform: "translate(-50%, -50%)",
-            },
-        };
 
         const { handle, displayName, displayImgSrc, headerImgSrc, following, followers } = auth;
 
@@ -678,7 +667,7 @@ class ProfileOverview extends React.Component {
                                 </h3>
                                 <Link
                                     className="btn button__twitterBlue"
-                                    to="/profile"
+                                    to={`/profile/${handle}`}
                                     style={{
                                         margin: "10px auto 6px auto",
                                         display: "block",
