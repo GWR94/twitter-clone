@@ -16,13 +16,7 @@ import Profile from "../components/Profile";
 export const history = createHistory();
 
 class AppRouter extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            users: null,
-        };
-    }
+    state = {}
 
     async componentWillMount() {
         const { fetchUser } = this.props;
@@ -31,7 +25,6 @@ class AppRouter extends React.Component {
 
     render() {
         const { auth } = this.props;
-        const { users } = this.state;
         const isAuthenticated = !!auth;
 
         return (
@@ -39,11 +32,11 @@ class AppRouter extends React.Component {
                 <Switch>
                     <Public path="/login" component={Login} />
                     <Public path="/i/flow/signup" component={SignUp} />
-                    <Route
+                    <Private
                         path="/profile/:handle"
                         component={Profile}
                     />
-                    <Route path="/" component={isAuthenticated ? Profile : Landing} exact />
+                    <Route path="/" component={isAuthenticated ? Dashboard : Landing} exact />
                     <Route component={NotFound} />
                 </Switch>
             </Router>

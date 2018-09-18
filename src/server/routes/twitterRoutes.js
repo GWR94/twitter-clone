@@ -36,7 +36,10 @@ module.exports = app => {
             Connects to twitter API and returns all trends from id parameter WOEID
         */
         client.get("/trends/place", params, function(error, trends) {
-            if (error) throw error;
+            if (error) {
+                console.log(error);
+                return res.json(error);
+            }
             return res.send(trends[0].trends.slice(0, 10));
         });
     });
