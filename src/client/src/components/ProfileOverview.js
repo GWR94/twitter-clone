@@ -18,6 +18,7 @@ import "rc-dialog/assets/index.css";
     TODO
     [ ] Add functionality to upload display image.
     [ ] Fix searchLocation results
+    [ ] Check positioning for dropdown boxes
 */
 
 class ProfileOverview extends React.Component {

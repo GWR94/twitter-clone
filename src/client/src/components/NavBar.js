@@ -28,10 +28,10 @@ class NavBar extends Component {
         const { searchInput } = this.state;
 
         return (
-            <div className={transparent ? "navbar__container transparent" : "navbar__container"}>
+            <div className="navbar__container">
                 <div className="navbar--container">
                     <div className="navbar--nav__container">
-                        <div className="navbar--nav">
+                        <div className={transparent ? "navbar--nav transparent" : "navbar--nav"}>
                             <i className="icon__twitter fab fa-twitter" />
                             <NavLink to="/" exact className="navbar--link" activeClassName="active">
                                 <i className="fas fa-home icon__nav" />

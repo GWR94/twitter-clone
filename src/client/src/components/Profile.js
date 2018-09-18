@@ -15,7 +15,7 @@ class Profile extends React.Component {
         numTweets: 0,
         editMode: true,
         themeColor: "#1DA1F2",
-        birthdaySelection: true,
+        birthdaySelection: false,
         year: null,
         month: null,
         day: null,
@@ -45,23 +45,23 @@ class Profile extends React.Component {
     handleDefaultTweet = async tweet => {
         const { postTweet, auth } = this.props;
         const { numTweets } = this.state;
-        const { themeColor } = auth;
         await postTweet({
             tweet,
             handle: auth.handle,
             postedAt: Date.now(),
         });
-        this.setState({ numTweets: numTweets + 1, themeColor });
+        this.setState({ numTweets: numTweets + 1 });
     };
 
     /* eslint-disable-next-line */
     renderProfileInfo(userInfo) {
+        const { editMode } = this.state;
         const filteredInfo = userInfo.filter(info => info.value > 0);
         filteredInfo.push(userInfo[5]); /* Add Lists */
         filteredInfo.push(userInfo[6]); /* Add Moments */
 
         return filteredInfo.map(info => (
-            <div className="profile--info">
+            <div className={editMode ? "profile--info transparent" : "profile--info"}>
                 <p className="profile--infoDescription">{info.description}</p>
                 <p className="profile--infoValue">{info.value}</p>
             </div>
@@ -91,15 +91,12 @@ class Profile extends React.Component {
         const {
             numTweets,
             editMode,
-            themeColor,
             birthdaySelection,
             year,
             month,
             day,
             monthDropdownOpen,
-            monthPrivacy,
             yearDropdownOpen,
-            yearPrivacy,
         } = this.state;
 
         const {
@@ -114,8 +111,9 @@ class Profile extends React.Component {
         } = auth;
 
         const formattedBirthPlace = birthPlace && birthPlace.split(",").slice(0, 1);
-        const formattedBirthday = `${birthday.monthObj.month} ${birthday.dayObj.day}, 
-        ${birthday.yearObj.year}`;
+        const formattedBirthday = `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
+            birthday.yearObj.year
+        }`;
 
         autosize(document.getElementById("profile--bioTextArea"));
 
@@ -152,8 +150,16 @@ class Profile extends React.Component {
 
         return (
             <div>
-                <NavBar transparent={editMode} />
-                <div className={editMode ? "profile--container" : "profile--container"}>
+                <div className={editMode && "profile--editBackground"}>
+                    <NavBar transparent={editMode} />
+                </div>
+                <div
+                    className={
+                        editMode
+                            ? "profile--container profile--editBackground"
+                            : "profile--container"
+                    }
+                >
                     <header className="profile--header" />
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
@@ -175,7 +181,15 @@ class Profile extends React.Component {
                                     >
                                         Cancel
                                     </button>
-                                    <button className="button__lightBlue" type="button">
+                                    <button
+                                        className="button__lightBlue"
+                                        type="button"
+                                        onClick={() => {
+                                            const values = {
+                                                
+                                            }
+                                        }}
+                                    >
                                         Save changes
                                     </button>
                                 </div>
@@ -192,7 +206,13 @@ class Profile extends React.Component {
                             )}
                         </div>
                         {editMode ? (
-                            <div className="profile--overviewEditMode">
+                            <div
+                                className={
+                                    birthdaySelection
+                                        ? "profile--overviewEditBirthday"
+                                        : "profile--overviewEditMode"
+                                }
+                            >
                                 <input
                                     placeholder="Name"
                                     type="text"
@@ -262,12 +282,13 @@ class Profile extends React.Component {
                                         />
                                         <div
                                             className="profileOverview--privacyIconContainer"
-                                            onClick={() =>
+                                            onClick={() => {
+                                                const newState = !monthDropdownOpen;
                                                 this.setState({
-                                                    monthDropdownOpen: true,
+                                                    monthDropdownOpen: newState,
                                                     yearDropdownOpen: false,
-                                                })
-                                            }
+                                                });
+                                            }}
                                         >
                                             <i className="fas fa-caret-down icon__caret" />
                                             {this.renderPrivacy("month")}
@@ -282,16 +303,171 @@ class Profile extends React.Component {
                                         />
                                         <div
                                             className="profileOverview--privacyIconContainer"
-                                            onClick={() =>
+                                            onClick={() => {
+                                                const newState = !yearDropdownOpen;
                                                 this.setState({
-                                                    yearDropdownOpen: true,
+                                                    yearDropdownOpen: newState,
                                                     monthDropdownOpen: false,
-                                                })
-                                            }
+                                                });
+                                            }}
                                         >
                                             <i className="fas fa-caret-down icon__caret" />
                                             {this.renderPrivacy()}
                                         </div>
+                                        {monthDropdownOpen && (
+                                            <div className="profile--monthDropdown">
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            monthPrivacy: "all",
+                                                            monthDropdownOpen: false,
+                                                        });
+                                                    }}
+                                                >
+                                                    <i className="fas fa-globe-americas icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Public
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            monthPrivacy: "followers",
+                                                            monthDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-users icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Your followers
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            monthPrivacy: "following",
+                                                            monthDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-user icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        People you follow
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            monthPrivacy: "both",
+                                                            monthDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-exchange-alt icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        You follow each other
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            monthPrivacy: "private",
+                                                            monthDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-lock icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Only you
+                                                    </p>
+                                                </div>
+                                                <p className="profileOverview--learnMore">
+                                                    Learn more about these settings
+                                                </p>
+                                            </div>
+                                        )}
+                                        {yearDropdownOpen && (
+                                            <div className="profile--yearDropdown">
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            yearPrivacy: "all",
+                                                            yearDropdownOpen: false,
+                                                        });
+                                                    }}
+                                                >
+                                                    <i className="fas fa-globe-americas icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Public
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            yearPrivacy: "followers",
+                                                            yearDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-users icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Your followers
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            yearPrivacy: "following",
+                                                            yearDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-user icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        People you follow
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            yearPrivacy: "both",
+                                                            yearDropdownOpen: false,
+                                                        });
+                                                    }}
+                                                >
+                                                    <i className="fas fa-exchange-alt icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        You follow each other
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className="profile--dropdownItem"
+                                                    onClick={() =>
+                                                        this.setState({
+                                                            yearPrivacy: "private",
+                                                            yearDropdownOpen: false,
+                                                        })
+                                                    }
+                                                >
+                                                    <i className="fas fa-lock icon__profilePrivacy profileOverview--dropdownIcon" />
+                                                    <p className="profile--dropdownOption">
+                                                        Only you
+                                                    </p>
+                                                </div>
+                                                <p className="profileOverview--learnMore">
+                                                    Learn more about these settings
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div>
@@ -299,7 +475,7 @@ class Profile extends React.Component {
                                             placeholder="Birthday"
                                             type="text"
                                             className="profile--textInput"
-                                            value={birthday}
+                                            value={formattedBirthday}
                                             onClick={() =>
                                                 this.setState({ birthdaySelection: true })
                                             }
@@ -332,7 +508,7 @@ class Profile extends React.Component {
                                 )}
                             </div>
                         )}
-                        <div className="profile--main">
+                        <div className={editMode ? "profile--main transparent" : "profile--main"}>
                             {numTweets === 0 ? (
                                 <MyFirstTweet handleDefaultTweet={this.handleDefaultTweet} />
                             ) : (
@@ -350,147 +526,13 @@ class Profile extends React.Component {
                             )}
                         </div>
 
-                        <div className="profile--trends">
+                        <div
+                            className={editMode ? "profile--trends transparent" : "profile--trends"}
+                        >
                             <Trends />
                         </div>
                     </div>
                 </div>
-                {monthDropdownOpen && (
-                    <div className="profile--monthDropdown">
-                        <div
-                            className="profile--dropdownItem"
-                            onClick={() => {
-                                this.setState({
-                                    monthPrivacy: "all",
-                                    monthDropdownOpen: false,
-                                });
-                            }}
-                        >
-                            <i className="fas fa-globe-americas icon__profilePrivacy profileOverview--dropdownIcon" />
-                            <p className="profile--dropdownOption">Public</p>
-                        </div>
-                        <div
-                            className="profile--dropdownItem"
-                            onClick={() =>
-                                this.setState({
-                                    monthPrivacy: "followers",
-                                    monthDropdownOpen: false,
-                                })
-                            }
-                        >
-                            <i className="fas fa-users icon__profilePrivacy profileOverview--dropdownIcon" />
-                            <p className="profile--dropdownOption">Your followers</p>
-                        </div>
-                        <div
-                            className="profile--dropdownItem"
-                            onClick={() =>
-                                this.setState({
-                                    monthPrivacy: "following",
-                                    monthDropdownOpen: false,
-                                })
-                            }
-                        >
-                            <i className="fas fa-user icon__profilePrivacy profileOverview--dropdownIcon" />
-                            <p className="profile--dropdownOption">People you follow</p>
-                        </div>
-                        <div
-                            className="profile--dropdownItem"
-                            onClick={() =>
-                                this.setState({
-                                    monthPrivacy: "both",
-                                    monthDropdownOpen: false,
-                                })
-                            }
-                        >
-                            <i className="fas fa-exchange-alt icon__profilePrivacy profileOverview--dropdownIcon" />
-                            <p className="profile--dropdownOption">You follow each other</p>
-                        </div>
-                        <div
-                            className="profile--dropdownItem"
-                            onClick={() =>
-                                this.setState({
-                                    monthPrivacy: "private",
-                                    monthDropdownOpen: false,
-                                })
-                            }
-                        >
-                            <i className="fas fa-lock icon__profilePrivacy profileOverview--dropdownIcon" />
-                            <p className="profile--dropdownOption">Only you</p>
-                        </div>
-                        <p className="profileOverview--learnMore">
-                            Learn more about these settings
-                        </p>
-                    </div>
-                )}
-                {yearDropdownOpen && (
-                    <div className="profileOverview--dropdownContainer">
-                        <div className="profile--yearDropdown">
-                            <div
-                                className="profile--dropdownItem"
-                                onClick={() => {
-                                    this.setState({
-                                        yearPrivacy: "all",
-                                        yearDropdownOpen: false,
-                                    });
-                                }}
-                            >
-                                <i className="fas fa-globe-americas icon__profilePrivacy profileOverview--dropdownIcon" />
-                                <p className="profile--dropdownOption">Public</p>
-                            </div>
-                            <div
-                                className="profile--dropdownItem"
-                                onClick={() =>
-                                    this.setState({
-                                        yearPrivacy: "followers",
-                                        yearDropdownOpen: false,
-                                    })
-                                }
-                            >
-                                <i className="fas fa-users icon__profilePrivacy profileOverview--dropdownIcon" />
-                                <p className="profile--dropdownOption">Your followers</p>
-                            </div>
-                            <div
-                                className="profile--dropdownItem"
-                                onClick={() =>
-                                    this.setState({
-                                        yearPrivacy: "following",
-                                        yearDropdownOpen: false,
-                                    })
-                                }
-                            >
-                                <i className="fas fa-user icon__profilePrivacy profileOverview--dropdownIcon" />
-                                <p className="profile--dropdownOption">People you follow</p>
-                            </div>
-                            <div
-                                className="profile--dropdownItem"
-                                onClick={() => {
-                                    this.setState({
-                                        yearPrivacy: "both",
-                                        yearDropdownOpen: false,
-                                    })
-                                }}
-                            >
-                                <i className="fas fa-exchange-alt icon__profilePrivacy profileOverview--dropdownIcon" />
-                                <p className="profile--dropdownOption">You follow each other</p>
-                            </div>
-                            <div
-                                className="profile--dropdownItem"
-                                onClick={() =>
-                                    this.setState({
-                                        yearPrivacy: "private",
-                                        yearDropdownOpen: false,
-                                    })
-                                }
-                            >
-                                <i className="fas fa-lock icon__profilePrivacy profileOverview--dropdownIcon" />
-                                <p className="profile--dropdownOption">Only you</p>
-                            </div>
-                            <p className="profileOverview--learnMore">
-                                Learn more about these settings
-                            </p>
-                        </div>
-                    </div>
-                )}
             </div>
         );
     }

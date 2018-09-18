@@ -214,8 +214,9 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
 }
 
 .transparent {
-    opacity: 0.2;
-    background: #fff;
+    background: #fff !important;
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 /* Overview */
@@ -223,6 +224,12 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
 .profile--overviewEditMode {
     background: #e8f5fd;
     padding: 10px 5px;
+    height: 290px;
+}
+
+.profile--overviewEditBirthday {
+    @extend .profile--overviewEditMode;
+    height: 410px;    
 }
 
 .profile--bioTextArea {
@@ -295,9 +302,11 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
 
 .profile--monthDropdown {
     @extend .profileOverview--monthDropdown;
-    top: -654px !important;
-    left: 0;
+    top: -30px !important;
+    left: 160px !important;
+    position: relative !important;
     padding: 14px 0 !important;
+    margin-bottom: -140px;
     &:after {
         content: "";
         width: 0px;
@@ -326,7 +335,9 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
 
 .profile--yearDropdown {
     @extend .profileOverview--yearDropdown;
-    top: -600px !important;
+    position: relative !important;
+    left: 50px !important;
+    top: 4px !important;
     &:after {
         content: "";
         width: 0px;
@@ -351,4 +362,8 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
         left: 30px;
         top: -20px;
     }
+}
+
+.profile--editBackground {
+    background: #fff;
 }

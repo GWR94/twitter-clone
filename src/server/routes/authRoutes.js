@@ -119,19 +119,27 @@ module.exports = app => {
 
     app.post("/api/update_profile", async (req, res) => {
         const { value, field, user } = req.body;
-        await User.findOneAndUpdate(
-            {
-                handle: user,
-            },
-            {
-                $set: { [field]: value },
-            },
-            (err, user) => {
-                if (err) return res.send(err);
-                user.save();
-                return res.send(user);
-            },
-        );
+        if (typeof value === Array) {
+            await User.findOneAndUpdate(
+                {
+                    handle: user
+                }
+            )
+        } else {
+            await User.findOneAndUpdate(
+                {
+                    handle: user,
+                },
+                {
+                    $set: { [field]: value },
+                },
+                (err, user) => {
+                    if (err) return res.send(err);
+                    user.save();
+                    return res.send(user);
+                },
+            );
+        }
     });
 
     app.get("/api/logout", (req, res) => {

@@ -58,8 +58,9 @@
 }
 
 .button__themeColor {
-    @extend .themeColor;
     @extend .button__twitterLarge;
+    border: 1px solid #66757f !important;
+    color: #66757f !important;
     font-size: 14px;
     font-weight: 700;
     margin-top: 7px;
@@ -67,26 +68,17 @@
     padding: 5px 16px !important;
     &:hover {
         color: #66757f;
+        background: #f0f0f0c4;
+
     }
     &:focus {
         outline: none;
     }
 }
 
-/* Theme Colors */
-.default__color .themeColor {
-    color: $blue !important;
-    border: 1px solid $blue !important;
-}
-
-.orange__color .themeColor {
-    color: #FF691F !important;
-    border: 1px solid #FF691F !important; 
-}
-
 .button__lightBlue {
-    @extend .button__themeColor;
-    color: $blue;
+    @extend .button__twitterLarge;
+    color: $blue !important;
     border: 1px solid $blue !important;
     margin-left: 5px;
     &:hover {
