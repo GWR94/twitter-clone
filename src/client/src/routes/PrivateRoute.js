@@ -10,7 +10,6 @@ export const PrivateRoute = ({ isAuthenticated, component: Component, ...rest })
         component={props =>
             isAuthenticated ? (
                 <div>
-                    <Header />
                     <Component {...props} />
                 </div>
             ) : (

@@ -11,6 +11,10 @@ const userSchema = new Schema({
         type: String,
         unique: true,
     },
+    displayImg: {
+        type: String,
+        default: null
+    },
     isVerified: {
         type: Boolean,
         default: false,

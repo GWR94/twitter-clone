@@ -11,7 +11,7 @@ class Feed extends React.Component {
         TODO
         [ ] check circle progress bar for errors when length is 0 after typing
     */
-    state = {}
+    state = {};
 
     async componentDidMount() {
         const { fetchTweets, auth } = this.props;
@@ -35,7 +35,16 @@ class Feed extends React.Component {
                     This empty timeline won’t be around for long. Start following people and you’ll
                     see Tweets show up here.
                 </p>
-                <button type="button" className="button__follow">
+                <button
+                    type="button"
+                    className="button__signupLarge"
+                    style={{ 
+                        fontSize: "14px",
+                        float: "left",
+                        marginTop: "5px",
+                        padding: "6px 16px"
+                    }}
+                >
                     Find people to follow
                 </button>
             </div>
@@ -43,15 +52,15 @@ class Feed extends React.Component {
 
         return (
             <div className="feed--container">
-                { showFeed && <TweetInput />}
+                {showFeed && <TweetInput />}
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {
-                        tweets.length === 0 
-                        ? showFeed 
-                            ? <NoTweets /> 
-                            : null 
-                        : this.renderTweets(tweets)
-                    }
+                    {tweets.length === 0 ? (
+                        showFeed ? (
+                            <NoTweets />
+                        ) : null
+                    ) : (
+                        this.renderTweets(tweets)
+                    )}
                 </div>
             </div>
         );

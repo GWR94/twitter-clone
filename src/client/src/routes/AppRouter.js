@@ -32,7 +32,7 @@ class AppRouter extends React.Component {
                 <Switch>
                     <Public path="/login" component={Login} />
                     <Public path="/i/flow/signup" component={SignUp} />
-                    <Private
+                    <Route
                         path="/profile/:handle"
                         component={Profile}
                     />

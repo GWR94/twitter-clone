@@ -1,40 +1,42 @@
 import React from "react";
-import {connect} from "react-redux";
-import {PropTypes} from "prop-types";
+import { connect } from "react-redux";
+import { PropTypes } from "prop-types";
 import * as actions from "../actions";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 import TweetInput from "./TweetInput";
 
 class MyFirstTweet extends React.Component {
     async handleNewTweet(exampleTweet) {
-        const {postTweet, auth, tweets} = this.props;
+        const { postTweet, auth, tweets } = this.props;
         await postTweet({
             tweet: exampleTweet,
             handle: auth.handle,
-            postedAt: Date.now()
+            postedAt: Date.now(),
         });
         this.renderTweets(tweets);
     }
 
     render() {
-        const {auth} = this.props;
-        const {displayName, handle, displayImgSrc} = auth;
+        const { auth } = this.props;
+        const { displayName, handle, displayImgSrc } = auth;
         return (
             <div className="myFirstTweet--container">
                 <div className="myFirstTweet--sampleContainer">
                     <div className="myFirstTweet--textContainer">
                         <h4 className="myFirstTweet--title">Send your first Tweet</h4>
                         <p className="myFirstTweet--subtitle">
-                            We&apos;ve got your first Tweet ready to go. The hashtag #myFirstTweet will help
-                            others find and chat with you.
+                            We&apos;ve got your first Tweet ready to go. The hashtag #myFirstTweet
+                            will help others find and chat with you.
                         </p>
                     </div>
                     <div className="myFirstTweet--tweetContainer">
                         <div className="myFirstTweet--displayImgContainer">
-                            <img
-                                src={displayImgSrc || defaultDisplayImg}
-                                className="myFirstTweet--displayImg"
-                                alt="Display Image"/>
+                            {displayImgSrc && (
+                                <img
+                                    src={displayImgSrc}
+                                    className="myFirstTweet--displayImg"
+                                    alt="Display Image"
+                                />
+                            )}
                         </div>
                         <div className="myFirstTweet--textContainer">
                             <div className="myFirstTweet--tweetInfoContainer">
@@ -54,12 +56,13 @@ class MyFirstTweet extends React.Component {
                             className="button__tweet"
                             type="button"
                             style={{
-                            marginTop: "30px"
-                        }}
+                                marginTop: "30px",
+                            }}
                             onClick={() => {
-                            const {handleDefaultTweet} = this.props;
-                            handleDefaultTweet("Just setting up my Twitter. #myfirstTweet")
-                        }}>
+                                const { handleDefaultTweet } = this.props;
+                                handleDefaultTweet("Just setting up my Twitter. #myfirstTweet");
+                            }}
+                        >
                             Tweet
                         </button>
                     </div>
@@ -70,7 +73,8 @@ class MyFirstTweet extends React.Component {
                         <img
                             src={displayImgSrc || defaultDisplayImg}
                             className="myFirstTweet--displayImg"
-                            alt="Display Image"/>
+                            alt="Display Image"
+                        />
                     </div>
                     <div className="myFirstTweet--textContainer">
                         <div className="myFirstTweet--tweetInfoContainer">
@@ -90,36 +94,39 @@ class MyFirstTweet extends React.Component {
                         className="button__tweet"
                         type="button"
                         style={{
-                        marginTop: "10px"
-                    }}
+                            marginTop: "10px",
+                        }}
                         onClick={() => {
-                        const {renderTweets} = this.props;
-                        this.handleNewTweet("Hello Twitter! #myfirstTweet");
-                        renderTweets();
-                    }}>
+                            const { renderTweets } = this.props;
+                            this.handleNewTweet("Hello Twitter! #myfirstTweet");
+                            renderTweets();
+                        }}
+                    >
                         Tweet
                     </button>
                 </div>
                 <p
                     className="myFirstTweet--subtitle"
                     style={{
-                    marginTop: "30px"
-                }}>
+                        marginTop: "30px",
+                    }}
+                >
                     Or write your own
                 </p>
-                <TweetInput large/>
+                <TweetInput large />
             </div>
         );
     }
 }
 
 MyFirstTweet.propTypes = {
-    auth: PropTypes
-        .shape({isVerified: PropTypes.bool, profileImg: PropTypes.string})
-        .isRequired,
-    postTweet: PropTypes.func.isRequired
+    auth: PropTypes.shape({ isVerified: PropTypes.bool, profileImg: PropTypes.string }).isRequired,
+    postTweet: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({auth}) => ({auth});
+const mapStateToProps = ({ auth }) => ({ auth });
 
-export default connect(mapStateToProps, actions,)(MyFirstTweet);
+export default connect(
+    mapStateToProps,
+    actions,
+)(MyFirstTweet);

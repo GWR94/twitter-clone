@@ -7,7 +7,6 @@ import { Tooltip } from "reactstrap";
 import axios from "axios";
 import { connect } from "react-redux";
 import * as actions from "../actions";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 /* 
     TODO
     [ ] Add functionality to upload a photo
@@ -103,7 +102,8 @@ class SignUp extends React.Component {
             nameTouched,
         } = this.state;
 
-        const { createUser, history } = this.props;
+        const { createUser, history, auth } = this.props;
+        const { displayImgSrc } = auth;
 
         return (
             <div>
@@ -417,7 +417,7 @@ class SignUp extends React.Component {
                                                 handle: name,
                                                 password,
                                                 email,
-                                                dateCreated: Date.now()
+                                                dateCreated: Date.now(),
                                             });
                                             this.setState({ currentPage: 5 });
                                         } catch (e) {
@@ -531,11 +531,13 @@ class SignUp extends React.Component {
                                     </div>
                                     <p>Have a favourite selfie? Upload it now.</p>
 
-                                    <img
-                                        src={defaultDisplayImg}
-                                        alt="Pick a photo to display"
-                                        className="modal__displayImg"
-                                    />
+                                    {dispayImgSrc && (
+                                        <img
+                                            src={displayImgSrc}
+                                            alt="Pick a photo to display"
+                                            className="modal__displayImg"
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </div>

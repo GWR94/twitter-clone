@@ -19,17 +19,23 @@
     vertical-align: top;
 }
 
-.profileOverview--displayImg {
+.profileOverview--displayImgContainer {
     border-radius: 50%;
-    border: 2px solid white;
+    border: 3px solid white;
     height: 70px;
     width: 70px;
-    margin-top: -35px;
+    margin-top: -56px;
     margin-left: 20px;
-    background: white;
+    background: $blue;
+    overflow: hidden;
     &:hover {
     box-shadow: $blue 0px 0px 4px 0px;
     }
+}
+
+.profileOverview--displayImg {
+    width: 100%;
+    height: 100%;
 }
 
 .profileOverview--nameContainer {
@@ -94,6 +100,10 @@
             box-shadow: $blue 0px 0px 4px 0px;
         }
     }
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 .profileOverview--completeProfileContainer {

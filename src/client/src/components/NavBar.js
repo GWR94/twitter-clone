@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 
 class NavBar extends Component {
     constructor() {
@@ -38,12 +37,12 @@ class NavBar extends Component {
                                 <span className="navbar--text">Home</span>
                             </NavLink>
                             <NavLink
-                                to="/profile/james_gower"
+                                to="/moments"
                                 className="navbar--link"
                                 activeClassName="active"
                             >
                                 <i className="fas fa-bolt icon__nav" />
-                                <span className="navbar--text">Profile</span>
+                                <span className="navbar--text">Moments</span>
                             </NavLink>
                             <NavLink
                                 to="/notifications"
@@ -84,11 +83,13 @@ class NavBar extends Component {
                                         aria-haspopup="true"
                                         aria-expanded="false"
                                     >
-                                        <img
-                                            src={displayImgSrc || defaultDisplayImg}
-                                            alt="Profile Img"
-                                            className="navbar--img"
-                                        />
+                                        {displayImgSrc && (
+                                            <img
+                                                src={displayImgSrc}
+                                                alt="Profile Img"
+                                                className="navbar--img"
+                                            />
+                                        )}
                                     </a>
                                     <button type="button" className="btn button__signup">
                                         Tweet
@@ -100,9 +101,7 @@ class NavBar extends Component {
                                     >
                                         <div className="dropdown--profile">
                                             <p className="dropdown--profile-name">{displayName}</p>
-                                            <p className="dropdown--profile-handle">
-                                                @{handle}
-                                            </p>
+                                            <p className="dropdown--profile-handle">@{handle}</p>
                                         </div>
                                         <div
                                             className="dropdown-divider"
@@ -111,25 +110,29 @@ class NavBar extends Component {
                                             }}
                                         />
                                         <a className="dropdown-item">
-                                            <i className="far fa-user icon__dropdown" />Profile
+                                            <i className="far fa-user icon__dropdown" />
+                                            Profile
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="far fa-list-alt icon__dropdown" />Lists
+                                            <i className="far fa-list-alt icon__dropdown" />
+                                            Lists
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-bolt icon__dropdown" />Moments
+                                            <i className="fas fa-bolt icon__dropdown" />
+                                            Moments
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">
-                                            <i className="fas fa-dollar-sign icon__dropdown" />Promote
-                                            Mode
+                                            <i className="fas fa-dollar-sign icon__dropdown" />
+                                            Promote Mode
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-shopping-cart icon__dropdown" />Twitter
-                                            Ads
+                                            <i className="fas fa-shopping-cart icon__dropdown" />
+                                            Twitter Ads
                                         </a>
                                         <a className="dropdown-item">
-                                            <i className="fas fa-chart-bar icon__dropdown" />Analytics
+                                            <i className="fas fa-chart-bar icon__dropdown" />
+                                            Analytics
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">Settings and privacy</a>
@@ -140,7 +143,8 @@ class NavBar extends Component {
                                         </a>
                                         <div className="dropdown-divider" />
                                         <a className="dropdown-item">
-                                            Night Mode<i className="far fa-moon icon__darkmode" />
+                                            Night Mode
+                                            <i className="far fa-moon icon__darkmode" />
                                         </a>
                                     </div>
                                 </div>

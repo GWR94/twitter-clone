@@ -69,7 +69,6 @@
     &:hover {
         color: #66757f;
         background: #f0f0f0c4;
-
     }
     &:focus {
         outline: none;
@@ -210,9 +209,5 @@ button:disabled {
     display: inline-block !important;
     vertical-align: middle !important;
     height: 100% !important;
-}
-
-.button__lightBlue {
-    @extend .button__themeColor;
 }
 

@@ -28,14 +28,14 @@ module.exports = app => {
         Fetches trends from twitter API based on WOEID from twitterLocations in
         services directory.
     */
-    app.get("/api/get_trends/:location", (req, res) => {
+    app.get("/api/get_trends/:location", async (req, res) => {
         const params = {
             id: req.params.location,
         };
         /*
             Connects to twitter API and returns all trends from id parameter WOEID
         */
-        client.get("/trends/place", params, function(error, trends) {
+        await client.get("/trends/place", params, function(error, trends) {
             if (error) {
                 console.log(error);
                 return res.json(error);

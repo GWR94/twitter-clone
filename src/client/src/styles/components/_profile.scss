@@ -1,6 +1,5 @@
 $scroll-factor: 0.5;
 $header-height: 50px;
-$image: "../../../../public/images/headerPlaceholder.jpg";
 
 /* Containers */
 
@@ -55,7 +54,7 @@ $image: "../../../../public/images/headerPlaceholder.jpg";
 .profile--header {
     top: 96px;
     height: 30vw;
-    background: url($image);
+    background: $blue;
     background-size: cover;
     background-position: center center;
     position: relative;

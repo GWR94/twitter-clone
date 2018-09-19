@@ -5,7 +5,6 @@ import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import * as actions from "../actions";
 import NavBar from "./NavBar";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import MyFirstTweet from "./MyFirstTweet";
@@ -13,7 +12,7 @@ import MyFirstTweet from "./MyFirstTweet";
 class Profile extends React.Component {
     state = {
         numTweets: 0,
-        editMode: true,
+        editMode: false,
         themeColor: "#1DA1F2",
         birthdaySelection: false,
         year: null,
@@ -36,7 +35,7 @@ class Profile extends React.Component {
         [ ] Set theme color around all site
     */
 
-    async componentWillMount () {
+    async componentWillMount() {
         const { fetchUser, auth } = this.props;
         await fetchUser();
         this.setState({ numTweets: auth.tweets.length });
@@ -108,6 +107,7 @@ class Profile extends React.Component {
             dateCreated,
             location,
             website,
+            displayImgSrc,
         } = auth;
 
         const formattedBirthPlace = birthPlace && birthPlace.split(",").slice(0, 1);
@@ -164,11 +164,13 @@ class Profile extends React.Component {
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
                         <div className="profile--imgContainer">
-                            <img
-                                src={defaultDisplayImg}
-                                className="profile--displayImg"
-                                alt="Profile Img"
-                            />
+                            {displayImgSrc && (
+                                <img
+                                    src={displayImgSrc}
+                                    className="profile--displayImg"
+                                    alt="Profile Img"
+                                />
+                            )}
                         </div>
                         <div className="profile--information">
                             {this.renderProfileInfo(userInfo)}
@@ -181,15 +183,7 @@ class Profile extends React.Component {
                                     >
                                         Cancel
                                     </button>
-                                    <button
-                                        className="button__lightBlue"
-                                        type="button"
-                                        onClick={() => {
-                                            const values = {
-                                                
-                                            }
-                                        }}
-                                    >
+                                    <button className="button__lightBlue" type="button">
                                         Save changes
                                     </button>
                                 </div>

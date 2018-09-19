@@ -44,6 +44,8 @@ module.exports = app => {
                 themeColor: req.user.themeColor,
                 location: req.user.location,
                 website: req.user.location,
+                displayImg: req.user.displayImg,
+                headerImg: req.user.headerImg
             };
             return res.send(data);
         }
@@ -119,27 +121,19 @@ module.exports = app => {
 
     app.post("/api/update_profile", async (req, res) => {
         const { value, field, user } = req.body;
-        if (typeof value === Array) {
-            await User.findOneAndUpdate(
-                {
-                    handle: user
-                }
-            )
-        } else {
-            await User.findOneAndUpdate(
-                {
-                    handle: user,
-                },
-                {
-                    $set: { [field]: value },
-                },
-                (err, user) => {
-                    if (err) return res.send(err);
-                    user.save();
-                    return res.send(user);
-                },
-            );
-        }
+        await User.findOneAndUpdate(
+            {
+                handle: user,
+            },
+            {
+                $set: { [field]: value },
+            },
+            (err, user) => {
+                if (err) return res.send(err);
+                user.save();
+                return res.send(user);
+            },
+        );
     });
 
     app.get("/api/logout", (req, res) => {

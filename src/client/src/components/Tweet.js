@@ -6,7 +6,6 @@ import TimeAgo from "timeago-react";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import verifiedIcon from "../../../../public/images/twitterVerified.png";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 import twitterLocale from "../services/twitterLocale";
 
 /*
@@ -107,11 +106,9 @@ class Tweet extends React.Component {
         return (
             <div className="tweet--container">
                 <div className="tweet--displayImgContainer">
-                    <img
-                        src={displayImgSrc || defaultDisplayImg}
-                        alt="Display Img"
-                        className="tweet--displayImg"
-                    />
+                    {displayImgSrc && (
+                        <img src={displayImgSrc} alt="Display Img" className="tweet--displayImg" />
+                    )}
                 </div>
                 <div className="tweet--textContainer">
                     <div className="tweet--nameTextContainer">
@@ -137,15 +134,11 @@ class Tweet extends React.Component {
                                 id="tweet--commentsID"
                             />
                             {comments.length > 0 && (
-                                <span className="tweet--interactionText">
-                                    {comments.length}
-                                </span>
+                                <span className="tweet--interactionText">{comments.length}</span>
                             )}
                         </div>
                         <div
-                            className={
-                                userRetweeted ? "tweet--userRetweet" : "tweet--retweet"
-                            }
+                            className={userRetweeted ? "tweet--userRetweet" : "tweet--retweet"}
                             onClick={async () => {
                                 await updateTweet({
                                     tweetID: _id,
@@ -160,9 +153,7 @@ class Tweet extends React.Component {
                                 id="tweet--retweetID"
                             />
                             {retweets.amount > 0 && (
-                                <span className="tweet--interactionText">
-                                    {retweets.amount}
-                                </span>
+                                <span className="tweet--interactionText">{retweets.amount}</span>
                             )}
                         </div>
                         <div className={userLiked ? "tweet--userLiked" : "tweet--like"}>
@@ -179,9 +170,7 @@ class Tweet extends React.Component {
                                 }}
                             />
                             {likes.amount > 0 && (
-                                <span className="tweet--interactionText">
-                                    {likes.amount}
-                                </span>
+                                <span className="tweet--interactionText">{likes.amount}</span>
                             )}
                         </div>
                         <div className="tweet--message">
@@ -256,8 +245,8 @@ Tweet.propTypes = {
         handle: PropTypes.string.isRequired,
         displayName: PropTypes.string,
         email: PropTypes.string.isRequired,
-        displayImgSrc: PropTypes.string,
-        headerImgSrc: PropTypes.string,
+        displayImg: PropTypes.string,
+        headerImg: PropTypes.string,
     }).isRequired,
 };
 Tweet.defaultProps = {

@@ -7,8 +7,6 @@ import CropViewer from "rc-cropping";
 import Dialog from "rc-dialog";
 import Upload from "rc-upload";
 import * as actions from "../actions";
-import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
-import defaultHeaderImg from "../../../../public/images/headerPlaceholder.jpg";
 import twitterLocations from "../services/twitterLocations.json";
 import oneHundred from "../../../../public/images/oneHundred.png";
 import "rc-cropping/assets/index.css";
@@ -174,19 +172,26 @@ class ProfileOverview extends React.Component {
             <div>
                 <div className="profileOverview--header">
                     <div className="profileOverview--headerContainer">
-                        <img
-                            className="profileOverview--headerImg"
-                            src={headerImgSrc || defaultHeaderImg}
-                            alt="Header Img"
-                        />
+                        {headerImgSrc && (
+                            <img
+                                className="profileOverview--headerImg"
+                                src={headerImgSrc}
+                                alt="Header Img"
+                            />
+                        )}
                     </div>
-                    <i className="fas fa-camera profile--addIcon" />
-                    <img
-                        src={displayImgSrc || defaultDisplayImg}
-                        className="profileOverview--displayImg"
-                        alt="Display Img"
-                        onClick={() => this.setState({ uploadImageDropdownOpen: true })}
-                    />
+                    <i className={displayImgSrc ? "hidden fas fa-camera" : "fas fa-camera profile--addIcon"} />
+                    <div className="profileOverview--displayImgContainer">
+                        {displayImgSrc && (
+                            <img
+                                src={displayImgSrc}
+                                className="profileOverview--displayImg"
+                                alt="Display Img"
+                                onClick={() => this.setState({ uploadImageDropdownOpen: true })}
+                            />
+                        )}
+                    </div>
+
                     <div className="profileOverview--nameContainer">
                         <h5 className="profileOverview--name">{displayName}</h5>
                         <h6 className="profileOverview--handle">@{handle}</h6>
@@ -743,7 +748,9 @@ class ProfileOverview extends React.Component {
                         renderModal={() => <Dialog />}
                         circle
                         locale="en-US"
-                        ref={ele => {this.cropper = ele}}
+                        ref={ele => {
+                            this.cropper = ele;
+                        }}
                     />
                 )}
             </div>

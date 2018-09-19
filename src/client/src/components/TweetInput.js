@@ -254,7 +254,11 @@ class TweetInput extends Component {
 
 TweetInput.propTypes = {
     auth: PropTypes.shape({ displayImgSrc: PropTypes.string }).isRequired,
-    large: PropTypes.bool.isRequired,
+    large: PropTypes.bool,
+};
+
+TweetInput.defaultProps = {
+    large: null,
 };
 
 const mapStateToProps = ({ auth, tweets }) => ({ auth, tweets });
