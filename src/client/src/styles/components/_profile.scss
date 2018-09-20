@@ -76,7 +76,8 @@ $header-height: 50px;
     -o-transform: translateZ(0);
 }
 
-.profile--displayImg {
+.profile--imgContainer {
+    grid-area: image;
     width: 212px;
     height: 212px;
     border: 8px solid white;
@@ -87,6 +88,13 @@ $header-height: 50px;
     -o-border-radius: 50%;
     margin-top: -140px;
     z-index: 1;
+    background: $blue;
+}
+
+.profile--displayImg {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 /* Information */
@@ -163,10 +171,6 @@ $header-height: 50px;
 
 .profile--trends {
     grid-area: trends;
-}
-
-.profile--imgContainer {
-    grid-area: image;
 }
 
 .profile--infoBottomBorder {

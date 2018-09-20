@@ -26,6 +26,24 @@
     display: block;
 }
 
+.icon__addPhotoLarge {
+    @extend .icon__addPhoto;
+    font-size: 60px;
+    top: 70px;
+    left: 70px;
+}
+
+.icon__dropdownTweet {
+    color: $gray-text;
+    position: relative;
+    right: 10px;
+    top: 5px;
+    float: right;
+    &:hover {
+        color: $blue;
+    }
+}
+
 .icon__hidden {
     visibility: hidden;
 }

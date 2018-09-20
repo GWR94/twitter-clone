@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
+import { Tooltip } from "reactstrap";
 import * as actions from "../actions";
 import NavBar from "./NavBar";
 import Trends from "./Trends";
@@ -10,19 +11,23 @@ import Feed from "./Feed";
 import MyFirstTweet from "./MyFirstTweet";
 
 class Profile extends React.Component {
-    state = {
-        numTweets: 0,
-        editMode: false,
-        themeColor: "#1DA1F2",
-        birthdaySelection: false,
-        year: null,
-        month: null,
-        day: null,
-        monthPrivacy: "both",
-        yearPrivacy: "private",
-        monthDropdownOpen: false,
-        yearDropdownOpen: false,
-    };
+    constructor() {
+        super();
+
+        this.state = {
+            numTweets: 0,
+            editMode: false,
+            birthdaySelection: false,
+            year: null,
+            month: null,
+            day: null,
+            monthPrivacy: "both",
+            yearPrivacy: "private",
+            monthDropdownOpen: false,
+            yearDropdownOpen: false,
+            tooltipOpen: false
+        };
+    }
 
     /*
         TODO
@@ -59,8 +64,8 @@ class Profile extends React.Component {
         filteredInfo.push(userInfo[5]); /* Add Lists */
         filteredInfo.push(userInfo[6]); /* Add Moments */
 
-        return filteredInfo.map(info => (
-            <div className={editMode ? "profile--info transparent" : "profile--info"}>
+        return filteredInfo.map((info, i) => (
+            <div key={i} className={editMode ? "profile--info transparent" : "profile--info"}>
                 <p className="profile--infoDescription">{info.description}</p>
                 <p className="profile--infoValue">{info.value}</p>
             </div>
@@ -85,6 +90,11 @@ class Profile extends React.Component {
         }
     }
 
+    toggleTooltip = () => {
+        const { tooltipOpen } = this.state;
+        this.setState({ tooltipOpen: !tooltipOpen });
+    };
+
     render() {
         const { auth } = this.props;
         const {
@@ -96,6 +106,7 @@ class Profile extends React.Component {
             day,
             monthDropdownOpen,
             yearDropdownOpen,
+            tooltipOpen
         } = this.state;
 
         const {
@@ -150,7 +161,7 @@ class Profile extends React.Component {
 
         return (
             <div>
-                <div className={editMode && "profile--editBackground"}>
+                <div className={editMode ? "profile--editBackground" : undefined}>
                     <NavBar transparent={editMode} />
                 </div>
                 <div
@@ -163,7 +174,14 @@ class Profile extends React.Component {
                     <header className="profile--header" />
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
-                        <div className="profile--imgContainer">
+                        <div className="profile--imgContainer" id="imgContainer">
+                            <i
+                                className={
+                                    displayImgSrc
+                                        ? "icon__hidden fas fa-camera"
+                                        : "fas fa-camera icon__addPhotoLarge"
+                                }
+                            />
                             {displayImgSrc && (
                                 <img
                                     src={displayImgSrc}
@@ -171,6 +189,14 @@ class Profile extends React.Component {
                                     alt="Profile Img"
                                 />
                             )}
+                            <Tooltip
+                                placement="right"
+                                isOpen={tooltipOpen}
+                                target="imgContainer"
+                                toggle={this.toggleTooltip}
+                            >
+                                Add a profile photo
+                            </Tooltip>
                         </div>
                         <div className="profile--information">
                             {this.renderProfileInfo(userInfo)}

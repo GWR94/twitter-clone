@@ -45,7 +45,6 @@ class ProfileOverview extends React.Component {
     }
 
     onModalClose = () => {
-        console.log("HOvering");
         this.setState({ modalIsOpen: false });
     };
 

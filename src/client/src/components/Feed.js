@@ -22,7 +22,7 @@ class Feed extends React.Component {
     renderTweets(tweets) {
         return tweets
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
-            .map((tweet, i) => <Tweet key={i} {...tweet} />);
+            .map((tweet, i) => <Tweet onDeleteTweet={() => this.renderTweets()} key={i} {...tweet} />);
     }
 
     render() {

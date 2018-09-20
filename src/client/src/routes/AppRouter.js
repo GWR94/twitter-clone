@@ -36,7 +36,7 @@ class AppRouter extends React.Component {
                         path="/profile/:handle"
                         component={Profile}
                     />
-                    <Route path="/" component={isAuthenticated ? Dashboard : Landing} exact />
+                    <Route path="/" component={isAuthenticated ? Profile : Landing} exact />
                     <Route component={NotFound} />
                 </Switch>
             </Router>

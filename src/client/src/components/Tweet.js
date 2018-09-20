@@ -8,12 +8,14 @@ import * as actions from "../actions";
 import verifiedIcon from "../../../../public/images/twitterVerified.png";
 import twitterLocale from "../services/twitterLocale";
 import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
+
 /*
     TODO
     [x] Add verified option
     [x] Add dot between time ago & handle
     [x] Add tooltips for interactions
     [ ] Fix retweet & undo retweet
+    [ ] Delete tweet when deleteTweet function is executed
 */
 
 class Tweet extends React.Component {
@@ -26,6 +28,7 @@ class Tweet extends React.Component {
             retweetTooltipOpen: false,
             likeTooltipOpen: false,
             messageTooltipOpen: false,
+            dropdownOpen: false,
         };
 
         this.toggleTooltip = this.toggleTooltip.bind(this);
@@ -99,13 +102,42 @@ class Tweet extends React.Component {
             likeTooltipOpen,
             messageTooltipOpen,
             retweetTooltipOpen,
+            dropdownOpen,
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
-        console.log(displayImgSrc)
+        console.log(displayImgSrc);
 
         return (
             <div className="tweet--container">
+                <i
+                    className="fas fa-chevron-down icon__dropdownTweet"
+                    onClick={() => {
+                        const newState = !dropdownOpen;
+                        this.setState({ dropdownOpen: newState });
+                    }}
+                />
+                {dropdownOpen && (
+                    <div className="tweet--dropdownContainer">
+                        <p className="tweet--dropdownItem">Share via Direct Message</p>
+                        <p className="tweet--dropdownItem">Copy Link to Tweet</p>
+                        <p className="tweet--dropdownItem">Embed Tweet</p>
+                        <p className="tweet--dropdownItem">Pin to your profile page</p>
+                        <p
+                            className="tweet--dropdownItem"
+                            onClick={async () => {
+                                const { deleteTweet, onDeleteTweet } = this.props;
+                                await deleteTweet(_id);
+                                onDeleteTweet();
+                            }}
+                        >
+                            Delete Tweet
+                        </p>
+                        <hr style={{ margin: "5px 0" }} />
+                        <p className="tweet--dropdownItem">Add to new Moment</p>
+                    </div>
+                )}
+
                 <div className="tweet--displayImgContainer">
                     <img
                         src={displayImgSrc || defaultDisplayImg}

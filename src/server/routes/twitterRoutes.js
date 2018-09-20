@@ -142,22 +142,22 @@ module.exports = app => {
                     case "retweet":
                         if (tweet.retweets.users.indexOf(user) === -1) {
                             /*
-                    If the retweets.users array doesn't contain the user value sent from
-                    req.body, then the client is trying to retweet something. The retweets.amount 
-                    value should be incremented by 1, and the user value from req.body should be pushed 
-                    into the retweets.users array.  
-                */
+                If the retweets.users array doesn't contain the user value sent from
+                req.body, then the client is trying to retweet something. The retweets.amount 
+                value should be incremented by 1, and the user value from req.body should be pushed 
+                into the retweets.users array.  
+            */
                             let amount = tweet.retweets.amount + 1;
                             tweet.retweets.amount = amount;
                             let users = tweet.retweets.users;
                             users.push(user);
                             tweet.retweets.users = users;
                             /*
-                    The current user then needs to have a reference to the
-                    retweeted tweet, so the current user is found by using
-                    the findOne function, then the tweetID (from req.body)
-                    is pushed into the retweetedTweets.
-                */
+                The current user then needs to have a reference to the
+                retweeted tweet, so the current user is found by using
+                the findOne function, then the tweetID (from req.body)
+                is pushed into the retweetedTweets.
+            */
                             await User.findOne(
                                 {
                                     handle: user,
@@ -171,10 +171,10 @@ module.exports = app => {
                             );
                         } else {
                             /*
-                    If the user value from req.body is already in the tweet.retweets.users array, then the
-                    client is trying to undo a retweet. This means that the amount should be decremented by 1,
-                    and the user value should be removed from the tweets retweets.users array.
-                */
+                If the user value from req.body is already in the tweet.retweets.users array, then the
+                client is trying to undo a retweet. This means that the amount should be decremented by 1,
+                and the user value should be removed from the tweets retweets.users array.
+            */
                             let amount = tweet.retweets.amount - 1;
                             tweet.retweets.amount = amount;
                             let users = tweet.retweets.users;
@@ -182,11 +182,11 @@ module.exports = app => {
                             users.splice(index, 1);
                             tweet.retweets.users = users;
                             /*
-                    Once the tweet is un-retweeted, it must then be removed from the current
-                    users' retweetedTweets array. This is done by finding the user from the 
-                    users collection by the findOne function. It is then removed by finding 
-                    the index, and removing it from the array using splice().
-                */
+                Once the tweet is un-retweeted, it must then be removed from the current
+                users' retweetedTweets array. This is done by finding the user from the 
+                users collection by the findOne function. It is then removed by finding 
+                the index, and removing it from the array using splice().
+            */
                             await User.findOne(
                                 {
                                     handle: user,
@@ -201,14 +201,14 @@ module.exports = app => {
                             );
                         }
                         /*
-                Save the tweet to the Tweets collection, and send it back to the client.  
-            */
+            Save the tweet to the Tweets collection, and send it back to the client.  
+        */
                         tweet.save();
                         res.send(tweet);
                         break;
                     /*
-                Use the same methods as 'retweet' for the 'like' action.
-            */
+            Use the same methods as 'retweet' for the 'like' action.
+        */
                     case "like":
                         if (tweet.likes.users.indexOf(user) === -1) {
                             let amount = tweet.likes.amount + 1;
@@ -291,6 +291,15 @@ module.exports = app => {
                 if (err) return res.status(400).send(err);
             },
         );
+    });
+
+    app.delete("/api/delete_tweet/:tweetID", async (req, res) => {
+        try {
+            const { tweetID } = req.params;
+            await Tweet.findByIdAndRemove(tweetID);
+        } catch (e) {
+            res.json({ error: e });
+        }
     });
 
     app.use(bodyParser.json());
