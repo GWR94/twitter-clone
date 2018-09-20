@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 import verifiedIcon from "../../../../public/images/twitterVerified.png";
 import twitterLocale from "../services/twitterLocale";
-
+import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 /*
     TODO
     [x] Add verified option
@@ -102,13 +102,16 @@ class Tweet extends React.Component {
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
+        console.log(displayImgSrc)
 
         return (
             <div className="tweet--container">
                 <div className="tweet--displayImgContainer">
-                    {displayImgSrc && (
-                        <img src={displayImgSrc} alt="Display Img" className="tweet--displayImg" />
-                    )}
+                    <img
+                        src={displayImgSrc || defaultDisplayImg}
+                        alt="Display Img"
+                        className="tweet--displayImg"
+                    />
                 </div>
                 <div className="tweet--textContainer">
                     <div className="tweet--nameTextContainer">

@@ -16,6 +16,20 @@
     }
 }
 
+.icon__addPhoto {
+    color: #fff;
+    font-size: 26px;
+    position: relative;
+    top: -7px;
+    left: 42px;
+    z-index: 10;
+    display: block;
+}
+
+.icon__hidden {
+    visibility: hidden;
+}
+
 .icon__twitter {
     font-size: 22px;
     margin: auto;
@@ -34,7 +48,7 @@
 }
 
 .icon__darkmode {
-    color: #1B95E0;
+    color: #1b95e0;
     position: relative;
     right: 5px;
     top: 4px;
@@ -78,11 +92,11 @@
     margin-right: 2px;
     display: inline-block;
     vertical-align: top;
-    color: #66757F;
+    color: #66757f;
 }
 
 .icon__profilePrivacy {
-    color: #66757F;
+    color: #66757f;
 }
 
 .icon__profile {
