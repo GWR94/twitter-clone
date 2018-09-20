@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import * as actions from "../actions";
 import TweetInput from "./TweetInput";
+import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 
 class MyFirstTweet extends React.Component {
     async handleNewTweet(exampleTweet) {
@@ -97,9 +98,8 @@ class MyFirstTweet extends React.Component {
                             marginTop: "10px",
                         }}
                         onClick={() => {
-                            const { renderTweets } = this.props;
-                            this.handleNewTweet("Hello Twitter! #myfirstTweet");
-                            renderTweets();
+                            const { handleDefaultTweet } = this.props;
+                            handleDefaultTweet("Hello Twitter! #myfirstTweet");
                         }}
                     >
                         Tweet
@@ -122,6 +122,7 @@ class MyFirstTweet extends React.Component {
 MyFirstTweet.propTypes = {
     auth: PropTypes.shape({ isVerified: PropTypes.bool, profileImg: PropTypes.string }).isRequired,
     postTweet: PropTypes.func.isRequired,
+    handleDefaultTweet: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ auth }) => ({ auth });

@@ -36,7 +36,7 @@ class ProfileOverview extends React.Component {
     componentDidMount() {
         const { auth } = this.props;
         const { profileCompleted } = auth;
-        if (profileCompleted) this.setState({ profileCompleted: false }); // ! CHANGE BACK
+        if (profileCompleted) this.setState({ profileCompleted: true });
     }
 
     onModalClose = () => {

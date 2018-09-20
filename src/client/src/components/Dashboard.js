@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import ProfileOverview from "./ProfileOverview";
 import WhoToFollow from "./WhoToFollow";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import NavBar from "./NavBar";
-
 /*
     TODO
     [ ] Add red bar at top of page to send confirmation email
@@ -31,6 +31,7 @@ const DashboardPage = () => (
                     <div className="dashboard--trends">
                         <Trends />
                     </div>
+                    <Link to="/profile/james_gower">Profile</Link>
                 </div>
             </div>
         </div>
