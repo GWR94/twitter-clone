@@ -20,18 +20,23 @@ import "rc-dialog/assets/index.css";
 */
 
 class ProfileOverview extends React.Component {
-    state = {
-        percent: 30,
-        showInfo: "displayImg",
-        year: null,
-        month: null,
-        day: null,
-        monthPrivacy: "both",
-        yearPrivacy: "private",
-        monthDropdownOpen: false,
-        yearDropdownOpen: false,
-        profileCompleted: false,
-    };
+    constructor() {
+        super();
+        this.displayRef = React.createRef();
+
+        this.state = {
+            percent: 30,
+            showInfo: "displayImg",
+            year: null,
+            month: null,
+            day: null,
+            monthPrivacy: "both",
+            yearPrivacy: "private",
+            monthDropdownOpen: false,
+            yearDropdownOpen: false,
+            profileCompleted: false,
+        };
+    }
 
     componentDidMount() {
         const { auth } = this.props;
@@ -40,6 +45,7 @@ class ProfileOverview extends React.Component {
     }
 
     onModalClose = () => {
+        console.log("HOvering");
         this.setState({ modalIsOpen: false });
     };
 
@@ -180,8 +186,20 @@ class ProfileOverview extends React.Component {
                             />
                         )}
                     </div>
-                    <i className={displayImgSrc ? "hidden fas fa-camera" : "fas fa-camera profile--addIcon"} />
-                    <div className="profileOverview--displayImgContainer">
+                    <i
+                        className={
+                            displayImgSrc
+                                ? "icon__hidden fas fa-camera"
+                                : "fas fa-camera icon__addPhoto"
+                        }
+                        onMouseEnter={() =>
+                            this.displayRef.current.classList.add("profileOverview--hover")
+                        }
+                        onMouseLeave={() =>
+                            this.displayRef.current.classList.remove("profileOverview--hover")
+                        }
+                    />
+                    <div className="profileOverview--displayImgContainer" ref={this.displayRef}>
                         {displayImgSrc && (
                             <img
                                 src={displayImgSrc}

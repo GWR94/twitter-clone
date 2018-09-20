@@ -12,13 +12,21 @@
 }
 
 .tweet--displayImgContainer {
-    display: inline-flex;
+    display: inline-block;
+    height: 50px;
+    width: 50px;
     padding: 0 10px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }
 
 .tweet--textContainer {
     display: inline-block;
     margin-top: -4px;
+    margin-left: 20px;
 }
 
 .tweet--tweetContainer {
