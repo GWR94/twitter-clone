@@ -6,6 +6,7 @@ import WhoToFollow from "./WhoToFollow";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import NavBar from "./NavBar";
+import UserProfile from "./UserProfile";
 /*
     TODO
     [ ] Add red bar at top of page to send confirmation email
@@ -30,6 +31,9 @@ const DashboardPage = () => (
                     </div>
                     <div className="dashboard--trends">
                         <Trends />
+                    </div>
+                    <div>
+                        <UserProfile name="jgower94" />
                     </div>
                 </div>
             </div>

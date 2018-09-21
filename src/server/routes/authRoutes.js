@@ -45,11 +45,36 @@ module.exports = app => {
                 location: req.user.location,
                 website: req.user.location,
                 displayImg: req.user.displayImg,
-                headerImg: req.user.headerImg
+                headerImg: req.user.headerImg,
             };
             return res.send(data);
         }
         res.send(undefined);
+    });
+
+    app.get("/api/get_user/:handle", async (req, res) => {
+        const { handle } = req.params;
+        User.findOne(
+            {
+                handle,
+            },
+            (err, user) => {
+                if (err) return res.json({ error: err });
+                const userData = {
+                    displayImgSrc: user.displayImgSrc,
+                    headerImgSrc: user.headerImgSrc,
+                    isVerified: user.isVerified,
+                    displayName: user.displayName || user.handle,
+                    handle: user.handle,
+                    followers: user.followers,
+                    following: user.following,
+                    favouritedTweets: user.favouritedTweets,
+                    retweetedTweets: user.retweetedTweets,
+                    email: user.email,
+                };
+                return res.send(userData);
+            },
+        );
     });
 
     app.get("/api/get_users", (req, res) => {
