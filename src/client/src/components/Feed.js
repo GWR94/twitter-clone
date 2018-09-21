@@ -11,7 +11,6 @@ class Feed extends React.Component {
         TODO
         [ ] check circle progress bar for errors when length is 0 after typing
     */
-    state = {};
 
     async componentDidMount() {
         const { fetchTweets, auth } = this.props;
@@ -22,7 +21,7 @@ class Feed extends React.Component {
     renderTweets(tweets) {
         return tweets
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
-            .map((tweet, i) => <Tweet onDeleteTweet={() => this.renderTweets()} key={i} {...tweet} />);
+            .map((tweet, i) => <Tweet key={i} {...tweet} />);
     }
 
     render() {

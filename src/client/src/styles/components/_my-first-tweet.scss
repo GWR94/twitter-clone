@@ -30,15 +30,16 @@
 }
 
 .myFirstTweet--displayImgContainer {
-    padding: 10px;
-    display: inline-block;
-    vertical-align: top;
+    display: block;
     width: 70px;
+    margin-top: 10px;
+    margin-left: 20px;
 }
 
 .myFirstTweet--textContainer {
     display: inline-block;
     width: 100%;
+    margin-left: -8px;
 }
 
 .myFirstTweet--displayImg {

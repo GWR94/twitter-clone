@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { Tooltip } from "reactstrap";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import CropViewer from "rc-cropping";
 import Dialog from "rc-dialog";
@@ -35,6 +36,7 @@ class ProfileOverview extends React.Component {
             monthDropdownOpen: false,
             yearDropdownOpen: false,
             profileCompleted: false,
+            tooltipOpen: false,
         };
     }
 
@@ -112,6 +114,11 @@ class ProfileOverview extends React.Component {
         reader.readAsDataURL(file);
     }
 
+    toggleTooltip = () => {
+        const { tooltipOpen } = this.state;
+        this.setState({ tooltipOpen: !tooltipOpen });
+    };
+
     renderPrivacy(type) {
         const { monthPrivacy, yearPrivacy } = this.state;
         switch (type === "month" ? monthPrivacy : yearPrivacy) {
@@ -150,6 +157,7 @@ class ProfileOverview extends React.Component {
             uploadImageDropdownOpen,
             modalIsOpen,
             imagePreviewUrl,
+            tooltipOpen,
         } = this.state;
 
         let imagePreview = null;
@@ -191,14 +199,26 @@ class ProfileOverview extends React.Component {
                                 ? "icon__hidden fas fa-camera"
                                 : "fas fa-camera icon__addPhoto"
                         }
-                        onMouseEnter={() =>
-                            this.displayRef.current.classList.add("profileOverview--hover")
-                        }
-                        onMouseLeave={() =>
-                            this.displayRef.current.classList.remove("profileOverview--hover")
-                        }
+                        onMouseEnter={() => {
+                            this.displayRef.current.classList.add("profileOverview--hover");
+                            this.setState({ tooltipOpen: true });
+                        }}
+                        onMouseLeave={() => {
+                            this.displayRef.current.classList.remove("profileOverview--hover");
+                            this.setState({ tooltipOpen: false });
+                        }}
                     />
-                    <div className="profileOverview--displayImgContainer" ref={this.displayRef}>
+                    <div
+                        className="profileOverview--displayImgContainer"
+                        id="displayImg"
+                        ref={this.displayRef}
+                        onMouseEnter={() => {
+                            this.setState({ tooltipOpen: true });
+                        }}
+                        onMouseLeave={() => {
+                            this.setState({ tooltipOpen: false });
+                        }}
+                    >
                         {displayImgSrc && (
                             <img
                                 src={displayImgSrc}
@@ -208,10 +228,21 @@ class ProfileOverview extends React.Component {
                             />
                         )}
                     </div>
+                    <Tooltip
+                        target="displayImg"
+                        placement="top"
+                        isOpen={tooltipOpen}
+                    >
+                        Add a profile photo
+                    </Tooltip>
 
                     <div className="profileOverview--nameContainer">
-                        <h5 className="profileOverview--name">{displayName}</h5>
-                        <h6 className="profileOverview--handle">@{handle}</h6>
+                        <Link to={`/profile/${handle}`} className="profileOverview--name">
+                            {displayName}
+                        </Link>
+                        <Link to={`/profile/${handle}`} className="profileOverview--handle">
+                            @{handle}
+                        </Link>
                     </div>
                     <div className="profileOverview--followingsContainer">
                         <div className="profileOverview--tweets">

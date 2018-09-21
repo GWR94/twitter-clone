@@ -29,7 +29,7 @@
     background: $blue;
     overflow: hidden;
     &:hover {
-    box-shadow: $blue 0px 0px 4px 0px;
+        box-shadow: $blue 0px 0px 4px 0px;
     }
 }
 
@@ -50,18 +50,28 @@
 
 .profileOverview--name {
     font-weight: 700;
+    font-size: 22px;
+    display: block;
+    margin-bottom: -6px;
+    color: #000;
+    &:hover {
+        text-decoration: underline;
+        color: #000;
+    }
 }
 
 .profileOverview--handle {
-    margin-top: -6px;
-    color: $gray;
-    font-size: 15px;
+    color: $gray-text;
+    font-size: 14px;
     font-weight: 400;
+    &:hover {
+        color: $gray-text;
+    }
 }
 
 .profileOverview--followingsContainer {
     display: flex;
-    margin: 14px 16px 0 16px;
+    margin: 10px 16px 5px 16px;
 }
 
 .profileOverview--tweets {

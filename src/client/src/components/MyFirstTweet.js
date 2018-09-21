@@ -31,13 +31,11 @@ class MyFirstTweet extends React.Component {
                     </div>
                     <div className="myFirstTweet--tweetContainer">
                         <div className="myFirstTweet--displayImgContainer">
-                            {displayImgSrc && (
-                                <img
-                                    src={displayImgSrc}
-                                    className="myFirstTweet--displayImg"
-                                    alt="Display Image"
-                                />
-                            )}
+                            <img
+                                src={displayImgSrc || defaultDisplayImg}
+                                className="myFirstTweet--displayImg"
+                                alt="Display Image"
+                            />
                         </div>
                         <div className="myFirstTweet--textContainer">
                             <div className="myFirstTweet--tweetInfoContainer">
@@ -122,7 +120,7 @@ class MyFirstTweet extends React.Component {
 MyFirstTweet.propTypes = {
     auth: PropTypes.shape({ isVerified: PropTypes.bool, profileImg: PropTypes.string }).isRequired,
     postTweet: PropTypes.func.isRequired,
-    handleDefaultTweet: PropTypes.func.isRequired
+    handleDefaultTweet: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ auth }) => ({ auth });

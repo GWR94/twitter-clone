@@ -31,7 +31,6 @@ const DashboardPage = () => (
                     <div className="dashboard--trends">
                         <Trends />
                     </div>
-                    <Link to="/profile/james_gower">Profile</Link>
                 </div>
             </div>
         </div>

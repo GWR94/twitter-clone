@@ -19,20 +19,16 @@ import defaultDisplayImg from "../../../../public/images/displayPicturePlacehold
 */
 
 class Tweet extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            userRetweeted: false,
-            userLiked: false,
-            commentsTooltipOpen: false,
-            retweetTooltipOpen: false,
-            likeTooltipOpen: false,
-            messageTooltipOpen: false,
-            dropdownOpen: false,
-        };
-
-        this.toggleTooltip = this.toggleTooltip.bind(this);
-    }
+    state = {
+        userRetweeted: false,
+        userLiked: false,
+        commentsTooltipOpen: false,
+        retweetTooltipOpen: false,
+        likeTooltipOpen: false,
+        messageTooltipOpen: false,
+        dropdownOpen: false,
+        showComponent: true,
+    };
 
     componentDidMount() {
         const { retweets, likes, auth } = this.props;
@@ -103,156 +99,163 @@ class Tweet extends React.Component {
             messageTooltipOpen,
             retweetTooltipOpen,
             dropdownOpen,
+            showComponent,
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
         console.log(displayImgSrc);
 
         return (
-            <div className="tweet--container">
-                <i
-                    className="fas fa-chevron-down icon__dropdownTweet"
-                    onClick={() => {
-                        const newState = !dropdownOpen;
-                        this.setState({ dropdownOpen: newState });
-                    }}
-                />
-                {dropdownOpen && (
-                    <div className="tweet--dropdownContainer">
-                        <p className="tweet--dropdownItem">Share via Direct Message</p>
-                        <p className="tweet--dropdownItem">Copy Link to Tweet</p>
-                        <p className="tweet--dropdownItem">Embed Tweet</p>
-                        <p className="tweet--dropdownItem">Pin to your profile page</p>
-                        <p
-                            className="tweet--dropdownItem"
-                            onClick={async () => {
-                                const { deleteTweet, onDeleteTweet } = this.props;
-                                await deleteTweet(_id);
-                                onDeleteTweet();
-                            }}
-                        >
-                            Delete Tweet
-                        </p>
-                        <hr style={{ margin: "5px 0" }} />
-                        <p className="tweet--dropdownItem">Add to new Moment</p>
-                    </div>
-                )}
-
-                <div className="tweet--displayImgContainer">
-                    <img
-                        src={displayImgSrc || defaultDisplayImg}
-                        alt="Display Img"
-                        className="tweet--displayImg"
+            showComponent && (
+                <div className="tweet--container">
+                    <i
+                        className="fas fa-chevron-down icon__dropdownTweet"
+                        onClick={() => {
+                            const newState = !dropdownOpen;
+                            this.setState({ dropdownOpen: newState });
+                        }}
                     />
-                </div>
-                <div className="tweet--textContainer">
-                    <div className="tweet--nameTextContainer">
-                        {displayName && <p className="tweet--nameText">{displayName}</p>}
-                        {isVerified && (
-                            <img
-                                alt="Verified Profile"
-                                src={verifiedIcon}
-                                className="tweet--verifiedIcon"
-                            />
-                        )}
-                        <p className="tweet--handleText">
-                            @{handle} · <TimeAgo datetime={postedAt} locale="twitter" />
-                        </p>
-                    </div>
-                    <div className="tweet--tweetContainer">
-                        <p className="tweet--tweetText">{tweetText}</p>
-                    </div>
-                    <div className="tweet--interactionsContainer">
-                        <div className="tweet--comment">
-                            <i
-                                className="far fa-comment tweet--interaction"
-                                id="tweet--commentsID"
-                            />
-                            {comments.length > 0 && (
-                                <span className="tweet--interactionText">{comments.length}</span>
-                            )}
+                    {dropdownOpen && (
+                        <div className="tweet--dropdownContainer">
+                            <p className="tweet--dropdownItem">Share via Direct Message</p>
+                            <p className="tweet--dropdownItem">Copy Link to Tweet</p>
+                            <p className="tweet--dropdownItem">Embed Tweet</p>
+                            <p className="tweet--dropdownItem">Pin to your profile page</p>
+                            <p
+                                className="tweet--dropdownItem"
+                                onClick={() => {
+                                    const { deleteTweet } = this.props;
+                                    deleteTweet(_id);
+                                    this.setState({ showComponent: false });
+                                }}
+                            >
+                                Delete Tweet
+                            </p>
+                            <hr style={{ margin: "5px 0" }} />
+                            <p className="tweet--dropdownItem">Add to new Moment</p>
                         </div>
-                        <div
-                            className={userRetweeted ? "tweet--userRetweet" : "tweet--retweet"}
-                            onClick={async () => {
-                                await updateTweet({
-                                    tweetID: _id,
-                                    action: "retweet",
-                                    user: auth.handle,
-                                });
-                                this.setState({ userRetweeted: !userRetweeted });
-                            }}
-                        >
-                            <i
-                                className="fas fa-retweet tweet--interaction"
-                                id="tweet--retweetID"
-                            />
-                            {retweets.amount > 0 && (
-                                <span className="tweet--interactionText">{retweets.amount}</span>
+                    )}
+
+                    <div className="tweet--displayImgContainer">
+                        <img
+                            src={displayImgSrc || defaultDisplayImg}
+                            alt="Display Img"
+                            className="tweet--displayImg"
+                        />
+                    </div>
+                    <div className="tweet--textContainer">
+                        <div className="tweet--nameTextContainer">
+                            {displayName && <p className="tweet--nameText">{displayName}</p>}
+                            {isVerified && (
+                                <img
+                                    alt="Verified Profile"
+                                    src={verifiedIcon}
+                                    className="tweet--verifiedIcon"
+                                />
                             )}
+                            <p className="tweet--handleText">
+                                @{handle} · <TimeAgo datetime={postedAt} locale="twitter" />
+                            </p>
                         </div>
-                        <div className={userLiked ? "tweet--userLiked" : "tweet--like"}>
-                            <i
-                                className="far fa-heart tweet--interaction"
-                                id="tweet--likeID"
+                        <div className="tweet--tweetContainer">
+                            <p className="tweet--tweetText">{tweetText}</p>
+                        </div>
+                        <div className="tweet--interactionsContainer">
+                            <div className="tweet--comment">
+                                <i
+                                    className="far fa-comment tweet--interaction"
+                                    id="tweet--commentsID"
+                                />
+                                {comments.length > 0 && (
+                                    <span className="tweet--interactionText">
+                                        {comments.length}
+                                    </span>
+                                )}
+                            </div>
+                            <div
+                                className={userRetweeted ? "tweet--userRetweet" : "tweet--retweet"}
                                 onClick={async () => {
                                     await updateTweet({
                                         tweetID: _id,
-                                        action: "like",
+                                        action: "retweet",
                                         user: auth.handle,
                                     });
-                                    this.setState({ userLiked: !userLiked });
+                                    this.setState({ userRetweeted: !userRetweeted });
                                 }}
-                            />
-                            {likes.amount > 0 && (
-                                <span className="tweet--interactionText">{likes.amount}</span>
-                            )}
-                        </div>
-                        <div className="tweet--message">
-                            <i
-                                className="far fa-envelope tweet--interaction"
-                                id="tweet--messageID"
-                            />
+                            >
+                                <i
+                                    className="fas fa-retweet tweet--interaction"
+                                    id="tweet--retweetID"
+                                />
+                                {retweets.amount > 0 && (
+                                    <span className="tweet--interactionText">
+                                        {retweets.amount}
+                                    </span>
+                                )}
+                            </div>
+                            <div className={userLiked ? "tweet--userLiked" : "tweet--like"}>
+                                <i
+                                    className="far fa-heart tweet--interaction"
+                                    id="tweet--likeID"
+                                    onClick={async () => {
+                                        await updateTweet({
+                                            tweetID: _id,
+                                            action: "like",
+                                            user: auth.handle,
+                                        });
+                                        this.setState({ userLiked: !userLiked });
+                                    }}
+                                />
+                                {likes.amount > 0 && (
+                                    <span className="tweet--interactionText">{likes.amount}</span>
+                                )}
+                            </div>
+                            <div className="tweet--message">
+                                <i
+                                    className="far fa-envelope tweet--interaction"
+                                    id="tweet--messageID"
+                                />
+                            </div>
                         </div>
                     </div>
+                    <Tooltip
+                        placement="top"
+                        isOpen={commentsTooltipOpen}
+                        target="tweet--commentsID"
+                        toggle={() => this.toggleTooltip("comment")}
+                        delay={250}
+                    >
+                        Reply
+                    </Tooltip>
+                    <Tooltip
+                        placement="top"
+                        isOpen={retweetTooltipOpen}
+                        target="tweet--retweetID"
+                        toggle={() => this.toggleTooltip("retweet")}
+                        delay={250}
+                    >
+                        {userRetweeted ? "Undo Retweet" : "Retweet"}
+                    </Tooltip>
+                    <Tooltip
+                        placement="top"
+                        isOpen={likeTooltipOpen}
+                        target="tweet--likeID"
+                        toggle={() => this.toggleTooltip("like")}
+                        delay={250}
+                    >
+                        {userLiked ? "Undo Like" : "Like"}
+                    </Tooltip>
+                    <Tooltip
+                        placement="top"
+                        isOpen={messageTooltipOpen}
+                        target="tweet--messageID"
+                        toggle={() => this.toggleTooltip("message")}
+                        delay={250}
+                    >
+                        Direct Message
+                    </Tooltip>
                 </div>
-                <Tooltip
-                    placement="top"
-                    isOpen={commentsTooltipOpen}
-                    target="tweet--commentsID"
-                    toggle={() => this.toggleTooltip("comment")}
-                    delay={250}
-                >
-                    Reply
-                </Tooltip>
-                <Tooltip
-                    placement="top"
-                    isOpen={retweetTooltipOpen}
-                    target="tweet--retweetID"
-                    toggle={() => this.toggleTooltip("retweet")}
-                    delay={250}
-                >
-                    {userRetweeted ? "Undo Retweet" : "Retweet"}
-                </Tooltip>
-                <Tooltip
-                    placement="top"
-                    isOpen={likeTooltipOpen}
-                    target="tweet--likeID"
-                    toggle={() => this.toggleTooltip("like")}
-                    delay={250}
-                >
-                    {userLiked ? "Undo Like" : "Like"}
-                </Tooltip>
-                <Tooltip
-                    placement="top"
-                    isOpen={messageTooltipOpen}
-                    target="tweet--messageID"
-                    toggle={() => this.toggleTooltip("message")}
-                    delay={250}
-                >
-                    Direct Message
-                </Tooltip>
-            </div>
+            )
         );
     }
 }
@@ -265,6 +268,7 @@ Tweet.propTypes = {
     _id: PropTypes.string.isRequired,
     postedAt: PropTypes.string.isRequired,
     updateTweet: PropTypes.func.isRequired,
+    deleteTweet: PropTypes.func.isRequired,
     likes: PropTypes.shape({
         amount: PropTypes.number.isRequired,
         users: PropTypes.arrayOf(PropTypes.string.isRequired),
