@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import defaultDisplayImg from "../../../../public/images/displayPicturePlaceholder.png";
 
 class NavBar extends Component {
     constructor() {
@@ -83,13 +84,11 @@ class NavBar extends Component {
                                         aria-haspopup="true"
                                         aria-expanded="false"
                                     >
-                                        {displayImgSrc && (
-                                            <img
-                                                src={displayImgSrc}
-                                                alt="Profile Img"
-                                                className="navbar--img"
-                                            />
-                                        )}
+                                        <img
+                                            src={displayImgSrc || defaultDisplayImg}
+                                            alt="Profile Img"
+                                            className="navbar--img"
+                                        />
                                     </a>
                                     <button type="button" className="btn button__signup">
                                         Tweet

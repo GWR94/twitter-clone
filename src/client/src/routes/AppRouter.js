@@ -12,7 +12,6 @@ import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import * as actions from "../actions";
 import Profile from "../components/Profile";
-import { getUser } from './../actions/user';
 
 export const history = createHistory();
 

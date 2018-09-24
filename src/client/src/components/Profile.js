@@ -27,7 +27,7 @@ class Profile extends React.Component {
             monthDropdownOpen: false,
             yearDropdownOpen: false,
             tooltipOpen: false,
-            rendered: false,
+            userProfile: true,
         };
     }
 
@@ -42,16 +42,16 @@ class Profile extends React.Component {
         [ ] Set theme color around all site
     */
 
-    async componentWillMount() {
+    async componentDidMount() {
         const { user, getUser, auth, fetchUser, match } = this.props;
         const { handle } = match.params;
         if (handle === auth.handle) {
             await fetchUser();
-            this.setState({ numTweets: auth.tweets.length, rendered: true });
+            this.setState({ numTweets: auth.tweets.length, userProfile: true, rendered: true });
+        } else {
+            await getUser(handle);
+            this.setState({ userProfile: false, rendered: true });
         }
-        const res = await getUser(handle);
-        console.log(res);
-        this.setState({ rendered: true });
     }
 
     handleDefaultTweet = async tweet => {
@@ -104,7 +104,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { auth, user } = this.props;
+        const { auth, user, match } = this.props;
         const {
             numTweets,
             editMode,
@@ -116,58 +116,60 @@ class Profile extends React.Component {
             yearDropdownOpen,
             tooltipOpen,
             rendered,
+            userProfile,
         } = this.state;
 
         const {
-            handle,
+            displayImgSrc,
             displayName,
             profileOverview,
-            birthPlace,
-            birthday,
+            handle,
             dateCreated,
-            location,
-            website,
-            displayImgSrc,
-        } = auth;
+            birthday,
+            birthPlace,
+        } = userProfile ? auth : user;
 
-        const formattedBirthPlace = birthPlace && birthPlace.split(",").slice(0, 1);
-        const formattedBirthday = `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
-            birthday.yearObj.year
-        }`;
+        console.log(displayName);
 
+        const formattedBirthPlace = (birthPlace && birthPlace.split(",").slice(0, 1)) || "";
+
+        let formattedBirthday = null;
+        if (typeof birthday === "object") {
+            formattedBirthday =
+                `${birthday.monthObj.month} ${birthday.dayObj.day}, ${birthday.yearObj.year}` || "";
+        }
         autosize(document.getElementById("profile--bioTextArea"));
 
         const userInfo = [
             {
                 description: "Tweets",
-                value: auth ? auth.tweets.length : user.tweets.length,
+                value: user ? user.tweets : auth.tweets,
             },
             {
                 description: "Following",
-                value: auth.following ? auth.following.length : 0,
+                value: user ? user.following.length : auth.following.length,
             },
             {
                 description: "Followers",
-                value: auth.followers ? auth.followers.length : 0,
+                value: user ? user.followers.length : auth.followers.length,
             },
             {
                 description: "Likes",
-                value: auth.favouritedTweets ? auth.favouritedTweets.length : 0,
+                value: user ? user.favouritedTweets.length : auth.favouritedTweets.length,
             },
             {
                 description: "Retweets",
-                value: auth.retweetedTweets ? auth.retweetedTweets.length : 0,
+                value: user ? user.retweetedTweets.length : auth.retweetedTweets.length,
             },
             {
                 description: "Lists",
-                value: auth.lists ? auth.lists.length : 0,
+                value: user ? user.lists.length : auth.lists.length,
             },
             {
                 description: "Moments",
-                value: auth.moments ? auth.moments.length : 0,
+                value: user ? user.moments.length : auth.moments.length,
             },
         ];
-        if (!rendered) return <img src={loader} alt="loading..." />;
 
         return (
             <div>
@@ -539,7 +541,7 @@ class Profile extends React.Component {
                             </div>
                         )}
                         <div className={editMode ? "profile--main transparent" : "profile--main"}>
-                            {numTweets === 0 ? (
+                            {userProfile && numTweets === 0 ? (
                                 <MyFirstTweet handleDefaultTweet={this.handleDefaultTweet} />
                             ) : (
                                 <div className="profile--feedContainer">
@@ -548,7 +550,11 @@ class Profile extends React.Component {
                                         <p className="profile--control">Tweets & replies</p>
                                         <p className="profile--control">Media</p>
                                     </div>
-                                    <Feed showFeed={false} />
+                                    <Feed
+                                        userProfile={userProfile}
+                                        handle={userInfo ? user.handle : auth.handle}
+                                        showFeed={false}
+                                    />
                                     <div className="profile--footer">
                                         <i className="fab fa-twitter icon__footer" />
                                     </div>
@@ -573,7 +579,7 @@ Profile.propTypes = {
     fetchUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ auth }) => ({ auth });
+const mapStateToProps = ({ auth, user }) => ({ auth, user });
 
 export default connect(
     mapStateToProps,

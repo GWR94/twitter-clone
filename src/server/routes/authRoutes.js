@@ -54,6 +54,10 @@ module.exports = app => {
 
     app.get("/api/get_user/:handle", async (req, res) => {
         const { handle } = req.params;
+        const tweets = await Tweets.find({ handle }, (err, tweets) => {
+            if (err) return res.send(err);
+            return tweets;
+        });
         User.findOne(
             {
                 handle,
@@ -61,16 +65,28 @@ module.exports = app => {
             (err, user) => {
                 if (err) return res.json({ error: err });
                 const userData = {
+                    isVerified: user.isVerified,
+                    handle: user.handle,
+                    displayName: user.displayName || user.handle,
+                    email: user.email,
                     displayImgSrc: user.displayImgSrc,
                     headerImgSrc: user.headerImgSrc,
-                    isVerified: user.isVerified,
-                    displayName: user.displayName || user.handle,
-                    handle: user.handle,
-                    followers: user.followers,
-                    following: user.following,
                     favouritedTweets: user.favouritedTweets,
                     retweetedTweets: user.retweetedTweets,
-                    email: user.email,
+                    followers: user.followers,
+                    following: user.following,
+                    lists: user.lists || [],
+                    moments: user.moments || [],
+                    tweets: tweets,
+                    profileOverview: user.profileOverview || "",
+                    birthday: user.birthday || "",
+                    birthPlace: user.birthPlace || "",
+                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
+                    themeColor: user.themeColor || "",
+                    location: user.location || "",
+                    website: user.location || "",
+                    displayImg: user.displayImg,
+                    headerImg: user.headerImg,
                 };
                 return res.send(userData);
             },

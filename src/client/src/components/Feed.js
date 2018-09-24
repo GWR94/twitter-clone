@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Tweet from "./Tweet";
 import * as actions from "../actions";
 import TweetInput from "./TweetInput";
+import loader from "../../../../public/images/loader.gif";
 
 class Feed extends React.Component {
     /*
@@ -12,9 +13,10 @@ class Feed extends React.Component {
         [ ] check circle progress bar for errors when length is 0 after typing
     */
 
-    async componentDidMount() {
-        const { fetchTweets, auth } = this.props;
-        await fetchTweets(auth.handle);
+    async componentWillMount() {
+        console.log(this.props);
+        const { fetchTweets, handle } = this.props;
+        await fetchTweets(handle);
     }
 
     /* eslint-disable-next-line */
@@ -60,7 +62,7 @@ class Feed extends React.Component {
                     ) : (
                         <div>
                             {this.renderTweets(tweets)}
-                            <Link to="/profile/jgower94">TO JGOWER94</Link>
+                            <Link to="/profile/jgower94">To jgower94</Link>
                         </div>
                     )}
                 </div>
