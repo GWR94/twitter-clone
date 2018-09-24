@@ -226,6 +226,7 @@ class Profile extends React.Component {
                                     </button>
                                 </div>
                             ) : (
+                                userProfile ? (
                                 <div className="profile--buttonContainer">
                                     <button
                                         className="button__themeColor"
@@ -235,6 +236,14 @@ class Profile extends React.Component {
                                         Edit Profile
                                     </button>
                                 </div>
+                                ) : (
+                                    <button
+                                        className="button__themeColor"
+                                        type="button"
+                                    >
+                                        Follow
+                                    </button>
+                                )
                             )}
                         </div>
                         {editMode ? (
