@@ -33,7 +33,6 @@ const DashboardPage = () => (
                         <Trends />
                     </div>
                     <div>
-                        <UserProfile name="jgower94" />
                     </div>
                 </div>
             </div>

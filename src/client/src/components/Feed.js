@@ -37,11 +37,11 @@ class Feed extends React.Component {
                 <button
                     type="button"
                     className="button__signupLarge"
-                    style={{ 
+                    style={{
                         fontSize: "14px",
                         float: "left",
                         marginTop: "5px",
-                        padding: "6px 16px"
+                        padding: "6px 16px",
                     }}
                 >
                     Find people to follow
@@ -58,7 +58,10 @@ class Feed extends React.Component {
                             <NoTweets />
                         ) : null
                     ) : (
-                        this.renderTweets(tweets)
+                        <div>
+                            {this.renderTweets(tweets)}
+                            <Link to="/profile/jgower94">TO JGOWER94</Link>
+                        </div>
                     )}
                 </div>
             </div>

@@ -15,7 +15,8 @@ import defaultDisplayImg from "../../../../public/images/displayPicturePlacehold
     [x] Add dot between time ago & handle
     [x] Add tooltips for interactions
     [ ] Fix retweet & undo retweet
-    [ ] Delete tweet when deleteTweet function is executed
+    [x] Delete tweet when deleteTweet function is executed
+    [ ] Add functionality for dropdown menu
 */
 
 class Tweet extends React.Component {

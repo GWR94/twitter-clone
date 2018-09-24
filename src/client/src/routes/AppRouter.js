@@ -12,6 +12,7 @@ import SignUp from "../components/SignUp";
 import Login from "../components/Login";
 import * as actions from "../actions";
 import Profile from "../components/Profile";
+import { getUser } from './../actions/user';
 
 export const history = createHistory();
 
@@ -34,7 +35,7 @@ class AppRouter extends React.Component {
                     <Public path="/i/flow/signup" component={SignUp} />
                     <Route
                         path="/profile/:handle"
-                        component={Profile}
+                        render={props => <Profile {...props} />}
                     />
                     <Route path="/" component={isAuthenticated ? Dashboard : Landing} exact />
                     <Route component={NotFound} />

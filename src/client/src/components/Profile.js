@@ -4,6 +4,7 @@ import { PropTypes } from "prop-types";
 import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import { Tooltip } from "reactstrap";
+import loader from "../../../../public/images/loader.gif";
 import * as actions from "../actions";
 import NavBar from "./NavBar";
 import Trends from "./Trends";
@@ -25,7 +26,8 @@ class Profile extends React.Component {
             yearPrivacy: "private",
             monthDropdownOpen: false,
             yearDropdownOpen: false,
-            tooltipOpen: false
+            tooltipOpen: false,
+            rendered: false,
         };
     }
 
@@ -41,9 +43,15 @@ class Profile extends React.Component {
     */
 
     async componentWillMount() {
-        const { fetchUser, auth } = this.props;
-        await fetchUser();
-        this.setState({ numTweets: auth.tweets.length });
+        const { user, getUser, auth, fetchUser, match } = this.props;
+        const { handle } = match.params;
+        if (handle === auth.handle) {
+            await fetchUser();
+            this.setState({ numTweets: auth.tweets.length, rendered: true });
+        }
+        const res = await getUser(handle);
+        console.log(res);
+        this.setState({ rendered: true });
     }
 
     handleDefaultTweet = async tweet => {
@@ -96,7 +104,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { auth } = this.props;
+        const { auth, user } = this.props;
         const {
             numTweets,
             editMode,
@@ -106,7 +114,8 @@ class Profile extends React.Component {
             day,
             monthDropdownOpen,
             yearDropdownOpen,
-            tooltipOpen
+            tooltipOpen,
+            rendered,
         } = this.state;
 
         const {
@@ -131,7 +140,7 @@ class Profile extends React.Component {
         const userInfo = [
             {
                 description: "Tweets",
-                value: auth.tweets ? auth.tweets.length : 0,
+                value: auth ? auth.tweets.length : user.tweets.length,
             },
             {
                 description: "Following",
@@ -158,6 +167,7 @@ class Profile extends React.Component {
                 value: auth.moments ? auth.moments.length : 0,
             },
         ];
+        if (!rendered) return <img src={loader} alt="loading..." />;
 
         return (
             <div>
