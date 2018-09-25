@@ -70,14 +70,13 @@ class TweetInput extends Component {
 
     async handleNewTweet() {
         const { tweetText } = this.state;
-        const { postTweet, auth, tweets } = this.props;
+        const { postTweet, auth } = this.props;
         this.setState({ tweetError: true });
         await postTweet({
             tweet: tweetText,
             handle: auth.handle,
             postedAt: Date.now(),
         });
-        this.renderTweets(tweets);
         this.setState({ tweetText: "", tweetError: false });
     }
 

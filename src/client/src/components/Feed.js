@@ -62,10 +62,10 @@ class Feed extends React.Component {
                     ) : (
                         <div>
                             {this.renderTweets(tweets)}
-                            <Link to="/profile/jgower94">To jgower94</Link>
                         </div>
                     )}
                 </div>
+                <Link to="/profile/jgower94">To jgower94</Link>
             </div>
         );
     }

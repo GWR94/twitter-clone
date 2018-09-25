@@ -43,14 +43,14 @@ class Profile extends React.Component {
     */
 
     async componentDidMount() {
-        const { user, getUser, auth, fetchUser, match } = this.props;
+        const { getUser, auth, fetchUser, match } = this.props;
         const { handle } = match.params;
         if (handle === auth.handle) {
             await fetchUser();
-            this.setState({ numTweets: auth.tweets.length, userProfile: true, rendered: true });
+            this.setState({ numTweets: auth.tweets.length, userProfile: true });
         } else {
             await getUser(handle);
-            this.setState({ userProfile: false, rendered: true });
+            this.setState({ userProfile: false });
         }
     }
 
@@ -115,7 +115,6 @@ class Profile extends React.Component {
             monthDropdownOpen,
             yearDropdownOpen,
             tooltipOpen,
-            rendered,
             userProfile,
         } = this.state;
 
@@ -143,31 +142,31 @@ class Profile extends React.Component {
         const userInfo = [
             {
                 description: "Tweets",
-                value: user ? user.tweets : auth.tweets,
+                value: user ? user.tweets.length : auth.tweets.length || 0,
             },
             {
                 description: "Following",
-                value: user ? user.following.length : auth.following.length,
+                value: user ? user.following.length : auth.following.length || 0,
             },
             {
                 description: "Followers",
-                value: user ? user.followers.length : auth.followers.length,
+                value: user ? user.followers.length : auth.followers.length || 0,
             },
             {
                 description: "Likes",
-                value: user ? user.favouritedTweets.length : auth.favouritedTweets.length,
+                value: user ? user.favouritedTweets.length : auth.favouritedTweets.length || 0,
             },
             {
                 description: "Retweets",
-                value: user ? user.retweetedTweets.length : auth.retweetedTweets.length,
+                value: user ? user.retweetedTweets.length : auth.retweetedTweets.length || 0,
             },
             {
                 description: "Lists",
-                value: user ? user.lists.length : auth.lists.length,
+                value: user ? user.lists.length : auth.lists.length || 0,
             },
             {
                 description: "Moments",
-                value: user ? user.moments.length : auth.moments.length,
+                value: user ? user.moments.length : auth.moments.length || 0,
             },
         ];
 
@@ -225,8 +224,7 @@ class Profile extends React.Component {
                                         Save changes
                                     </button>
                                 </div>
-                            ) : (
-                                userProfile ? (
+                            ) : userProfile ? (
                                 <div className="profile--buttonContainer">
                                     <button
                                         className="button__themeColor"
@@ -236,14 +234,10 @@ class Profile extends React.Component {
                                         Edit Profile
                                     </button>
                                 </div>
-                                ) : (
-                                    <button
-                                        className="button__themeColor"
-                                        type="button"
-                                    >
-                                        Follow
-                                    </button>
-                                )
+                            ) : (
+                                <button className="button__themeColor" type="button">
+                                    Follow
+                                </button>
                             )}
                         </div>
                         {editMode ? (
@@ -561,7 +555,7 @@ class Profile extends React.Component {
                                     </div>
                                     <Feed
                                         userProfile={userProfile}
-                                        handle={userInfo ? user.handle : auth.handle}
+                                        handle={userProfile ? auth.handle : user.handle}
                                         showFeed={false}
                                     />
                                     <div className="profile--footer">

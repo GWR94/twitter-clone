@@ -20,24 +20,38 @@ import defaultDisplayImg from "../../../../public/images/displayPicturePlacehold
 */
 
 class Tweet extends React.Component {
-    state = {
-        userRetweeted: false,
-        userLiked: false,
-        commentsTooltipOpen: false,
-        retweetTooltipOpen: false,
-        likeTooltipOpen: false,
-        messageTooltipOpen: false,
-        dropdownOpen: false,
-        showComponent: true,
-    };
+    constructor() {
+        super();
+        this.state = {
+            userRetweeted: false,
+            userLiked: false,
+            commentsTooltipOpen: false,
+            retweetTooltipOpen: false,
+            likeTooltipOpen: false,
+            messageTooltipOpen: false,
+            dropdownOpen: false,
+            showComponent: true,
+        };
+
+        this.retweetRef = React.createRef();
+        this.likesRef = React.createRef();
+    }
 
     componentDidMount() {
-        const { retweets, likes, auth } = this.props;
-        if (retweets.users.indexOf(auth.handle) > -1) {
-            this.setState({ userRetweeted: true });
-        }
+        const { likes, auth, retweets } = this.props;
         if (likes.users.indexOf(auth.handle) > -1) {
             this.setState({ userLiked: true });
+            this.likesRef.current.className = "tweet--userLiked";
+        } else {
+            this.setState({ userLiked: false });
+            this.likesRef.current.className = "tweet--liked";
+        }
+        if (retweets.users.indexOf(auth.handle) > -1) {
+            this.setState({ userRetweeted: true });
+            this.retweetRef.current.className = "tweet--userRetweet";
+        } else {
+            this.setState({ userRetweeted: false });
+            this.retweetRef.current.className = "tweet--retweet";
         }
     }
 
@@ -104,7 +118,6 @@ class Tweet extends React.Component {
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
-        console.log(displayImgSrc);
 
         return (
             showComponent && (
@@ -174,14 +187,16 @@ class Tweet extends React.Component {
                                 )}
                             </div>
                             <div
-                                className={userRetweeted ? "tweet--userRetweet" : "tweet--retweet"}
+                                className="user--retweet"
+                                ref={this.retweetRef}
                                 onClick={async () => {
                                     await updateTweet({
                                         tweetID: _id,
                                         action: "retweet",
                                         user: auth.handle,
                                     });
-                                    this.setState({ userRetweeted: !userRetweeted });
+                                    const newState = !userRetweeted;
+                                    this.setState({ userRetweeted: newState });
                                 }}
                             >
                                 <i
@@ -194,7 +209,7 @@ class Tweet extends React.Component {
                                     </span>
                                 )}
                             </div>
-                            <div className={userLiked ? "tweet--userLiked" : "tweet--like"}>
+                            <div className="tweet--like" ref={this.likesRef}>
                                 <i
                                     className="far fa-heart tweet--interaction"
                                     id="tweet--likeID"
@@ -204,7 +219,8 @@ class Tweet extends React.Component {
                                             action: "like",
                                             user: auth.handle,
                                         });
-                                        this.setState({ userLiked: !userLiked });
+                                        const newState = !userLiked;
+                                        this.setState({ userLiked: newState });
                                     }}
                                 />
                                 {likes.amount > 0 && (
@@ -293,7 +309,7 @@ Tweet.defaultProps = {
     displayImgSrc: null,
 };
 
-const mapStateToProps = ({ auth }) => ({ auth });
+const mapStateToProps = ({ auth, user, tweets }) => ({ auth, user, tweets });
 
 export default connect(
     mapStateToProps,
