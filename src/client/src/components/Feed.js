@@ -14,7 +14,6 @@ class Feed extends React.Component {
     */
 
     async componentWillMount() {
-        console.log(this.props);
         const { fetchTweets, handle } = this.props;
         await fetchTweets(handle);
     }

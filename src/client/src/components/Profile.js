@@ -42,15 +42,16 @@ class Profile extends React.Component {
         [ ] Set theme color around all site
     */
 
-    async componentDidMount() {
+    async componentWillMount() {
         const { user, getUser, auth, fetchUser, match } = this.props;
         const { handle } = match.params;
         if (handle === auth.handle) {
             await fetchUser();
-            this.setState({ numTweets: auth.tweets.length, userProfile: true, rendered: true });
+            console.log(auth);
+            this.setState({ numTweets: auth.tweets.length, userProfile: true });
         } else {
             await getUser(handle);
-            this.setState({ userProfile: false, rendered: true });
+            this.setState({ userProfile: false });
         }
     }
 
@@ -104,7 +105,7 @@ class Profile extends React.Component {
     };
 
     render() {
-        const { auth, user, match } = this.props;
+        const { auth, user } = this.props;
         const {
             numTweets,
             editMode,
@@ -115,7 +116,6 @@ class Profile extends React.Component {
             monthDropdownOpen,
             yearDropdownOpen,
             tooltipOpen,
-            rendered,
             userProfile,
         } = this.state;
 
@@ -129,8 +129,6 @@ class Profile extends React.Component {
             birthPlace,
         } = userProfile ? auth : user;
 
-        console.log(displayName);
-
         const formattedBirthPlace = (birthPlace && birthPlace.split(",").slice(0, 1)) || "";
 
         let formattedBirthday = null;
@@ -143,7 +141,7 @@ class Profile extends React.Component {
         const userInfo = [
             {
                 description: "Tweets",
-                value: user ? user.tweets : auth.tweets,
+                value: user ? user.tweets.length || 0 : auth.tweets,
             },
             {
                 description: "Following",
@@ -225,8 +223,7 @@ class Profile extends React.Component {
                                         Save changes
                                     </button>
                                 </div>
-                            ) : (
-                                userProfile ? (
+                            ) : userProfile ? (
                                 <div className="profile--buttonContainer">
                                     <button
                                         className="button__themeColor"
@@ -236,14 +233,10 @@ class Profile extends React.Component {
                                         Edit Profile
                                     </button>
                                 </div>
-                                ) : (
-                                    <button
-                                        className="button__themeColor"
-                                        type="button"
-                                    >
-                                        Follow
-                                    </button>
-                                )
+                            ) : (
+                                <button className="button__themeColor" type="button">
+                                    Follow
+                                </button>
                             )}
                         </div>
                         {editMode ? (
@@ -561,7 +554,7 @@ class Profile extends React.Component {
                                     </div>
                                     <Feed
                                         userProfile={userProfile}
-                                        handle={userInfo ? user.handle : auth.handle}
+                                        handle={userProfile ? auth.handle : user.handle}
                                         showFeed={false}
                                     />
                                     <div className="profile--footer">

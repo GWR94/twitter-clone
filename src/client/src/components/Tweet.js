@@ -20,24 +20,34 @@ import defaultDisplayImg from "../../../../public/images/displayPicturePlacehold
 */
 
 class Tweet extends React.Component {
-    state = {
-        userRetweeted: false,
-        userLiked: false,
-        commentsTooltipOpen: false,
-        retweetTooltipOpen: false,
-        likeTooltipOpen: false,
-        messageTooltipOpen: false,
-        dropdownOpen: false,
-        showComponent: true,
-    };
+    constructor() {
+        super();
+
+        this.likeRef = React.createRef();
+        this.retweetRef = React.createRef();
+
+        this.state = {
+            commentsTooltipOpen: false,
+            retweetTooltipOpen: false,
+            likeTooltipOpen: false,
+            messageTooltipOpen: false,
+            dropdownOpen: false,
+            showComponent: true,
+        };
+    }
 
     componentDidMount() {
+        this.setState({ retweetTooltipOpen: false, likeTooltipOpen: false });
         const { retweets, likes, auth } = this.props;
         if (retweets.users.indexOf(auth.handle) > -1) {
-            this.setState({ userRetweeted: true });
+            this.retweetRef.current.className = "tweet--userRetweet";
+        } else {
+            this.retweetRef.current.className = "tweet--retweet";
         }
         if (likes.users.indexOf(auth.handle) > -1) {
-            this.setState({ userLiked: true });
+            this.likeRef.current.className = "tweet--userLiked";
+        } else {
+            this.likeRef.current.className = "tweet--like";
         }
     }
 
@@ -93,8 +103,6 @@ class Tweet extends React.Component {
         } = this.props;
 
         const {
-            userRetweeted,
-            userLiked,
             commentsTooltipOpen,
             likeTooltipOpen,
             messageTooltipOpen,
@@ -104,8 +112,6 @@ class Tweet extends React.Component {
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
-        console.log(displayImgSrc);
-
         return (
             showComponent && (
                 <div className="tweet--container">
@@ -165,7 +171,7 @@ class Tweet extends React.Component {
                             <div className="tweet--comment">
                                 <i
                                     className="far fa-comment tweet--interaction"
-                                    id="tweet--commentsID"
+                                    id={`comment_${_id}`}
                                 />
                                 {comments.length > 0 && (
                                     <span className="tweet--interactionText">
@@ -174,19 +180,23 @@ class Tweet extends React.Component {
                                 )}
                             </div>
                             <div
-                                className={userRetweeted ? "tweet--userRetweet" : "tweet--retweet"}
+                                className={
+                                    retweets.users.indexOf(auth.handle) > -1
+                                        ? "tweet--userRetweet"
+                                        : "tweet--retweet"
+                                }
+                                ref={this.retweetRef}
                                 onClick={async () => {
                                     await updateTweet({
                                         tweetID: _id,
                                         action: "retweet",
                                         user: auth.handle,
                                     });
-                                    this.setState({ userRetweeted: !userRetweeted });
                                 }}
                             >
                                 <i
                                     className="fas fa-retweet tweet--interaction"
-                                    id="tweet--retweetID"
+                                    id={`retweet_${_id}`}
                                 />
                                 {retweets.amount > 0 && (
                                     <span className="tweet--interactionText">
@@ -194,19 +204,22 @@ class Tweet extends React.Component {
                                     </span>
                                 )}
                             </div>
-                            <div className={userLiked ? "tweet--userLiked" : "tweet--like"}>
-                                <i
-                                    className="far fa-heart tweet--interaction"
-                                    id="tweet--likeID"
-                                    onClick={async () => {
-                                        await updateTweet({
-                                            tweetID: _id,
-                                            action: "like",
-                                            user: auth.handle,
-                                        });
-                                        this.setState({ userLiked: !userLiked });
-                                    }}
-                                />
+                            <div
+                                ref={this.likeRef}
+                                className={
+                                    likes.users.indexOf(auth.handle) > -1
+                                        ? "tweet--userLiked"
+                                        : "tweet--like"
+                                }
+                                onClick={async () => {
+                                    await updateTweet({
+                                        tweetID: _id,
+                                        action: "like",
+                                        user: auth.handle,
+                                    });
+                                }}
+                            >
+                                <i className="far fa-heart tweet--interaction" id={`like_${_id}`} />
                                 {likes.amount > 0 && (
                                     <span className="tweet--interactionText">{likes.amount}</span>
                                 )}
@@ -214,7 +227,7 @@ class Tweet extends React.Component {
                             <div className="tweet--message">
                                 <i
                                     className="far fa-envelope tweet--interaction"
-                                    id="tweet--messageID"
+                                    id={`dm_${_id}`}
                                 />
                             </div>
                         </div>
@@ -222,34 +235,36 @@ class Tweet extends React.Component {
                     <Tooltip
                         placement="top"
                         isOpen={commentsTooltipOpen}
-                        target="tweet--commentsID"
+                        target={`comment_${_id}`}
                         toggle={() => this.toggleTooltip("comment")}
                         delay={250}
                     >
                         Reply
                     </Tooltip>
+
                     <Tooltip
                         placement="top"
                         isOpen={retweetTooltipOpen}
-                        target="tweet--retweetID"
+                        target={`retweet_${_id}`}
                         toggle={() => this.toggleTooltip("retweet")}
                         delay={250}
                     >
-                        {userRetweeted ? "Undo Retweet" : "Retweet"}
+                        {retweets.users.indexOf(auth.handle) > -1 ? "Undo Retweet" : "Retweet"}
                     </Tooltip>
+
                     <Tooltip
                         placement="top"
                         isOpen={likeTooltipOpen}
-                        target="tweet--likeID"
+                        target={`like_${_id}`}
                         toggle={() => this.toggleTooltip("like")}
                         delay={250}
                     >
-                        {userLiked ? "Undo Like" : "Like"}
+                        {likes.users.indexOf(auth.handle) > -1 ? "Undo Like" : "Like"}
                     </Tooltip>
                     <Tooltip
                         placement="top"
                         isOpen={messageTooltipOpen}
-                        target="tweet--messageID"
+                        target={`dm_${_id}`}
                         toggle={() => this.toggleTooltip("message")}
                         delay={250}
                     >
@@ -293,7 +308,7 @@ Tweet.defaultProps = {
     displayImgSrc: null,
 };
 
-const mapStateToProps = ({ auth }) => ({ auth });
+const mapStateToProps = ({ auth, user, tweets }) => ({ auth, user, tweets });
 
 export default connect(
     mapStateToProps,
