@@ -78,6 +78,9 @@ const userSchema = new Schema({
     themeColor: {
         type: String,
         default: "#1DA1F2"
+    },
+    pinnedTweet: {
+        type: String,
     }
 });
 

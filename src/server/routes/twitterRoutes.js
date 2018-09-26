@@ -364,10 +364,8 @@ module.exports = app => {
             );
             /*
                 Catching any errors, and sending them back to the client with a 400 (bad request) status code.
-                Errors are also logged to the console.
             */
         } catch (err) {
-            console.log(err);
             res.status(400).send(err);
         }
     });

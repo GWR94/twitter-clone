@@ -200,3 +200,16 @@
     font-size: 14px;
     font-weight: 700;
 }
+
+.tweet--pinnedText {
+    display: inline-block;
+    color: $gray-text;
+    font-size: 12px;
+}
+
+.tweet--pinnedTextContainer {
+    margin-left: 54px;
+    margin-top: -8px;
+    padding: 0;
+    height: 26px;
+}

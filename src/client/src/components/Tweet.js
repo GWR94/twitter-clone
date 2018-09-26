@@ -33,12 +33,18 @@ class Tweet extends React.Component {
             messageTooltipOpen: false,
             dropdownOpen: false,
             showComponent: true,
+            pinnedTweet: false,
         };
     }
 
     componentDidMount() {
         this.setState({ retweetTooltipOpen: false, likeTooltipOpen: false });
-        const { retweets, likes, auth } = this.props;
+        const { retweets, likes, auth, pinnedTweet } = this.props;
+        if (pinnedTweet) {
+            this.setState({ pinnedTweet: true });
+        } else {
+            this.setState({ pinnedTweet: false });
+        }
         if (retweets.users.indexOf(auth.handle) > -1) {
             this.retweetRef.current.className = "tweet--userRetweet";
         } else {
@@ -109,12 +115,19 @@ class Tweet extends React.Component {
             retweetTooltipOpen,
             dropdownOpen,
             showComponent,
+            pinnedTweet,
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
         return (
             showComponent && (
                 <div className="tweet--container">
+                    {pinnedTweet && (
+                        <div className="tweet--pinnedTextContainer">
+                            <i className="fas fa-map-pin icon__pinnedTweet" />
+                            <p className="tweet--pinnedText">Pinned Tweet</p>
+                        </div>
+                    )}
                     <i
                         className="fas fa-chevron-down icon__dropdownTweet"
                         onClick={() => {
@@ -127,7 +140,25 @@ class Tweet extends React.Component {
                             <p className="tweet--dropdownItem">Share via Direct Message</p>
                             <p className="tweet--dropdownItem">Copy Link to Tweet</p>
                             <p className="tweet--dropdownItem">Embed Tweet</p>
-                            <p className="tweet--dropdownItem">Pin to your profile page</p>
+                            <p
+                                className="tweet--dropdownItem"
+                                onClick={async () => {
+                                    const { pinTweet } = this.props;
+                                    const values = {
+                                        handle,
+                                        tweetID: _id,
+                                    };
+                                    await pinTweet(values);
+                                    this.setState({ dropdownOpen: false });
+                                    if (pinnedTweet) {
+                                        this.setState({ pinnedTweet: false });
+                                    }
+                                }}
+                            >
+                                {pinnedTweet
+                                    ? "Unpin from profile page"
+                                    : "Pin to your profile page"}
+                            </p>
                             <p
                                 className="tweet--dropdownItem"
                                 onClick={() => {
@@ -303,9 +334,11 @@ Tweet.propTypes = {
         displayImg: PropTypes.string,
         headerImg: PropTypes.string,
     }).isRequired,
+    pinnedTweet: PropTypes.bool,
 };
 Tweet.defaultProps = {
     displayImgSrc: null,
+    pinnedTweet: false,
 };
 
 const mapStateToProps = ({ auth, user, tweets }) => ({ auth, user, tweets });

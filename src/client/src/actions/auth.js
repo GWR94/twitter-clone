@@ -30,3 +30,8 @@ export const followUser = values => async dispatch => {
     const res = await axios.post("/api/follow_user", values);
     dispatch({ type: FETCH_USER, payload: res.data });
 };
+
+export const pinTweet = values => async dispatch => {
+    const res = await axios.post("/api/pin_tweet", values);
+    dispatch({ type: FETCH_USER, payload: res.data});
+}

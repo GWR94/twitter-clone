@@ -10,6 +10,7 @@ import loader from "../../../../public/images/loader.gif";
 class Feed extends React.Component {
     state = {
         rendered: false,
+        pinnedTweet: false
     };
     /*
         TODO
@@ -17,22 +18,29 @@ class Feed extends React.Component {
     */
 
     async componentWillMount() {
-        const { fetchTweets, handle } = this.props;
+        const { fetchTweets, handle, tweets } = this.props;
         await fetchTweets(handle);
         this.setState({ rendered: true });
+        const pinnedTweet = tweets.filter(tweet => tweet.pinnedTweet === true);
+        if(pinnedTweet) {
+            this.setState({ pinnedTweet: true });
+        }
     }
 
     /* eslint-disable-next-line */
     renderTweets(tweets) {
-        console.log(tweets);
         return tweets
+            .filter(tweet => tweet.pinnedTweet !== true)
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
             .map((tweet, i) => <Tweet key={i} {...tweet} />);
     }
 
     render() {
         const { tweets, showFeed } = this.props;
-        const { rendered } = this.state;
+        const { rendered, pinnedTweet } = this.state;
+
+        const tweetPinned = tweets.filter(tweet => tweet.pinnedTweet === true);
+
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">
@@ -73,6 +81,7 @@ class Feed extends React.Component {
                                 ) : null
                             ) : (
                                 <div>
+                                    { pinnedTweet && <Tweet {...tweetPinned[0]} />}
                                     {this.renderTweets(tweets)}
                                     <Link to="/profile/jgower94">To jgower94</Link>
                                 </div>

@@ -220,6 +220,40 @@ module.exports = app => {
         );
     });
 
+    app.post("/api/pin_tweet", async (req, res) => {
+        const { handle, tweetID } = req.body;
+        await User.findOne(
+            {
+                handle: handle,
+            },
+            async (err, user) => {
+                if (err) return res.status(400).send(err);
+                if (!user.pinnedTweet) {
+                    user.pinnedTweet = tweetID;
+                    user.save();
+                } else {
+                    user.pinnedTweet = null;
+                    user.save();
+                }
+                await Tweets.findOne(
+                    {
+                        _id: tweetID,
+                    },
+                    (err, tweet) => {
+                        if (err) return res.status(400).send(err);
+                        if (tweet.pinnedTweet) {
+                            tweet.pinnedTweet = true;
+                        } else {
+                            tweet.pinnedTweet = false;
+                        }
+                        tweet.save();
+                    },
+                    res.send(user),
+                );
+            },
+        );
+    });
+
     app.get("/api/logout", (req, res) => {
         req.logout();
         res.redirect("/");

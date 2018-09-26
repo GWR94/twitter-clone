@@ -55,6 +55,10 @@ const tweetSchema = new Schema({
         type: Buffer,
         contentType: String,
     },
+    pinnedTweet: {
+        type: Boolean,
+        default: false
+    }
 });
 
 mongoose.model("tweets", tweetSchema);
