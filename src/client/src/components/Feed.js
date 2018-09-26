@@ -8,6 +8,9 @@ import TweetInput from "./TweetInput";
 import loader from "../../../../public/images/loader.gif";
 
 class Feed extends React.Component {
+    state = {
+        rendered: false,
+    };
     /*
         TODO
         [ ] check circle progress bar for errors when length is 0 after typing
@@ -16,10 +19,12 @@ class Feed extends React.Component {
     async componentWillMount() {
         const { fetchTweets, handle } = this.props;
         await fetchTweets(handle);
+        this.setState({ rendered: true });
     }
 
     /* eslint-disable-next-line */
     renderTweets(tweets) {
+        console.log(tweets);
         return tweets
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
             .map((tweet, i) => <Tweet key={i} {...tweet} />);
@@ -27,13 +32,14 @@ class Feed extends React.Component {
 
     render() {
         const { tweets, showFeed } = this.props;
+        const { rendered } = this.state;
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">
                 <h3 className="feed--noTweetsTitle">What? No Tweets yet?</h3>
                 <p className="feed--noTweetsText">
-                    This empty timeline won’t be around for long. Start following people and you’ll
-                    see Tweets show up here.
+                    This empty timeline won&apos;t be around for long. Start following people and
+                    you’ll see Tweets show up here.
                 </p>
                 <button
                     type="button"
@@ -54,14 +60,23 @@ class Feed extends React.Component {
             <div className="feed--container">
                 {showFeed && <TweetInput />}
                 <div className="feed--tweetFeedContainer" id="tweetFeed">
-                    {tweets.length === 0 ? (
-                        showFeed ? (
-                            <NoTweets />
-                        ) : null
+                    {!rendered ? (
+                        <div />
                     ) : (
                         <div>
-                            {this.renderTweets(tweets)}
-                            <Link to="/profile/jgower94">To jgower94</Link>
+                            {tweets.length === 0 ? (
+                                showFeed ? (
+                                    <div>
+                                        <NoTweets />
+                                        <Link to="/profile/jgower94">To jgower94</Link>
+                                    </div>
+                                ) : null
+                            ) : (
+                                <div>
+                                    {this.renderTweets(tweets)}
+                                    <Link to="/profile/jgower94">To jgower94</Link>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

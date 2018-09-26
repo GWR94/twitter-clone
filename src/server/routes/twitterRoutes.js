@@ -2,7 +2,6 @@ const Twitter = require("twitter");
 const keys = require("../config/keys");
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
-const Schema = mongoose.Schema;
 const Tweet = mongoose.model("tweets");
 const fs = require("fs");
 const path = require("path");
@@ -99,19 +98,94 @@ module.exports = app => {
     */
     app.get("/api/fetch_tweets/:handle", async (req, res) => {
         const { handle } = req.params;
-        await Tweet.find(
+        /*
+            The handle is received from the req.params, which is the handle which will be used to
+            determine which tweets are going to be loaded from the database via the users' following
+            array document.
+        */
+        await User.findOne(
             {
                 handle: handle,
             },
-            (err, tweets) => {
+            async (err, user) => {
+                /*
+                    If any errors are caught, send them to the client with a 400 status code.
+                */
                 if (err) {
                     return res.status(400).send(null);
                 }
                 /*
-                Send all tweets back to the client, or send any errors if there are any present.
-            */
-                return res.send(tweets);
+                    If a user is found, the user.following array is transferred to the following const,
+                    so it can be manipulated. The tweetsArr array is initialised to contain all of the tweets
+                    which will be pushed to it. 
+                */
+                const following = user.following;
+                const tweetsArr = [];
+                /*
+                    The current user's tweets also need to be pushed into the array, so the handle
+                    found in req.params is used as the parameter for searching the Tweet collection
+                    for its tweets. If there are any errors, they're returned to the client with a 
+                    400 status code, if not then the tweets are looped through and pushed to the 
+                    tweetsArr array.
+                */
+                await Tweet.find(
+                    {
+                        handle: handle,
+                    },
+                    (err, tweets) => {
+                        if (err) return res.status(400).send(err);
+                        tweets.forEach(tweet => {
+                            tweetsArr.push(tweet);
+                        });
+                    },
+                );
+                /*
+                        If there is only one item in the following array, then the first (and only) user
+                        needs to be found, and all tweets from that user need to be looped through, and 
+                        pushed to the tweetsArr array.
+                */
+                if(following.length === 1) {
+                    await Tweet.find(
+                        {
+                            handle: following[0],
+                        },
+                        (err, tweets) => {
+                            if (err) return res.status(400).send(err);
+                            tweets.forEach(tweet => {
+                                tweetsArr.push(tweet);
+                            });
+                        },
+                    );
+                }
+                /*
+                    If the following array is larger than 1 item, all of the followers are looped through,
+                    then a second loop is executed to push all of the tweets in the followers arrays.
+                    If there are any errors, the they are send back to the client with a 400 status code.
+                */
+                if (following.length > 1) {
+                    for (let users in following) {
+                        await Tweet.find(
+                            {
+                                handle: users,
+                            },
+                            (err, tweets) => {
+                                if (err) return res.status(400).send(err);
+                                tweets.forEach(tweet => {
+                                    tweetsArr.push(tweet);
+                                });
+                            },
+                        );
+                    }
+                }
+                /*
+                    The tweetsArr containing all of the tweets which the user follows have created is sent back
+                    to the client.
+                */
+                return res.send(tweetsArr);
             },
+            /*
+                Any uncaught errors are sent back the client.
+            */
         ).catch(err => {
             res.status(400).send(err);
         });
@@ -136,28 +210,28 @@ module.exports = app => {
                 async (err, tweet) => {
                     if (err) res.status(400).send(err);
                     /*
-                    Switch the action set in req.body to determine which document to update
-                */
+                        Switch the action set in req.body to determine which document to update
+                    */
                     switch (action) {
                     case "retweet":
                         if (tweet.retweets.users.indexOf(user) === -1) {
                             /*
-                If the retweets.users array doesn't contain the user value sent from
-                req.body, then the client is trying to retweet something. The retweets.amount 
-                value should be incremented by 1, and the user value from req.body should be pushed 
-                into the retweets.users array.  
-            */
+                                If the retweets.users array doesn't contain the user value sent from
+                                req.body, then the client is trying to retweet something. The retweets.amount 
+                                value should be incremented by 1, and the user value from req.body should be pushed 
+                                into the retweets.users array.  
+                            */
                             let amount = tweet.retweets.amount + 1;
                             tweet.retweets.amount = amount;
                             let users = tweet.retweets.users;
                             users.push(user);
                             tweet.retweets.users = users;
                             /*
-                The current user then needs to have a reference to the
-                retweeted tweet, so the current user is found by using
-                the findOne function, then the tweetID (from req.body)
-                is pushed into the retweetedTweets.
-            */
+                                The current user then needs to have a reference to the
+                                retweeted tweet, so the current user is found by using
+                                the findOne function, then the tweetID (from req.body)
+                                is pushed into the retweetedTweets.
+                            */
                             await User.findOne(
                                 {
                                     handle: user,
@@ -171,10 +245,10 @@ module.exports = app => {
                             );
                         } else {
                             /*
-                If the user value from req.body is already in the tweet.retweets.users array, then the
-                client is trying to undo a retweet. This means that the amount should be decremented by 1,
-                and the user value should be removed from the tweets retweets.users array.
-            */
+                                If the user value from req.body is already in the tweet.retweets.users array, then the
+                                client is trying to undo a retweet. This means that the amount should be decremented by 1,
+                                and the user value should be removed from the tweets retweets.users array.
+                            */
                             let amount = tweet.retweets.amount - 1;
                             tweet.retweets.amount = amount;
                             let users = tweet.retweets.users;
@@ -182,11 +256,11 @@ module.exports = app => {
                             users.splice(index, 1);
                             tweet.retweets.users = users;
                             /*
-                Once the tweet is un-retweeted, it must then be removed from the current
-                users' retweetedTweets array. This is done by finding the user from the 
-                users collection by the findOne function. It is then removed by finding 
-                the index, and removing it from the array using splice().
-            */
+                                Once the tweet is un-retweeted, it must then be removed from the current
+                                users' retweetedTweets array. This is done by finding the user from the 
+                                users collection by the findOne function. It is then removed by finding 
+                                the index, and removing it from the array using splice().
+                            */
                             await User.findOne(
                                 {
                                     handle: user,
@@ -201,22 +275,31 @@ module.exports = app => {
                             );
                         }
                         /*
-            Save the tweet to the Tweets collection, and send it back to the client.  
-        */
+                            Save the tweet to the Tweets collection, and send it back to the client.  
+                        */
                         tweet.save();
                         res.send(tweet);
                         break;
                     /*
-            Use the same methods as 'retweet' for the 'like' action.
-        */
+                        Use the same methods as 'retweet' for the 'like' action.
+                    */
                     case "like":
+                        /*
+                            If the action is "like", then the tweet is checked to see if the user has
+                            already liked by trying to find the index. If it is not found, then the like
+                            count is incremented by one, and the user is pushed into the likes user array,
+                            and saved.
+                        */
                         if (tweet.likes.users.indexOf(user) === -1) {
                             let amount = tweet.likes.amount + 1;
                             tweet.likes.amount = amount;
-                            console.log(tweet.likes.amount);
                             let users = tweet.likes.users;
                             users.push(user);
                             tweet.likes.users = user;
+                            /*
+                                The current users' document is updated to push the tweets _id to the 
+                                favouritedTweets field array. The user document is then saved.
+                            */
                             await User.findOne(
                                 {
                                     handle: user,
@@ -229,17 +312,34 @@ module.exports = app => {
                                 },
                             );
                         } else {
+                            /*
+                                If there is no index found in the search for the user in the tweets' likes array,
+                                then the user must be trying to remove a like. The tweet.likes amount number needs
+                                to be decreased by 1, so the tweet.likes.amount is stored into the const amount, and
+                                decreased by one. It is then converted to the tweets.likes.amount document.
+                            */
                             let amount = tweet.likes.amount - 1;
                             tweet.likes.amount = amount;
+                            /*
+                                Firstly, the tweet.likes.users array is stored into the const users so it can be 
+                                manipulated. The index of the user is then found so it can be removed; then the array 
+                                is spliced with the parameters of the index to remove, and the number of items to remove (1).
+                                The tweet.likes.users array is then converted to the updated users array.
+                            */
                             let users = tweet.likes.users;
                             const index = tweet.likes.users.indexOf(user);
                             users.splice(index, 1);
                             tweet.likes.users = users;
+                            /*
+                                The current user is found in the User collection, and the user.favouritedTweets array is spliced
+                                to remove the user from the array, using the same methods as above. The user is then saved.
+                            */
                             await User.findOne(
                                 {
                                     handle: user,
                                 },
                                 (err, user) => {
+                                    if(err) return res.status(400).send(err);
                                     const favouritedArr = user.favouritedTweets;
                                     const index = favouritedArr.indexOf(tweetID);
                                     favouritedArr.splice(index, 1);
@@ -248,56 +348,42 @@ module.exports = app => {
                                 },
                             );
                         }
+                        /*
+                            The tweet is saved to update all the values, and the tweet is then sent back to
+                            the client.
+                        */
                         tweet.save();
                         res.send(tweet);
                         break;
                     }
                 },
+                /*
+                    The new document is the one being sent to the client with { new: true }
+                */ 
                 { new: true },
             );
+            /*
+                Catching any errors, and sending them back to the client with a 400 (bad request) status code.
+                Errors are also logged to the console.
+            */
         } catch (err) {
             console.log(err);
             res.status(400).send(err);
         }
     });
 
-    app.post("/api/follow_user", async (req, res) => {
-        const { action, handle, currentUser } = req.body;
-        await User.findOne(
-            {
-                handle: currentUser,
-            },
-            async (err, user) => {
-                await User.findOne(
-                    {
-                        handle: user,
-                    },
-                    (e, foundUser) => {
-                        if (foundUser) {
-                            const followers = user.followers;
-                            if (action === "follow") {
-                                followers.push(handle);
-                            } else {
-                                const index = followers.indexOf(handle);
-                                followers.splice(index, 1);
-                            }
-                            user.followers = followers;
-                            user.save();
-                            return res.send(user);
-                        }
-                        return res.status(400).send(e);
-                    },
-                );
-                if (err) return res.status(400).send(err);
-            },
-        );
-    });
-
     app.delete("/api/delete_tweet/:tweetID", async (req, res) => {
         try {
+            /*
+                The tweetID is received from the req.params, and the findOneByIdAndRemove function finds this
+                ID in the Tweet collection, and removes the whole tweet.
+            */
             const { tweetID } = req.params;
             await Tweet.findByIdAndRemove(tweetID);
         } catch (e) {
+            /*
+                If there are any errors, send it back to the client.
+            */
             res.json({ error: e });
         }
     });

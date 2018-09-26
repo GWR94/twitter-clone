@@ -160,7 +160,7 @@ class ProfileOverview extends React.Component {
             tooltipOpen,
         } = this.state;
 
-        let imagePreview = null;
+        let imagePreview;
         if (imagePreviewUrl) {
             imagePreview = <img alt="Profile Img" src={imagePreviewUrl} />;
         } else {

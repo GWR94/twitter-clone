@@ -25,3 +25,8 @@ export const uploadPhoto = values => async dispatch => {
     const res = await axios.post("/api/upload", values);
     dispatch({ type: FETCH_USER, payload: res.data });
 }
+
+export const followUser = values => async dispatch => {
+    const res = await axios.post("/api/follow_user", values);
+    dispatch({ type: FETCH_USER, payload: res.data });
+};

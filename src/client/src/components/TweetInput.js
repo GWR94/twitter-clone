@@ -77,7 +77,6 @@ class TweetInput extends Component {
             handle: auth.handle,
             postedAt: Date.now(),
         });
-        this.renderTweets(tweets);
         this.setState({ tweetText: "", tweetError: false });
     }
 

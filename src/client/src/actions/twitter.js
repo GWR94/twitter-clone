@@ -16,11 +16,6 @@ export const updateTweet = values => async dispatch => {
     dispatch({ type: UPDATE_TWEET, payload: res.data });
 };
 
-export const followUser = values => async dispatch => {
-    const res = await axios.post("/api/follow_user", values);
-    dispatch({ type: POST_TWEET, payload: res.data });
-};
-
 export const deleteTweet = tweetID => async dispatch => {
     const res = await axios.delete(`/api/delete_tweet/${tweetID}`);
     dispatch({ type: UPDATE_TWEET, payload: res.data });

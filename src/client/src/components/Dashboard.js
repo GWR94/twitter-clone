@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { PropTypes } from "prop-types";
 import ProfileOverview from "./ProfileOverview";
 import WhoToFollow from "./WhoToFollow";
 import Trends from "./Trends";
@@ -14,7 +14,7 @@ import NavBar from "./NavBar";
     [ ] Fix Login Component styling (NavBar)
 */
 
-const DashboardPage = (props) => {
+const DashboardPage = props => {
     const { auth } = props;
     return (
         <div>
@@ -34,12 +34,15 @@ const DashboardPage = (props) => {
                         <div className="dashboard--trends">
                             <Trends />
                         </div>
-                        <div />
                     </div>
                 </div>
             </div>
         </div>
     );
+};
+
+DashboardPage.propTypes = {
+    auth: PropTypes.shape().isRequired,
 };
 
 const mapStateToProps = ({ auth, twitter }) => ({ auth, twitter });

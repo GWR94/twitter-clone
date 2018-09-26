@@ -177,6 +177,49 @@ module.exports = app => {
         );
     });
 
+    app.post("/api/follow_user", async (req, res) => {
+        const { action, currentUser, userToFollow } = req.body;
+        await User.findOne(
+            {
+                handle: currentUser,
+            },
+            async (err, user) => {
+                if (err) return res.status(404).send(err);
+                const following = user.following;
+                if (action === "follow") {
+                    if (following.indexOf(userToFollow) > -1) {
+                        console.log(`${currentUser} is already following ${userToFollow}`);
+                        return res.status(400).send({ error: "Already following user" });
+                    }
+                    following.push(userToFollow);
+                } else {
+                    const index = following.indexOf(userToFollow);
+                    following.splice(index, 1);
+                }
+                user.following = following;
+                user.save();
+                await User.findOne(
+                    {
+                        handle: userToFollow,
+                    },
+                    async (err, foundUser) => {
+                        if (err) return res.status(404).send(err);
+                        const followers = foundUser.followers;
+                        if (action === "follow") {
+                            followers.push(currentUser);
+                        } else {
+                            const index = followers.indexOf(currentUser);
+                            followers.splice(index, 1);
+                        }
+                        foundUser.followers = followers;
+                        return foundUser.save();
+                    },
+                );
+                res.send(user);
+            },
+        );
+    });
+
     app.get("/api/logout", (req, res) => {
         req.logout();
         res.redirect("/");

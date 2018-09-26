@@ -50,6 +50,9 @@ class Profile extends React.Component {
             console.log(auth);
             this.setState({ numTweets: auth.tweets.length, userProfile: true });
         } else {
+            if (auth.following.indexOf(handle) > -1) {
+                this.setState({ userFollowing: true });
+            }
             await getUser(handle);
             this.setState({ userProfile: false });
         }
@@ -117,6 +120,7 @@ class Profile extends React.Component {
             yearDropdownOpen,
             tooltipOpen,
             userProfile,
+            userFollowing,
         } = this.state;
 
         const {
@@ -141,7 +145,7 @@ class Profile extends React.Component {
         const userInfo = [
             {
                 description: "Tweets",
-                value: user ? user.tweets.length || 0 : auth.tweets,
+                value: user ? user.tweets.length : auth.tweets,
             },
             {
                 description: "Following",
@@ -234,8 +238,21 @@ class Profile extends React.Component {
                                     </button>
                                 </div>
                             ) : (
-                                <button className="button__themeColor" type="button">
-                                    Follow
+                                <button
+                                    className="button__themeColor"
+                                    type="button"
+                                    onClick={async () => {
+                                        const { followUser } = this.props;
+                                        await followUser({
+                                            action: userFollowing ? "unfollow" : "follow",
+                                            currentUser: auth.handle,
+                                            userToFollow: user.handle,
+                                        });
+                                        const newState = !userFollowing;
+                                        this.setState({ userFollowing: newState });
+                                    }}
+                                >
+                                    {userFollowing ? "Unfollow" : "Follow"}
                                 </button>
                             )}
                         </div>
