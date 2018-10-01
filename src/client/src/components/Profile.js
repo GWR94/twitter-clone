@@ -47,7 +47,6 @@ class Profile extends React.Component {
         const { handle } = match.params;
         if (handle === auth.handle) {
             await fetchUser();
-            console.log(auth);
             this.setState({ numTweets: auth.tweets.length, userProfile: true });
         } else {
             if (auth.following.indexOf(handle) > -1) {

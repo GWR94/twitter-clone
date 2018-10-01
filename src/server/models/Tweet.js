@@ -54,10 +54,6 @@ const tweetSchema = new Schema({
     photos: {
         type: Buffer,
         contentType: String,
-    },
-    pinnedTweet: {
-        type: Boolean,
-        default: false
     }
 });
 

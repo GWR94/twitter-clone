@@ -46,6 +46,7 @@ module.exports = app => {
                 website: req.user.location,
                 displayImg: req.user.displayImg,
                 headerImg: req.user.headerImg,
+                pinnedTweet: req.user.pinnedTweet,
             };
             return res.send(data);
         }
@@ -87,6 +88,8 @@ module.exports = app => {
                     website: user.location || "",
                     displayImg: user.displayImg,
                     headerImg: user.headerImg,
+                    pinnedTweet: user.pinnedTweet,
+                    profileCompleted: user.profileCompleted,
                 };
                 return res.send(userData);
             },
@@ -162,6 +165,12 @@ module.exports = app => {
 
     app.post("/api/update_profile", async (req, res) => {
         const { value, field, user } = req.body;
+
+        const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
+            if (err) return res.send(err);
+            return tweets;
+        });
+
         await User.findOneAndUpdate(
             {
                 handle: user,
@@ -171,14 +180,46 @@ module.exports = app => {
             },
             (err, user) => {
                 if (err) return res.send(err);
+                const userData = {
+                    isVerified: user.isVerified,
+                    handle: user.handle,
+                    displayName: user.displayName || user.handle,
+                    email: user.email,
+                    displayImgSrc: user.displayImgSrc,
+                    headerImgSrc: user.headerImgSrc,
+                    favouritedTweets: user.favouritedTweets,
+                    retweetedTweets: user.retweetedTweets,
+                    followers: user.followers,
+                    following: user.following,
+                    lists: user.lists || [],
+                    moments: user.moments || [],
+                    tweets: tweets,
+                    profileOverview: user.profileOverview || "",
+                    birthday: user.birthday || "",
+                    birthPlace: user.birthPlace || "",
+                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
+                    themeColor: user.themeColor || "",
+                    location: user.location || "",
+                    website: user.location || "",
+                    displayImg: user.displayImg,
+                    headerImg: user.headerImg,
+                    pinnedTweet: user.pinnedTweet,
+                    profileCompleted: user.profileCompleted,
+                };
                 user.save();
-                return res.send(user);
+                return res.send(userData);
             },
         );
     });
 
     app.post("/api/follow_user", async (req, res) => {
         const { action, currentUser, userToFollow } = req.body;
+
+        const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
+            if (err) return res.send(err);
+            return tweets;
+        });
+
         await User.findOne(
             {
                 handle: currentUser,
@@ -198,6 +239,32 @@ module.exports = app => {
                 }
                 user.following = following;
                 user.save();
+                const userData = {
+                    isVerified: user.isVerified,
+                    handle: user.handle,
+                    displayName: user.displayName || user.handle,
+                    email: user.email,
+                    displayImgSrc: user.displayImgSrc,
+                    headerImgSrc: user.headerImgSrc,
+                    favouritedTweets: user.favouritedTweets,
+                    retweetedTweets: user.retweetedTweets,
+                    followers: user.followers,
+                    following: user.following,
+                    lists: user.lists || [],
+                    moments: user.moments || [],
+                    tweets: tweets,
+                    profileOverview: user.profileOverview || "",
+                    birthday: user.birthday || "",
+                    birthPlace: user.birthPlace || "",
+                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
+                    themeColor: user.themeColor || "",
+                    location: user.location || "",
+                    website: user.location || "",
+                    displayImg: user.displayImg,
+                    headerImg: user.headerImg,
+                    pinnedTweet: user.pinnedTweet,
+                    profileCompleted: user.profileCompleted,
+                };
                 await User.findOne(
                     {
                         handle: userToFollow,
@@ -215,41 +282,61 @@ module.exports = app => {
                         return foundUser.save();
                     },
                 );
-                res.send(user);
+                res.send(userData);
             },
         );
     });
 
     app.post("/api/pin_tweet", async (req, res) => {
         const { handle, tweetID } = req.body;
+
         await User.findOne(
             {
                 handle: handle,
             },
             async (err, user) => {
                 if (err) return res.status(400).send(err);
-                if (!user.pinnedTweet) {
-                    user.pinnedTweet = tweetID;
-                    user.save();
-                } else {
+                if (user.pinnedTweet === tweetID) {
                     user.pinnedTweet = null;
-                    user.save();
+                } else {
+                    user.pinnedTweet = tweetID;
                 }
-                await Tweets.findOne(
-                    {
-                        _id: tweetID,
-                    },
-                    (err, tweet) => {
-                        if (err) return res.status(400).send(err);
-                        if (tweet.pinnedTweet) {
-                            tweet.pinnedTweet = true;
-                        } else {
-                            tweet.pinnedTweet = false;
-                        }
-                        tweet.save();
-                    },
-                    res.send(user),
-                );
+                user.save();
+
+                const tweets = await Tweets.find({ handle: handle }, (err, tweets) => {
+                    if (err) return res.send(err);
+                    return tweets;
+                });
+
+                const userData = {
+                    _id: user._id,
+                    isVerified: user.isVerified,
+                    handle: user.handle,
+                    displayName: user.displayName || user.handle,
+                    email: user.email,
+                    displayImgSrc: user.displayImgSrc,
+                    headerImgSrc: user.headerImgSrc,
+                    favouritedTweets: user.favouritedTweets,
+                    retweetedTweets: user.retweetedTweets,
+                    followers: user.followers,
+                    following: user.following,
+                    lists: user.lists || [],
+                    moments: user.moments || [],
+                    tweets: tweets,
+                    profileOverview: user.profileOverview || "",
+                    birthday: user.birthday || "",
+                    birthPlace: user.birthPlace || "",
+                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
+                    themeColor: user.themeColor || "",
+                    location: user.location || "",
+                    website: user.location || "",
+                    displayImg: user.displayImg,
+                    headerImg: user.headerImg,
+                    pinnedTweet: user.pinnedTweet,
+                    profileCompleted: user.profileCompleted,
+                };
+                console.log(userData);
+                res.send(userData);
             },
         );
     });

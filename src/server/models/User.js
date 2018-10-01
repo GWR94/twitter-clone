@@ -80,7 +80,7 @@ const userSchema = new Schema({
         default: "#1DA1F2"
     },
     pinnedTweet: {
-        type: String,
+        type: String
     }
 });
 

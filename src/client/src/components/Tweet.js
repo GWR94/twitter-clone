@@ -37,14 +37,15 @@ class Tweet extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.setState({ retweetTooltipOpen: false, likeTooltipOpen: false });
-        const { retweets, likes, auth, pinnedTweet } = this.props;
-        if (pinnedTweet) {
-            this.setState({ pinnedTweet: true });
-        } else {
-            this.setState({ pinnedTweet: false });
-        }
+        const { auth, user, _id } = this.props;
+        const pinnedTweet = user ? user.pinnedTweet === _id : auth.pinnedTweet === _id;
+        this.setState({ pinnedTweet });
+    }
+
+    componentDidMount() {
+        const { retweets, likes, auth } = this.props;
         if (retweets.users.indexOf(auth.handle) > -1) {
             this.retweetRef.current.className = "tweet--userRetweet";
         } else {
@@ -106,6 +107,7 @@ class Tweet extends React.Component {
             retweets,
             comments,
             postedAt,
+            update
         } = this.props;
 
         const {
@@ -152,7 +154,10 @@ class Tweet extends React.Component {
                                     this.setState({ dropdownOpen: false });
                                     if (pinnedTweet) {
                                         this.setState({ pinnedTweet: false });
+                                    } else {
+                                        this.setState({ pinnedTweet: true });
                                     }
+                                    update();
                                 }}
                             >
                                 {pinnedTweet
@@ -165,6 +170,7 @@ class Tweet extends React.Component {
                                     const { deleteTweet } = this.props;
                                     deleteTweet(_id);
                                     this.setState({ showComponent: false });
+                                    update();
                                 }}
                             >
                                 Delete Tweet
@@ -334,11 +340,11 @@ Tweet.propTypes = {
         displayImg: PropTypes.string,
         headerImg: PropTypes.string,
     }).isRequired,
-    pinnedTweet: PropTypes.bool,
+    user: PropTypes.shape({})
 };
 Tweet.defaultProps = {
     displayImgSrc: null,
-    pinnedTweet: false,
+    user: null
 };
 
 const mapStateToProps = ({ auth, user, tweets }) => ({ auth, user, tweets });

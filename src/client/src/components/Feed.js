@@ -10,7 +10,7 @@ import loader from "../../../../public/images/loader.gif";
 class Feed extends React.Component {
     state = {
         rendered: false,
-        pinnedTweet: false
+        pinnedTweet: false,
     };
     /*
         TODO
@@ -22,25 +22,38 @@ class Feed extends React.Component {
         await fetchTweets(handle);
         this.setState({ rendered: true });
         const pinnedTweet = tweets.filter(tweet => tweet.pinnedTweet === true);
-        if(pinnedTweet) {
+        if (pinnedTweet.length > 0) {
             this.setState({ pinnedTweet: true });
         }
     }
 
-    /* eslint-disable-next-line */
-    renderTweets(tweets) {
+    renderTweets = tweets => {
+        const { userProfile, auth, user } = this.props;
+        const { pinnedTweet } = auth || user;
+        const pinTweets = tweets.filter(tweet => tweet._id === pinnedTweet);
+        if (pinTweets.length > 0) {
+            return (
+                <div>
+                    <Tweet {...pinTweets[0]} update={() => this.forceUpdate()}/>
+                    {tweets
+                        .filter(tweet => tweet._id !== pinnedTweet)
+                        .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
+                        .map((tweet, i) => (
+                            <Tweet key={i} {...tweet} update={() => this.forceUpdate()}/>
+                        ))}
+                </div>
+            );
+        }
         return tweets
-            .filter(tweet => tweet.pinnedTweet !== true)
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
-            .map((tweet, i) => <Tweet key={i} {...tweet} />);
-    }
+            .map((tweet, i) => <Tweet key={i} {...tweet} update={() => this.forceUpdate()} />);
+    };
 
     render() {
-        const { tweets, showFeed } = this.props;
+        const { tweets, showFeed, userProfile } = this.props;
         const { rendered, pinnedTweet } = this.state;
 
         const tweetPinned = tweets.filter(tweet => tweet.pinnedTweet === true);
-
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">
@@ -81,7 +94,6 @@ class Feed extends React.Component {
                                 ) : null
                             ) : (
                                 <div>
-                                    { pinnedTweet && <Tweet {...tweetPinned[0]} />}
                                     {this.renderTweets(tweets)}
                                     <Link to="/profile/jgower94">To jgower94</Link>
                                 </div>
