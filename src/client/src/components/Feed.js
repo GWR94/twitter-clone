@@ -18,42 +18,46 @@ class Feed extends React.Component {
     */
 
     async componentWillMount() {
-        const { fetchTweets, handle, tweets } = this.props;
+        const { fetchTweets, handle } = this.props;
         await fetchTweets(handle);
         this.setState({ rendered: true });
-        const pinnedTweet = tweets.filter(tweet => tweet.pinnedTweet === true);
-        if (pinnedTweet.length > 0) {
-            this.setState({ pinnedTweet: true });
-        }
     }
 
     renderTweets = tweets => {
-        const { userProfile, auth, user } = this.props;
+        const { auth, user } = this.props;
         const { pinnedTweet } = auth || user;
         const pinTweets = tweets.filter(tweet => tweet._id === pinnedTweet);
         if (pinTweets.length > 0) {
             return (
                 <div>
-                    <Tweet {...pinTweets[0]} update={() => this.forceUpdate()}/>
+                    <Tweet
+                        {...pinTweets[0]}
+                        key="pinnedComponent"
+                        pinnedID={pinTweets.length > 0 ? pinTweets[0]._id : ""}
+                    />
                     {tweets
                         .filter(tweet => tweet._id !== pinnedTweet)
                         .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
                         .map((tweet, i) => (
-                            <Tweet key={i} {...tweet} update={() => this.forceUpdate()}/>
+                            <Tweet
+                                key={i}
+                                {...tweet}
+                                pinnedID={pinTweets.length > 0 ? pinTweets[0]._id : ""}
+                            />
                         ))}
                 </div>
             );
         }
         return tweets
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
-            .map((tweet, i) => <Tweet key={i} {...tweet} update={() => this.forceUpdate()} />);
+            .map((tweet, i) => (
+                <Tweet key={i} {...tweet} pinnedID={pinTweets.length > 0 ? pinTweets[0]._id : ""} />
+            ));
     };
 
     render() {
-        const { tweets, showFeed, userProfile } = this.props;
-        const { rendered, pinnedTweet } = this.state;
-
-        const tweetPinned = tweets.filter(tweet => tweet.pinnedTweet === true);
+        const { tweets, showFeed } = this.props;
+        const { rendered } = this.state;
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">

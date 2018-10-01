@@ -33,15 +33,14 @@ class Tweet extends React.Component {
             messageTooltipOpen: false,
             dropdownOpen: false,
             showComponent: true,
-            pinnedTweet: false,
         };
     }
 
     componentWillMount() {
         this.setState({ retweetTooltipOpen: false, likeTooltipOpen: false });
-        const { auth, user, _id } = this.props;
-        const pinnedTweet = user ? user.pinnedTweet === _id : auth.pinnedTweet === _id;
-        this.setState({ pinnedTweet });
+        // const { auth, user, _id, pinnedID } = this.props;
+        // const pinnedTweet = user ? user.pinnedTweet === _id : auth.pinnedTweet === _id;
+        // this.setState({ pinnedTweet });
     }
 
     componentDidMount() {
@@ -107,7 +106,7 @@ class Tweet extends React.Component {
             retweets,
             comments,
             postedAt,
-            update
+            pinnedID,
         } = this.props;
 
         const {
@@ -117,14 +116,13 @@ class Tweet extends React.Component {
             retweetTooltipOpen,
             dropdownOpen,
             showComponent,
-            pinnedTweet,
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
         return (
             showComponent && (
                 <div className="tweet--container">
-                    {pinnedTweet && (
+                    {_id === pinnedID && (
                         <div className="tweet--pinnedTextContainer">
                             <i className="fas fa-map-pin icon__pinnedTweet" />
                             <p className="tweet--pinnedText">Pinned Tweet</p>
@@ -152,15 +150,9 @@ class Tweet extends React.Component {
                                     };
                                     await pinTweet(values);
                                     this.setState({ dropdownOpen: false });
-                                    if (pinnedTweet) {
-                                        this.setState({ pinnedTweet: false });
-                                    } else {
-                                        this.setState({ pinnedTweet: true });
-                                    }
-                                    update();
                                 }}
                             >
-                                {pinnedTweet
+                                {_id === pinnedID
                                     ? "Unpin from profile page"
                                     : "Pin to your profile page"}
                             </p>
@@ -170,7 +162,6 @@ class Tweet extends React.Component {
                                     const { deleteTweet } = this.props;
                                     deleteTweet(_id);
                                     this.setState({ showComponent: false });
-                                    update();
                                 }}
                             >
                                 Delete Tweet
@@ -340,11 +331,13 @@ Tweet.propTypes = {
         displayImg: PropTypes.string,
         headerImg: PropTypes.string,
     }).isRequired,
-    user: PropTypes.shape({})
+    user: PropTypes.shape({}),
+    pinnedID: PropTypes.string,
 };
 Tweet.defaultProps = {
     displayImgSrc: null,
-    user: null
+    user: null,
+    pinnedID: null,
 };
 
 const mapStateToProps = ({ auth, user, tweets }) => ({ auth, user, tweets });
