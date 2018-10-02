@@ -84,13 +84,17 @@
     width: 200px;
     height: 220px;
     margin-bottom: -220px;
-    left: 532px;
+    left: 386px;
     padding: 10px 0;
     -webkit-box-shadow: 0 0 3px 1px rgb(221, 221, 221);
     -moz-box-shadow: 0 0 3px 1px rgb(221, 221, 221);
     box-shadow: 0 0 3px 1px rgb(221, 221, 221);
     border-radius: 5px;
     top: 34px;
+    z-index: 10;
+    @media screen and (min-width: 1250px) {
+        left: 596px;
+    }
 }
 
 .tweet--dropdownItem {
@@ -115,6 +119,9 @@
         left: 30px;
         top: -19px;
         pointer-events: none;
+        @media screen and (max-width: 1250px) {
+            left: 168px;
+        }
     }
     &:before {
         content: "";
@@ -128,7 +135,16 @@
         left: 30px;
         top: -20px;
         pointer-events: none;
+        @media screen and (max-width: 1250px) {
+            left: 168px;
+        }
     }
+}
+
+.tweet--dropdownContainerUser {
+    @extend .tweet--dropdownContainer;
+    height: 246px;
+    margin-bottom: -246px;
 }
 
 //: Icons

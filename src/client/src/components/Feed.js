@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 import Tweet from "./Tweet";
 import * as actions from "../actions";
 import TweetInput from "./TweetInput";
-import loader from "../../../../public/images/loader.gif";
 
 class Feed extends React.Component {
     state = {
         rendered: false,
-        pinnedTweet: false,
     };
     /*
         TODO

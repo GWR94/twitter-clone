@@ -135,41 +135,53 @@ class Tweet extends React.Component {
                             this.setState({ dropdownOpen: newState });
                         }}
                     />
-                    {dropdownOpen && (
-                        <div className="tweet--dropdownContainer">
-                            <p className="tweet--dropdownItem">Share via Direct Message</p>
-                            <p className="tweet--dropdownItem">Copy Link to Tweet</p>
-                            <p className="tweet--dropdownItem">Embed Tweet</p>
-                            <p
-                                className="tweet--dropdownItem"
-                                onClick={async () => {
-                                    const { pinTweet } = this.props;
-                                    const values = {
-                                        handle,
-                                        tweetID: _id,
-                                    };
-                                    await pinTweet(values);
-                                    this.setState({ dropdownOpen: false });
-                                }}
-                            >
-                                {_id === pinnedID
-                                    ? "Unpin from profile page"
-                                    : "Pin to your profile page"}
-                            </p>
-                            <p
-                                className="tweet--dropdownItem"
-                                onClick={() => {
-                                    const { deleteTweet } = this.props;
-                                    deleteTweet(_id);
-                                    this.setState({ showComponent: false });
-                                }}
-                            >
-                                Delete Tweet
-                            </p>
-                            <hr style={{ margin: "5px 0" }} />
-                            <p className="tweet--dropdownItem">Add to new Moment</p>
-                        </div>
-                    )}
+                    {dropdownOpen &&
+                        (auth.handle === handle ? (
+                            <div className="tweet--dropdownContainer">
+                                <p className="tweet--dropdownItem">Share via Direct Message</p>
+                                <p className="tweet--dropdownItem">Copy Link to Tweet</p>
+                                <p className="tweet--dropdownItem">Embed Tweet</p>
+                                <p
+                                    className="tweet--dropdownItem"
+                                    onClick={async () => {
+                                        const { pinTweet } = this.props;
+                                        const values = {
+                                            handle,
+                                            tweetID: _id,
+                                        };
+                                        await pinTweet(values);
+                                        this.setState({ dropdownOpen: false });
+                                    }}
+                                >
+                                    {_id === pinnedID
+                                        ? "Unpin from profile page"
+                                        : "Pin to your profile page"}
+                                </p>
+                                <p
+                                    className="tweet--dropdownItem"
+                                    onClick={() => {
+                                        const { deleteTweet } = this.props;
+                                        deleteTweet(_id);
+                                        this.setState({ showComponent: false });
+                                    }}
+                                >
+                                    Delete Tweet
+                                </p>
+                                <hr style={{ margin: "5px 0" }} />
+                                <p className="tweet--dropdownItem">Add to new Moment</p>
+                            </div>
+                        ) : (
+                            <div className="tweet--dropdownContainerUser">
+                                <p className="tweet--dropdownItem">Copy Link to Tweet</p>
+                                <p className="tweet--dropdownItem">Embed Tweet</p>
+                                <p className="tweet--dropdownItem">{`Mute @${handle}`}</p>
+                                <p className="tweet--dropdownItem">{`Block @${handle}`} Tweet</p>
+                                <p className="tweet--dropdownItem">Report Tweet</p>
+                                <p className="tweet--dropdownItem">I don&apos;t like this Tweet</p>
+                                <hr style={{ margin: "5px 0" }} />
+                                <p className="tweet--dropdownItem">Add to new Moment</p>
+                            </div>
+                        ))}
 
                     <div className="tweet--displayImgContainer">
                         <img

@@ -11,7 +11,8 @@ module.exports = {
   entry: ["@babel/polyfill", "./src/client/src/app.js"],
   output: {
     path: path.join(__dirname, outputDirectory),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: "/"
   },
   module: {
     rules: [
@@ -27,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: "file-loader?name=/public/images/[name].[ext]"
+        loader: "file-loader?name=./public/images/[name].[ext]"
       },
       {
         test: /\.(sa|sc|c)ss$/,
