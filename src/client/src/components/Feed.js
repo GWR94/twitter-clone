@@ -15,7 +15,7 @@ class Feed extends React.Component {
         [ ] check circle progress bar for errors when length is 0 after typing
     */
 
-    async componentWillMount() {
+    async componentDidMount() {
         const { fetchTweets, handle } = this.props;
         await fetchTweets(handle);
         this.setState({ rendered: true });

@@ -36,13 +36,6 @@ class Tweet extends React.Component {
         };
     }
 
-    componentWillMount() {
-        this.setState({ retweetTooltipOpen: false, likeTooltipOpen: false });
-        // const { auth, user, _id, pinnedID } = this.props;
-        // const pinnedTweet = user ? user.pinnedTweet === _id : auth.pinnedTweet === _id;
-        // this.setState({ pinnedTweet });
-    }
-
     componentDidMount() {
         const { retweets, likes, auth } = this.props;
         if (retweets.users.indexOf(auth.handle) > -1) {
@@ -119,6 +112,7 @@ class Tweet extends React.Component {
         } = this.state;
 
         timeago.register("twitter", twitterLocale);
+
         return (
             showComponent && (
                 <div className="tweet--container">
