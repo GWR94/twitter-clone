@@ -232,7 +232,7 @@ $header-height: 50px;
 
 .profile--overviewEditBirthday {
     @extend .profile--overviewEditMode;
-    height: 410px;    
+    height: 410px;
 }
 
 .profile--bioTextArea {
@@ -370,4 +370,45 @@ $header-height: 50px;
 
 .profile--editBackground {
     background: #fff;
+}
+
+.profile--birthplaceDropdown {
+    background: #fff;
+    position: relative;
+    width: 310px;
+    top: 5px;
+    height: auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border: 1px solid #d0d6d9;
+    padding: 12px 0;
+    z-index: 1;
+    &:before {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid #C4C9CC;
+        left: 5%;
+        top: -16px;
+    }
+    
+    &:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid #fff;
+        left: 5%;
+        top: -15px;
+    }
 }

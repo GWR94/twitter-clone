@@ -237,10 +237,10 @@ class ProfileOverview extends React.Component {
                     </Tooltip>
 
                     <div className="profileOverview--nameContainer">
-                        <Link to={`/profile/${handle}`} className="profileOverview--name">
+                        <Link to={`/${handle}`} className="profileOverview--name">
                             {displayName}
                         </Link>
-                        <Link to={`/profile/${handle}`} className="profileOverview--handle">
+                        <Link to={`/${handle}`} className="profileOverview--handle">
                             @{handle}
                         </Link>
                     </div>

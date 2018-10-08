@@ -4,12 +4,12 @@ import { PropTypes } from "prop-types";
 import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import { Tooltip } from "reactstrap";
-import loader from "../../../../public/images/loader.gif";
 import * as actions from "../actions";
 import NavBar from "./NavBar";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import MyFirstTweet from "./MyFirstTweet";
+import twitterLocations from "../services/twitterLocations.json";
 
 class Profile extends React.Component {
     constructor() {
@@ -28,6 +28,8 @@ class Profile extends React.Component {
             yearDropdownOpen: false,
             tooltipOpen: false,
             userProfile: true,
+            userFollowing: false,
+            birthplaceDropdownOpen: false,
         };
     }
 
@@ -47,15 +49,114 @@ class Profile extends React.Component {
         const { handle } = match.params;
         if (handle === auth.handle) {
             await fetchUser();
-            this.setState({ numTweets: auth.tweets.length, userProfile: true });
+            const {
+                displayName,
+                profileOverview,
+                location,
+                website,
+                tweets,
+                isVerified,
+                email,
+                displayImgSrc,
+                headerImgSrc,
+                favouritedTweets,
+                retweetedTweets,
+                followers,
+                following,
+                lists,
+                moments,
+                profileCompleted,
+                birthday,
+                birthPlace,
+                dateCreated,
+                pinnedTweet,
+            } = auth;
+            this.setState({
+                userProfile: true,
+                handle,
+                displayName: displayName || "",
+                profileOverview: profileOverview || "",
+                location: location || "",
+                website: website || "",
+                tweets,
+                isVerified: isVerified || false,
+                email: email || "",
+                displayImgSrc: displayImgSrc || null,
+                headerImgSrc: headerImgSrc || null,
+                favouritedTweets,
+                retweetedTweets,
+                followers,
+                following,
+                lists,
+                moments,
+                profileCompleted,
+                birthday,
+                birthPlace,
+                dateCreated,
+                pinnedTweet: pinnedTweet || null,
+                numTweets: tweets.length || 0,
+            });
         } else {
             if (auth.following.indexOf(handle) > -1) {
                 this.setState({ userFollowing: true });
             }
             await getUser(handle);
-            this.setState({ userProfile: false });
+            const {
+                displayName,
+                profileOverview,
+                location,
+                website,
+                tweets,
+                isVerified,
+                email,
+                displayImgSrc,
+                headerImgSrc,
+                favouritedTweets,
+                retweetedTweets,
+                followers,
+                following,
+                lists,
+                moments,
+                profileCompleted,
+                birthday,
+                birthPlace,
+                dateCreated,
+                pinnedTweet,
+            } = user;
+            this.setState({
+                userProfile: false,
+                handle,
+                displayName: displayName || "",
+                profileOverview: profileOverview || "",
+                location: location || "",
+                website: website || "",
+                tweets: tweets || [],
+                isVerified: isVerified || false,
+                email: email || "",
+                displayImgSrc: displayImgSrc || null,
+                headerImgSrc: headerImgSrc || null,
+                favouritedTweets,
+                retweetedTweets,
+                followers,
+                following,
+                lists,
+                moments,
+                profileCompleted,
+                birthday,
+                birthPlace,
+                dateCreated,
+                pinnedTweet: pinnedTweet || null,
+                numTweets: tweets.length || 0,
+            });
         }
     }
+
+    searchLocation = name => {
+        const results = twitterLocations.filter(
+            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
+        );
+        return results;
+    };
 
     handleDefaultTweet = async tweet => {
         const { postTweet, auth } = this.props;
@@ -69,7 +170,48 @@ class Profile extends React.Component {
     };
 
     /* eslint-disable-next-line */
-    renderProfileInfo(userInfo) {
+    renderProfileInfo() {
+        const {
+            tweets,
+            following,
+            followers,
+            favouritedTweets,
+            retweetedTweets,
+            lists,
+            moments,
+        } = this.state;
+
+        const userInfo = [
+            {
+                description: "Tweets",
+                value: tweets && tweets.length,
+            },
+            {
+                description: "Following",
+                value: following && following.length,
+            },
+            {
+                description: "Followers",
+                value: followers && followers.length,
+            },
+            {
+                description: "Likes",
+                value: favouritedTweets && favouritedTweets.length,
+            },
+            {
+                description: "Retweets",
+                value: retweetedTweets && retweetedTweets.length,
+            },
+            {
+                description: "Lists",
+                value: lists && lists.length,
+            },
+            {
+                description: "Moments",
+                value: moments && moments.length,
+            },
+        ];
+
         const { editMode } = this.state;
         const filteredInfo = userInfo.filter(info => info.value > 0);
         filteredInfo.push(userInfo[5]); /* Add Lists */
@@ -109,6 +251,15 @@ class Profile extends React.Component {
     render() {
         const { auth, user } = this.props;
         const {
+            userProfile,
+            displayName,
+            handle,
+            profileOverview,
+            website,
+            displayImgSrc,
+            birthday,
+            birthPlace,
+            dateCreated,
             numTweets,
             editMode,
             birthdaySelection,
@@ -118,19 +269,10 @@ class Profile extends React.Component {
             monthDropdownOpen,
             yearDropdownOpen,
             tooltipOpen,
-            userProfile,
             userFollowing,
+            birthplaceDropdownOpen,
+            results,
         } = this.state;
-
-        const {
-            displayImgSrc,
-            displayName,
-            profileOverview,
-            handle,
-            dateCreated,
-            birthday,
-            birthPlace,
-        } = userProfile ? auth : user;
 
         const formattedBirthPlace = (birthPlace && birthPlace.split(",").slice(0, 1)) || "";
 
@@ -140,37 +282,6 @@ class Profile extends React.Component {
                 `${birthday.monthObj.month} ${birthday.dayObj.day}, ${birthday.yearObj.year}` || "";
         }
         autosize(document.getElementById("profile--bioTextArea"));
-
-        const userInfo = [
-            {
-                description: "Tweets",
-                value: user ? user.tweets.length : auth.tweets,
-            },
-            {
-                description: "Following",
-                value: user ? user.following.length : auth.following.length,
-            },
-            {
-                description: "Followers",
-                value: user ? user.followers.length : auth.followers.length,
-            },
-            {
-                description: "Likes",
-                value: user ? user.favouritedTweets.length : auth.favouritedTweets.length,
-            },
-            {
-                description: "Retweets",
-                value: user ? user.retweetedTweets.length : auth.retweetedTweets.length,
-            },
-            {
-                description: "Lists",
-                value: user ? user.lists.length : auth.lists.length,
-            },
-            {
-                description: "Moments",
-                value: user ? user.moments.length : auth.moments.length,
-            },
-        ];
 
         return (
             <div>
@@ -212,7 +323,7 @@ class Profile extends React.Component {
                             </Tooltip>
                         </div>
                         <div className="profile--information">
-                            {this.renderProfileInfo(userInfo)}
+                            {this.renderProfileInfo()}
                             {editMode ? (
                                 <div className="profile--buttonContainer">
                                     <button
@@ -276,15 +387,51 @@ class Profile extends React.Component {
                                     rows={1}
                                     id="profile--bioTextArea"
                                     className="profile--bioTextArea"
-                                    onChange={e => this.setState({ bio: e.target.value })}
+                                    value={profileOverview}
+                                    onChange={e =>
+                                        this.setState({ profileOverview: e.target.value })
+                                    }
                                 />
                                 <input
                                     placeholder="Location"
                                     type="text"
                                     className="profile--textInput"
-                                    value={location}
-                                    onChange={e => this.setState({ location: e.target.value })}
+                                    value={birthPlace}
+                                    onChange={e => {
+                                        const searchResults = this.searchLocation(e.target.value);
+                                        searchResults.sort((a, b) => {
+                                            if (a.name > b.name) return 1;
+                                            if (a.name < b.name) return -1;
+                                            return 0;
+                                        });
+                                        this.setState({
+                                            birthplaceDropdownOpen: true,
+                                            results: searchResults.slice(0, 5),
+                                            birthPlace: e.target.value,
+                                        });
+                                    }}
                                 />
+                                {birthplaceDropdownOpen &&
+                                    results.length > 0 && (
+                                        <div className="profile--birthplaceDropdown">
+                                            {results.map(result => {
+                                                const place = `${result.name}, ${result.country}`;
+                                                return (
+                                                    <div
+                                                        className="profileOverview--searchResult"
+                                                        onClick={async () => {
+                                                            this.setState({
+                                                                birthPlace: place,
+                                                                birthplaceDropdownOpen: false,
+                                                            });
+                                                        }}
+                                                    >
+                                                        {place}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 <input
                                     placeholder="Website"
                                     type="text"
@@ -570,7 +717,7 @@ class Profile extends React.Component {
                                     </div>
                                     <Feed
                                         userProfile={userProfile}
-                                        handle={userProfile ? auth.handle : user.handle}
+                                        handle={user ? user.handle : auth.handle}
                                         showFeed={false}
                                     />
                                     <div className="profile--footer">

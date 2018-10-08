@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -108,10 +108,10 @@ class NavBar extends Component {
                                                 marginTop: "-8px",
                                             }}
                                         />
-                                        <a className="dropdown-item">
+                                        <Link to={`/${handle}`} className="dropdown-item">
                                             <i className="far fa-user icon__dropdown" />
                                             Profile
-                                        </a>
+                                        </Link>
                                         <a className="dropdown-item">
                                             <i className="far fa-list-alt icon__dropdown" />
                                             Lists
