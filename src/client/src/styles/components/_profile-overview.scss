@@ -309,16 +309,6 @@
         color: #fff;
         cursor: pointer;
     }
-    &:before {
-        content: " ";
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: 20px;
-        top: -16px;
-        border: 8px solid;
-        border-color: transparent transparent #fff transparent;
-    }
 }
 
 .profileOverview--oneHundredImg {

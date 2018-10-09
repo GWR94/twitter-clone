@@ -76,10 +76,13 @@
 }
 
 .button__lightBlue {
-    @extend .button__twitterLarge;
+    @extend .button__themeColor;
     color: $blue !important;
     border: 1px solid $blue !important;
     margin-left: 5px;
+    font-size: 14px;
+    padding: 5px 16px !important;
+    
     &:hover {
         color: $blue;
     }

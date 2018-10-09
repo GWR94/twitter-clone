@@ -15,6 +15,36 @@ module.exports = app => {
         }),
     );
 
+    const formatUserInfo = (user, tweets) => {
+        return {
+            _id: user._id,
+            isVerified: user.isVerified || false,
+            handle: user.handle,
+            displayName: user.displayName || user.handle,
+            email: user.email || "",
+            displayImgSrc: user.displayImgSrc || undefined,
+            headerImgSrc: user.headerImgSrc || undefined,
+            favouritedTweets: user.favouritedTweets || [],
+            retweetedTweets: user.retweetedTweets || [],
+            followers: user.followers || [],
+            following: user.following || [],
+            lists: user.lists || [],
+            moments: user.moments || [],
+            tweets: tweets,
+            profileOverview: user.profileOverview || "",
+            birthday: user.birthday || "",
+            birthPlace: user.birthPlace || "",
+            dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
+            themeColor: user.themeColor || "",
+            location: user.location || "",
+            website: user.website || "",
+            displayImg: user.displayImg || undefined,
+            headerImg: user.headerImg || undefined,
+            pinnedTweet: user.pinnedTweet || undefined,
+            profileCompleted: user.profileCompleted || false,
+        };
+    };
+
     app.get("/api/current_user", async (req, res) => {
         if (req.user) {
             const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
@@ -43,7 +73,7 @@ module.exports = app => {
                 dateCreated: moment(req.user.dateCreated).format("MMMM YYYY"),
                 themeColor: req.user.themeColor,
                 location: req.user.location,
-                website: req.user.location,
+                website: req.user.website,
                 displayImg: req.user.displayImg,
                 headerImg: req.user.headerImg,
                 pinnedTweet: req.user.pinnedTweet,
@@ -65,32 +95,7 @@ module.exports = app => {
             },
             (err, user) => {
                 if (err) return res.json({ error: err });
-                const userData = {
-                    isVerified: user.isVerified,
-                    handle: user.handle,
-                    displayName: user.displayName || user.handle,
-                    email: user.email,
-                    displayImgSrc: user.displayImgSrc,
-                    headerImgSrc: user.headerImgSrc,
-                    favouritedTweets: user.favouritedTweets,
-                    retweetedTweets: user.retweetedTweets,
-                    followers: user.followers,
-                    following: user.following,
-                    lists: user.lists || [],
-                    moments: user.moments || [],
-                    tweets: tweets,
-                    profileOverview: user.profileOverview || "",
-                    birthday: user.birthday || "",
-                    birthPlace: user.birthPlace || "",
-                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
-                    themeColor: user.themeColor || "",
-                    location: user.location || "",
-                    website: user.location || "",
-                    displayImg: user.displayImg,
-                    headerImg: user.headerImg,
-                    pinnedTweet: user.pinnedTweet,
-                    profileCompleted: user.profileCompleted,
-                };
+                const userData = formatUserInfo(user, tweets);
                 return res.send(userData);
             },
         );
@@ -100,19 +105,12 @@ module.exports = app => {
         try {
             User.find({}, (err, users) => {
                 const usersArr = [];
-                users.map(user => {
-                    return usersArr.push({
-                        displayImgSrc: user.displayImgSrc,
-                        headerImgSrc: user.headerImgSrc,
-                        followers: user.followers,
-                        following: user.following,
-                        favouritedTweets: user.favouritedTweets,
-                        retweetedTweets: user.retweetedTweets,
-                        _id: user._id,
-                        displayName: user.displayName,
-                        handle: user.handle,
-                        email: user.email,
+                users.map(async user => {
+                    const tweets = await Tweets.find({ handle: user.handle }, (err, tweets) => {
+                        if (err) return res.send(err);
+                        return tweets;
                     });
+                    return usersArr.push(formatUserInfo(user, tweets));
                 });
                 res.send(usersArr);
             });
@@ -164,52 +162,60 @@ module.exports = app => {
     });
 
     app.post("/api/update_profile", async (req, res) => {
-        const { value, field, user } = req.body;
+        if (Array.isArray(req.body)) {
+            const handle = req.body[0].user;
+            const birthPlace = req.body[0].value;
+            const displayName = req.body[1].value;
+            const birthday = req.body[2].value;
+            const profileOverview = req.body[3].value;
+            const website = req.body[4].value;
 
-        const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
-            if (err) return res.send(err);
-            return tweets;
-        });
-
-        await User.findOneAndUpdate(
-            {
-                handle: user,
-            },
-            {
-                $set: { [field]: value },
-            },
-            (err, user) => {
+            const tweets = await Tweets.find({ handle }, (err, tweets) => {
                 if (err) return res.send(err);
-                const userData = {
-                    isVerified: user.isVerified,
-                    handle: user.handle,
-                    displayName: user.displayName || user.handle,
-                    email: user.email,
-                    displayImgSrc: user.displayImgSrc,
-                    headerImgSrc: user.headerImgSrc,
-                    favouritedTweets: user.favouritedTweets,
-                    retweetedTweets: user.retweetedTweets,
-                    followers: user.followers,
-                    following: user.following,
-                    lists: user.lists || [],
-                    moments: user.moments || [],
-                    tweets: tweets,
-                    profileOverview: user.profileOverview || "",
-                    birthday: user.birthday || "",
-                    birthPlace: user.birthPlace || "",
-                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
-                    themeColor: user.themeColor || "",
-                    location: user.location || "",
-                    website: user.location || "",
-                    displayImg: user.displayImg,
-                    headerImg: user.headerImg,
-                    pinnedTweet: user.pinnedTweet,
-                    profileCompleted: user.profileCompleted,
-                };
-                user.save();
-                return res.send(userData);
-            },
-        );
+                return tweets;
+            });
+            await User.findOneAndUpdate(
+                {
+                    handle,
+                },
+                {
+                    $set: {
+                        birthPlace,
+                        displayName,
+                        birthday,
+                        profileOverview,
+                        website,
+                    },
+                },
+                (err, user) => {
+                    if (err) return res.send(err);
+                    const userData = formatUserInfo(user, tweets);
+                    user.save();
+                    res.send(userData);
+                },
+            );
+        } else {
+            const { value, field, user } = req.body;
+            const tweets = await Tweets.find({ handle: req.user.handle }, (err, tweets) => {
+                if (err) return res.send(err);
+                return tweets;
+            });
+
+            await User.findOneAndUpdate(
+                {
+                    handle: user,
+                },
+                {
+                    $set: { [field]: value },
+                },
+                (err, user) => {
+                    if (err) return res.send(err);
+                    const userData = formatUserInfo(user, tweets);
+                    user.save();
+                    return res.send(userData);
+                },
+            );
+        }
     });
 
     app.post("/api/follow_user", async (req, res) => {
@@ -239,32 +245,7 @@ module.exports = app => {
                 }
                 user.following = following;
                 user.save();
-                const userData = {
-                    isVerified: user.isVerified,
-                    handle: user.handle,
-                    displayName: user.displayName || user.handle,
-                    email: user.email,
-                    displayImgSrc: user.displayImgSrc,
-                    headerImgSrc: user.headerImgSrc,
-                    favouritedTweets: user.favouritedTweets,
-                    retweetedTweets: user.retweetedTweets,
-                    followers: user.followers,
-                    following: user.following,
-                    lists: user.lists || [],
-                    moments: user.moments || [],
-                    tweets: tweets,
-                    profileOverview: user.profileOverview || "",
-                    birthday: user.birthday || "",
-                    birthPlace: user.birthPlace || "",
-                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
-                    themeColor: user.themeColor || "",
-                    location: user.location || "",
-                    website: user.location || "",
-                    displayImg: user.displayImg,
-                    headerImg: user.headerImg,
-                    pinnedTweet: user.pinnedTweet,
-                    profileCompleted: user.profileCompleted,
-                };
+                const userData = formatUserInfo(user, tweets);
                 await User.findOne(
                     {
                         handle: userToFollow,
@@ -308,33 +289,7 @@ module.exports = app => {
                     return tweets;
                 });
 
-                const userData = {
-                    _id: user._id,
-                    isVerified: user.isVerified,
-                    handle: user.handle,
-                    displayName: user.displayName || user.handle,
-                    email: user.email,
-                    displayImgSrc: user.displayImgSrc,
-                    headerImgSrc: user.headerImgSrc,
-                    favouritedTweets: user.favouritedTweets,
-                    retweetedTweets: user.retweetedTweets,
-                    followers: user.followers,
-                    following: user.following,
-                    lists: user.lists || [],
-                    moments: user.moments || [],
-                    tweets: tweets,
-                    profileOverview: user.profileOverview || "",
-                    birthday: user.birthday || "",
-                    birthPlace: user.birthPlace || "",
-                    dateCreated: moment(user.dateCreated).format("MMMM YYYY"),
-                    themeColor: user.themeColor || "",
-                    location: user.location || "",
-                    website: user.location || "",
-                    displayImg: user.displayImg,
-                    headerImg: user.headerImg,
-                    pinnedTweet: user.pinnedTweet,
-                    profileCompleted: user.profileCompleted,
-                };
+                const userData = formatUserInfo(user, tweets);
                 console.log(userData);
                 res.send(userData);
             },

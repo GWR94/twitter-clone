@@ -30,6 +30,7 @@ class Profile extends React.Component {
             userProfile: true,
             userFollowing: false,
             birthplaceDropdownOpen: false,
+            website: "",
         };
     }
 
@@ -52,48 +53,36 @@ class Profile extends React.Component {
             const {
                 displayName,
                 profileOverview,
-                location,
                 website,
                 tweets,
-                isVerified,
-                email,
                 displayImgSrc,
-                headerImgSrc,
                 favouritedTweets,
                 retweetedTweets,
                 followers,
                 following,
                 lists,
                 moments,
-                profileCompleted,
                 birthday,
                 birthPlace,
                 dateCreated,
-                pinnedTweet,
             } = auth;
             this.setState({
                 userProfile: true,
                 handle,
                 displayName: displayName || "",
                 profileOverview: profileOverview || "",
-                location: location || "",
-                website: website || "",
+                website,
                 tweets,
-                isVerified: isVerified || false,
-                email: email || "",
                 displayImgSrc: displayImgSrc || null,
-                headerImgSrc: headerImgSrc || null,
                 favouritedTweets,
                 retweetedTweets,
                 followers,
                 following,
                 lists,
                 moments,
-                profileCompleted,
                 birthday,
                 birthPlace,
                 dateCreated,
-                pinnedTweet: pinnedTweet || null,
                 numTweets: tweets.length || 0,
             });
         } else {
@@ -104,48 +93,37 @@ class Profile extends React.Component {
             const {
                 displayName,
                 profileOverview,
-                location,
                 website,
                 tweets,
-                isVerified,
-                email,
                 displayImgSrc,
-                headerImgSrc,
                 favouritedTweets,
                 retweetedTweets,
                 followers,
                 following,
                 lists,
                 moments,
-                profileCompleted,
                 birthday,
                 birthPlace,
                 dateCreated,
-                pinnedTweet,
             } = user;
+
             this.setState({
                 userProfile: false,
                 handle,
                 displayName: displayName || "",
                 profileOverview: profileOverview || "",
-                location: location || "",
-                website: website || "",
+                website,
                 tweets: tweets || [],
-                isVerified: isVerified || false,
-                email: email || "",
                 displayImgSrc: displayImgSrc || null,
-                headerImgSrc: headerImgSrc || null,
                 favouritedTweets,
                 retweetedTweets,
                 followers,
                 following,
                 lists,
                 moments,
-                profileCompleted,
                 birthday,
                 birthPlace,
                 dateCreated,
-                pinnedTweet: pinnedTweet || null,
                 numTweets: tweets.length || 0,
             });
         }
@@ -225,6 +203,37 @@ class Profile extends React.Component {
         ));
     }
 
+    formatMonth = month => {
+        switch (month) {
+            case "0":
+                return "January";
+            case "1":
+                return "February";
+            case "2":
+                return "March";
+            case "3":
+                return "April";
+            case "4":
+                return "May";
+            case "5":
+                return "June";
+            case "6":
+                return "July";
+            case "7":
+                return "August";
+            case "8":
+                return "September";
+            case "9":
+                return "October";
+            case "10":
+                return "November";
+            case "11":
+                return "December";
+            default:
+                return "Error";
+        }
+    };
+
     renderPrivacy(type) {
         const { monthPrivacy, yearPrivacy } = this.state;
         switch (type === "month" ? monthPrivacy : yearPrivacy) {
@@ -272,6 +281,8 @@ class Profile extends React.Component {
             userFollowing,
             birthplaceDropdownOpen,
             results,
+            monthPrivacy,
+            yearPrivacy,
         } = this.state;
 
         const formattedBirthPlace = (birthPlace && birthPlace.split(",").slice(0, 1)) || "";
@@ -333,7 +344,56 @@ class Profile extends React.Component {
                                     >
                                         Cancel
                                     </button>
-                                    <button className="button__lightBlue" type="button">
+                                    <button
+                                        className="button__lightBlue"
+                                        type="button"
+                                        onClick={async () => {
+                                            const values = [
+                                                {
+                                                    field: "birthPlace",
+                                                    value: birthPlace,
+                                                    user: auth.handle,
+                                                },
+                                                {
+                                                    field: "displayName",
+                                                    value: displayName,
+                                                    user: auth.handle,
+                                                },
+                                                {
+                                                    field: "birthday",
+                                                    value: {
+                                                        dayObj: {
+                                                            day,
+                                                            dayPrivacy: monthPrivacy,
+                                                        },
+                                                        monthObj: {
+                                                            month: this.formatMonth(month),
+                                                            monthPrivacy,
+                                                        },
+                                                        yearObj: {
+                                                            year,
+                                                            yearPrivacy,
+                                                        },
+                                                    },
+                                                    user: auth.handle,
+                                                },
+                                                {
+                                                    field: "profileOverview",
+                                                    value: profileOverview,
+                                                    user: auth.handle,
+                                                },
+                                                {
+                                                    field: "website",
+                                                    value: website,
+                                                    user: auth.handle,
+                                                },
+                                            ];
+
+                                            const { updateProfile } = this.props;
+                                            await updateProfile(values);
+                                            this.setState({ editMode: false });
+                                        }}
+                                    >
                                         Save changes
                                     </button>
                                 </div>
@@ -411,27 +471,6 @@ class Profile extends React.Component {
                                         });
                                     }}
                                 />
-                                {birthplaceDropdownOpen &&
-                                    results.length > 0 && (
-                                        <div className="profile--birthplaceDropdown">
-                                            {results.map(result => {
-                                                const place = `${result.name}, ${result.country}`;
-                                                return (
-                                                    <div
-                                                        className="profileOverview--searchResult"
-                                                        onClick={async () => {
-                                                            this.setState({
-                                                                birthPlace: place,
-                                                                birthplaceDropdownOpen: false,
-                                                            });
-                                                        }}
-                                                    >
-                                                        {place}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
                                 <input
                                     placeholder="Website"
                                     type="text"
@@ -679,6 +718,27 @@ class Profile extends React.Component {
                                         />
                                     </div>
                                 )}
+                                {birthplaceDropdownOpen &&
+                                    results.length > 0 && (
+                                        <div className="profile--birthplaceDropdown">
+                                            {results.map(result => {
+                                                const place = `${result.name}, ${result.country}`;
+                                                return (
+                                                    <div
+                                                        className="profile--searchResult"
+                                                        onClick={async () => {
+                                                            this.setState({
+                                                                birthPlace: place,
+                                                                birthplaceDropdownOpen: false,
+                                                            });
+                                                        }}
+                                                    >
+                                                        {place}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                             </div>
                         ) : (
                             <div className="profile--overview">
