@@ -4,6 +4,8 @@ import { PropTypes } from "prop-types";
 import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import { Tooltip } from "reactstrap";
+import validator from "validator";
+import Modal from "react-modal";
 import * as actions from "../actions";
 import NavBar from "./NavBar";
 import Trends from "./Trends";
@@ -19,9 +21,6 @@ class Profile extends React.Component {
             numTweets: 0,
             editMode: false,
             birthdaySelection: false,
-            year: null,
-            month: null,
-            day: null,
             monthPrivacy: "both",
             yearPrivacy: "private",
             monthDropdownOpen: false,
@@ -31,6 +30,8 @@ class Profile extends React.Component {
             userFollowing: false,
             birthplaceDropdownOpen: false,
             website: "",
+            websiteErrorOpen: false,
+            birthdayCheckModalOpen: false,
         };
     }
 
@@ -43,6 +44,8 @@ class Profile extends React.Component {
         [ ] Add Media when user has tweeted images/videos
         [x] Blur background when in edit mode
         [ ] Set theme color around all site
+        [x] Set birthday dropdowns to be default values
+        [ ] Add active border for Tweets / current active toggle
     */
 
     async componentWillMount() {
@@ -66,6 +69,7 @@ class Profile extends React.Component {
                 birthPlace,
                 dateCreated,
             } = auth;
+
             this.setState({
                 userProfile: true,
                 handle,
@@ -80,10 +84,16 @@ class Profile extends React.Component {
                 following,
                 lists,
                 moments,
-                birthday,
+                birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
+                    birthday.yearObj.year
+                }`,
+                month: birthday.monthObj.month,
+                day: birthday.dayObj.day,
+                year: birthday.yearObj.year,
                 birthPlace,
                 dateCreated,
                 numTweets: tweets.length || 0,
+                rendered: true,
             });
         } else {
             if (auth.following.indexOf(handle) > -1) {
@@ -121,10 +131,13 @@ class Profile extends React.Component {
                 following,
                 lists,
                 moments,
-                birthday,
+                birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
+                    birthday.yearObj.year
+                }`,
                 birthPlace,
                 dateCreated,
                 numTweets: tweets.length || 0,
+                rendered: true,
             });
         }
     }
@@ -134,6 +147,10 @@ class Profile extends React.Component {
             location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
         );
         return results;
+    };
+
+    closeModal = () => {
+        this.setState({ birthdayCheckModalOpen: false });
     };
 
     handleDefaultTweet = async tweet => {
@@ -283,22 +300,60 @@ class Profile extends React.Component {
             results,
             monthPrivacy,
             yearPrivacy,
+            rendered,
+            websiteErrorOpen,
+            birthdayErrorOpen,
+            birthdayCheckModalOpen,
         } = this.state;
+
+        const modalStyles = {
+            content: {
+                top: "50%",
+                left: "50%",
+                right: "auto",
+                bottom: "auto",
+                marginRight: "-50%",
+                transform: "translate(-50%, -50%)",
+                width: "520px",
+                padding: "0",
+            },
+        };
 
         const formattedBirthPlace = (birthPlace && birthPlace.split(",").slice(0, 1)) || "";
 
-        let formattedBirthday = null;
-        if (typeof birthday === "object") {
-            formattedBirthday =
-                `${birthday.monthObj.month} ${birthday.dayObj.day}, ${birthday.yearObj.year}` || "";
-        }
         autosize(document.getElementById("profile--bioTextArea"));
+
+        if (!rendered) {
+            return <div />;
+        }
 
         return (
             <div>
                 <div className={editMode ? "profile--editBackground" : undefined}>
                     <NavBar transparent={editMode} />
                 </div>
+                {websiteErrorOpen && (
+                    <div className="profile--errorBox">
+                        <div className="profile--errorCloseIcon">
+                            <i
+                                className="fas fa-times"
+                                onClick={() => this.setState({ websiteErrorOpen: false })}
+                            />
+                        </div>
+                        Url is not valid
+                    </div>
+                )}
+                {birthdayErrorOpen && (
+                    <div className="profile--errorBox">
+                        <div className="profile--errorCloseIcon">
+                            <i
+                                className="fas fa-times"
+                                onClick={() => this.setState({ birthdayErrorOpen: false })}
+                            />
+                        </div>
+                        Please enter a valid birthday
+                    </div>
+                )}
                 <div
                     className={
                         editMode
@@ -348,6 +403,22 @@ class Profile extends React.Component {
                                         className="button__lightBlue"
                                         type="button"
                                         onClick={async () => {
+                                            if (!validator.isURL(website)) {
+                                                return this.setState({ websiteErrorOpen: true });
+                                            }
+                                            if (
+                                                typeof day !== "string" ||
+                                                typeof month !== "string" ||
+                                                typeof year !== "string"
+                                            ) {
+                                                return this.setState({ birthdayErrorOpen: true });
+                                            }
+                                            const currentBirthday = `${month} ${day}, ${year}`;
+                                            if (birthday !== currentBirthday) {
+                                                return this.setState({
+                                                    birthdayCheckModalOpen: true,
+                                                });
+                                            }
                                             const values = [
                                                 {
                                                     field: "birthPlace",
@@ -391,7 +462,12 @@ class Profile extends React.Component {
 
                                             const { updateProfile } = this.props;
                                             await updateProfile(values);
-                                            this.setState({ editMode: false });
+                                            return this.setState({
+                                                editMode: false,
+                                                birthday: `${this.formatMonth(
+                                                    month,
+                                                )} ${day}, ${year}`,
+                                            });
                                         }}
                                     >
                                         Save changes
@@ -488,6 +564,87 @@ class Profile extends React.Component {
                                 >
                                     Theme color
                                 </button>
+                                <Modal
+                                    isOpen={birthdayCheckModalOpen}
+                                    style={modalStyles}
+                                    contentLabel="Confirm birth date"
+                                    onRequestClose={this.closeModal}
+                                    appElement={document.getElementById("app")}
+                                >
+                                    <h2 className="profile--modalTitle">Confirm birth date</h2>
+                                    <p className="profile--modalText">
+                                        You are confirming that the birth date you entered,{" "}
+                                        {this.formatMonth(month)} {day}, {year}, is accurate. If
+                                        it’s not, your account may be affected.
+                                    </p>
+                                    <div className="profile--modalButtonContainer">
+                                        <button
+                                            className="button__themeColor"
+                                            type="button"
+                                            onClick={this.closeModal}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="button__confirm"
+                                            onClick={async () => {
+                                                const values = [
+                                                    {
+                                                        field: "birthPlace",
+                                                        value: birthPlace,
+                                                        user: auth.handle,
+                                                    },
+                                                    {
+                                                        field: "displayName",
+                                                        value: displayName,
+                                                        user: auth.handle,
+                                                    },
+                                                    {
+                                                        field: "birthday",
+                                                        value: {
+                                                            dayObj: {
+                                                                day,
+                                                                dayPrivacy: monthPrivacy,
+                                                            },
+                                                            monthObj: {
+                                                                month: this.formatMonth(month),
+                                                                monthPrivacy,
+                                                            },
+                                                            yearObj: {
+                                                                year,
+                                                                yearPrivacy,
+                                                            },
+                                                        },
+                                                        user: auth.handle,
+                                                    },
+                                                    {
+                                                        field: "profileOverview",
+                                                        value: profileOverview,
+                                                        user: auth.handle,
+                                                    },
+                                                    {
+                                                        field: "website",
+                                                        value: website,
+                                                        user: auth.handle,
+                                                    },
+                                                ];
+
+                                                const { updateProfile } = this.props;
+                                                await updateProfile(values);
+                                                this.closeModal();
+                                                this.setState({
+                                                    editMode: false,
+                                                    birthday: `${this.formatMonth(
+                                                        month,
+                                                    )} ${day}, ${year}`,
+                                                });
+                                            }}
+                                        >
+                                            Confirm
+                                        </button>
+                                    </div>
+                                </Modal>
                                 {birthdaySelection ? (
                                     <div style={{ marginTop: "10px" }}>
                                         <p className="profile--birthdayText">Birthday</p>
@@ -498,7 +655,9 @@ class Profile extends React.Component {
                                         <MonthPicker
                                             defaultValue="Month"
                                             onChange={newMonth => {
-                                                this.setState({ month: newMonth });
+                                                this.setState({
+                                                    month: newMonth,
+                                                });
                                             }}
                                             value={month}
                                             optionClasses="profileOverview--monthContainer"
@@ -530,6 +689,7 @@ class Profile extends React.Component {
                                             {this.renderPrivacy("month")}
                                         </div>
                                         <YearPicker
+                                            reverse
                                             defaultValue="Year"
                                             onChange={newYear => {
                                                 this.setState({ year: newYear });
@@ -711,7 +871,8 @@ class Profile extends React.Component {
                                             placeholder="Birthday"
                                             type="text"
                                             className="profile--textInput"
-                                            value={formattedBirthday}
+                                            readOnly
+                                            defaultValue={birthday || ""}
                                             onClick={() =>
                                                 this.setState({ birthdaySelection: true })
                                             }
@@ -751,6 +912,14 @@ class Profile extends React.Component {
                                         <p className="profile--details">{formattedBirthPlace}</p>
                                     </div>
                                 )}
+                                {website && (
+                                    <div className="profile--detailContainer">
+                                        <i className="fas fa-link icon__profile" />
+                                        <a className="profile--details" href={website}>
+                                            {website}
+                                        </a>
+                                    </div>
+                                )}
                                 <div className="profile--detailContainer">
                                     <i className="far fa-calendar-alt icon__profile" />
                                     <p className="profile--details">Joined {dateCreated}</p>
@@ -758,9 +927,7 @@ class Profile extends React.Component {
                                 {birthday && (
                                     <div className="profile--detailContainer">
                                         <i className="fas fa-birthday-cake icon__profile" />
-                                        <p className="profile--details">
-                                            Born on {formattedBirthday}
-                                        </p>
+                                        <p className="profile--details">Born on {birthday}</p>
                                     </div>
                                 )}
                             </div>

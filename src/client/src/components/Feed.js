@@ -91,13 +91,11 @@ class Feed extends React.Component {
                                 showFeed ? (
                                     <div>
                                         <NoTweets />
-                                        <Link to="/profile/jgower94">To jgower94</Link>
                                     </div>
                                 ) : null
                             ) : (
                                 <div>
                                     {this.renderTweets(tweets)}
-                                    <Link to="/profile/jgower94">To jgower94</Link>
                                 </div>
                             )}
                         </div>

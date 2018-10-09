@@ -75,6 +75,18 @@
     }
 }
 
+.button__confirm {
+    @extend .button__themeColor;
+    background: $blue;
+    color: #fff !important;
+    border: 1px solid $blue !important;
+    &:hover {
+        background: darken($blue, 10%);
+        border: 1px solid darken($blue, 10%)
+    }
+    margin-left: 14px;
+}
+
 .button__lightBlue {
     @extend .button__themeColor;
     color: $blue !important;
@@ -213,4 +225,3 @@ button:disabled {
     vertical-align: middle !important;
     height: 100% !important;
 }
-
