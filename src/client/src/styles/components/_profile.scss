@@ -116,6 +116,16 @@ $header-height: 50px;
     }
 }
 
+.profile--infoActive {
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    width: 70px;
+    height: 54px;
+    border: transparent;
+    border-bottom: 2px solid $blue;
+}
+
 .profile--infoDescription {
     color: #66686a;
     margin-bottom: 0;
@@ -169,6 +179,15 @@ $header-height: 50px;
     color: $gray-text;
     font-size: 14px;
     margin: 8px 0 0 0;
+}
+
+.profile--link {
+    color: $gray-text;
+    font-size: 14px;
+    margin: 8px 0 0 0;
+    &:hover {
+        color: $blue;
+    }
 }
 
 .profile--main {

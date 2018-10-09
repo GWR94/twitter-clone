@@ -7,11 +7,12 @@ import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import CropViewer from "rc-cropping";
 import Dialog from "rc-dialog";
 import Upload from "rc-upload";
+import formatMonth from "../services/formatMonth";
 import * as actions from "../actions";
-import twitterLocations from "../services/twitterLocations.json";
 import oneHundred from "../../../../public/images/oneHundred.png";
 import "rc-cropping/assets/index.css";
 import "rc-dialog/assets/index.css";
+import searchLocation from "../services/searchLocation";
 
 /*
     TODO
@@ -49,70 +50,6 @@ class ProfileOverview extends React.Component {
     onModalClose = () => {
         this.setState({ modalIsOpen: false });
     };
-
-    formatMonth = month => {
-        switch (month) {
-            case "0":
-                return "January";
-            case "1":
-                return "February";
-            case "2":
-                return "March";
-            case "3":
-                return "April";
-            case "4":
-                return "May";
-            case "5":
-                return "June";
-            case "6":
-                return "July";
-            case "7":
-                return "August";
-            case "8":
-                return "September";
-            case "9":
-                return "October";
-            case "10":
-                return "November";
-            case "11":
-                return "December";
-            default:
-                return "Error";
-        }
-    };
-
-    searchLocation = name => {
-        const results = twitterLocations.filter(
-            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
-        );
-        return results;
-    };
-
-    beforeUpload(file) {
-        const cropper = this.cropper;
-        console.log(">> cropper", this.cropper);
-        return cropper.selectImage(file).then(image => {
-            console.log(">> selecTImage", image);
-            return image;
-        });
-    }
-
-    handleImageChange(e) {
-        const { imagePreviewUrl } = this.state;
-        e.preventDefault();
-
-        const reader = new FileReader();
-        const file = e.target.files[0];
-
-        reader.onloadend = () => {
-            this.setState({
-                file,
-                imagePreviewUrl: reader.result,
-                modalIsOpen: true,
-            });
-        };
-        reader.readAsDataURL(file);
-    }
 
     toggleTooltip = () => {
         const { tooltipOpen } = this.state;
@@ -228,11 +165,7 @@ class ProfileOverview extends React.Component {
                             />
                         )}
                     </div>
-                    <Tooltip
-                        target="displayImg"
-                        placement="top"
-                        isOpen={tooltipOpen}
-                    >
+                    <Tooltip target="displayImg" placement="top" isOpen={tooltipOpen}>
                         Add a profile photo
                     </Tooltip>
 
@@ -455,7 +388,7 @@ class ProfileOverview extends React.Component {
                                                         dayPrivacy: monthPrivacy,
                                                     },
                                                     monthObj: {
-                                                        month: this.formatMonth(month),
+                                                        month: formatMonth(month),
                                                         monthPrivacy,
                                                     },
                                                     yearObj: {
@@ -640,7 +573,7 @@ class ProfileOverview extends React.Component {
                                 <textarea
                                     className="profileOverview--textArea"
                                     onChange={e => {
-                                        const searchResults = this.searchLocation(e.target.value);
+                                        const searchResults = searchLocation(e.target.value);
                                         searchResults.sort((a, b) => {
                                             if (a.name > b.name) return 1;
                                             if (a.name < b.name) return -1;

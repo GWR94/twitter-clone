@@ -11,7 +11,8 @@ import NavBar from "./NavBar";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import MyFirstTweet from "./MyFirstTweet";
-import twitterLocations from "../services/twitterLocations.json";
+import formatMonth from "../services/formatMonth";
+import searchLocation from "../services/searchLocation";
 
 class Profile extends React.Component {
     constructor() {
@@ -32,6 +33,7 @@ class Profile extends React.Component {
             website: "",
             websiteErrorOpen: false,
             birthdayCheckModalOpen: false,
+            active: "Tweets",
         };
     }
 
@@ -69,6 +71,8 @@ class Profile extends React.Component {
                 birthPlace,
                 dateCreated,
             } = auth;
+
+            document.title = `${displayName} (@${handle}) | Twitter`;
 
             this.setState({
                 userProfile: true,
@@ -117,13 +121,15 @@ class Profile extends React.Component {
                 dateCreated,
             } = user;
 
+            document.title = `${displayName} (@${handle})`;
+
             this.setState({
-                userProfile: false,
+                userProfile: true,
                 handle,
                 displayName: displayName || "",
                 profileOverview: profileOverview || "",
                 website,
-                tweets: tweets || [],
+                tweets,
                 displayImgSrc: displayImgSrc || null,
                 favouritedTweets,
                 retweetedTweets,
@@ -134,6 +140,9 @@ class Profile extends React.Component {
                 birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
                     birthday.yearObj.year
                 }`,
+                month: birthday.monthObj.month,
+                day: birthday.dayObj.day,
+                year: birthday.yearObj.year,
                 birthPlace,
                 dateCreated,
                 numTweets: tweets.length || 0,
@@ -141,13 +150,6 @@ class Profile extends React.Component {
             });
         }
     }
-
-    searchLocation = name => {
-        const results = twitterLocations.filter(
-            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
-        );
-        return results;
-    };
 
     closeModal = () => {
         this.setState({ birthdayCheckModalOpen: false });
@@ -174,6 +176,7 @@ class Profile extends React.Component {
             retweetedTweets,
             lists,
             moments,
+            active,
         } = this.state;
 
         const userInfo = [
@@ -213,43 +216,21 @@ class Profile extends React.Component {
         filteredInfo.push(userInfo[6]); /* Add Moments */
 
         return filteredInfo.map((info, i) => (
-            <div key={i} className={editMode ? "profile--info transparent" : "profile--info"}>
+            <div
+                key={i}
+                className={
+                    editMode
+                        ? "profile--info transparent"
+                        : active === info.description
+                            ? "profile--infoActive"
+                            : "profile--info"
+                }
+            >
                 <p className="profile--infoDescription">{info.description}</p>
                 <p className="profile--infoValue">{info.value}</p>
             </div>
         ));
     }
-
-    formatMonth = month => {
-        switch (month) {
-            case "0":
-                return "January";
-            case "1":
-                return "February";
-            case "2":
-                return "March";
-            case "3":
-                return "April";
-            case "4":
-                return "May";
-            case "5":
-                return "June";
-            case "6":
-                return "July";
-            case "7":
-                return "August";
-            case "8":
-                return "September";
-            case "9":
-                return "October";
-            case "10":
-                return "November";
-            case "11":
-                return "December";
-            default:
-                return "Error";
-        }
-    };
 
     renderPrivacy(type) {
         const { monthPrivacy, yearPrivacy } = this.state;
@@ -438,7 +419,7 @@ class Profile extends React.Component {
                                                             dayPrivacy: monthPrivacy,
                                                         },
                                                         monthObj: {
-                                                            month: this.formatMonth(month),
+                                                            month,
                                                             monthPrivacy,
                                                         },
                                                         yearObj: {
@@ -464,9 +445,8 @@ class Profile extends React.Component {
                                             await updateProfile(values);
                                             return this.setState({
                                                 editMode: false,
-                                                birthday: `${this.formatMonth(
-                                                    month,
-                                                )} ${day}, ${year}`,
+                                                birthday: `${month} ${day}, ${year}`,
+                                                birthdaySelection: false,
                                             });
                                         }}
                                     >
@@ -534,7 +514,7 @@ class Profile extends React.Component {
                                     className="profile--textInput"
                                     value={birthPlace}
                                     onChange={e => {
-                                        const searchResults = this.searchLocation(e.target.value);
+                                        const searchResults = searchLocation(e.target.value);
                                         searchResults.sort((a, b) => {
                                             if (a.name > b.name) return 1;
                                             if (a.name < b.name) return -1;
@@ -573,9 +553,9 @@ class Profile extends React.Component {
                                 >
                                     <h2 className="profile--modalTitle">Confirm birth date</h2>
                                     <p className="profile--modalText">
-                                        You are confirming that the birth date you entered,{" "}
-                                        {this.formatMonth(month)} {day}, {year}, is accurate. If
-                                        it’s not, your account may be affected.
+                                        You are confirming that the birth date you entered, {month}{" "}
+                                        {day}, {year}, is accurate. If it’s not, your account may be
+                                        affected.
                                     </p>
                                     <div className="profile--modalButtonContainer">
                                         <button
@@ -608,7 +588,7 @@ class Profile extends React.Component {
                                                                 dayPrivacy: monthPrivacy,
                                                             },
                                                             monthObj: {
-                                                                month: this.formatMonth(month),
+                                                                month,
                                                                 monthPrivacy,
                                                             },
                                                             yearObj: {
@@ -635,9 +615,8 @@ class Profile extends React.Component {
                                                 this.closeModal();
                                                 this.setState({
                                                     editMode: false,
-                                                    birthday: `${this.formatMonth(
-                                                        month,
-                                                    )} ${day}, ${year}`,
+                                                    birthday: `${month} ${day}, ${year}`,
+                                                    birthdaySelection: false,
                                                 });
                                             }}
                                         >
@@ -653,23 +632,21 @@ class Profile extends React.Component {
                                             is for your business, event, or even your cat.
                                         </p>
                                         <MonthPicker
-                                            defaultValue="Month"
+                                            defaultValue={month || "Month"}
                                             onChange={newMonth => {
                                                 this.setState({
-                                                    month: newMonth,
+                                                    month: formatMonth(newMonth),
                                                 });
                                             }}
-                                            value={month}
                                             optionClasses="profileOverview--monthContainer"
                                             classes="profileOverview--dropdown"
                                             day={day}
                                         />
                                         <DayPicker
-                                            defaultValue="Day"
                                             onChange={newDay => {
                                                 this.setState({ day: newDay });
                                             }}
-                                            value={day}
+                                            defaultValue={day || "Day"}
                                             optionClasses="profileOverview--dayContainer"
                                             classes="profileOverview--dropdown"
                                             year={year}
@@ -690,10 +667,10 @@ class Profile extends React.Component {
                                         </div>
                                         <YearPicker
                                             reverse
-                                            defaultValue="Year"
                                             onChange={newYear => {
                                                 this.setState({ year: newYear });
                                             }}
+                                            defaultValue={year || "Year"}
                                             classes="profileOverview--dropdown"
                                             optionClasses="profileOverview--yearContainer"
                                         />
@@ -915,7 +892,7 @@ class Profile extends React.Component {
                                 {website && (
                                     <div className="profile--detailContainer">
                                         <i className="fas fa-link icon__profile" />
-                                        <a className="profile--details" href={website}>
+                                        <a className="profile--link" href={website}>
                                             {website}
                                         </a>
                                     </div>
