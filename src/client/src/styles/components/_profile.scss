@@ -89,12 +89,32 @@ $header-height: 50px;
     margin-top: -140px;
     z-index: 1;
     background: $blue;
+    overflow: hidden;
+}
+
+.profile--imgInnerContainer {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    transition: border .5s;
+    -webkit-transition: border .5s;
+    -moz-transition: border .5s;
+    -ms-transition: border .5s;
+    -o-transition: border .5s;
+    z-index: 200;
+    &:hover {
+        border: 8px solid red;
+    }
 }
 
 .profile--displayImg {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 /* Information */

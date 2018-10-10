@@ -9,6 +9,7 @@ import TweetInput from "./TweetInput";
 class Feed extends React.Component {
     state = {
         rendered: false,
+        fetchedTweets: false
     };
     /*
         TODO
@@ -16,16 +17,20 @@ class Feed extends React.Component {
     */
 
     async componentDidMount() {
-        const { fetchTweets, handle } = this.props;
-        await fetchTweets(handle);
+        const { fetchTweets, handle, profileTweets } = this.props;
+        if(!profileTweets) {
+            await fetchTweets(handle);
+            this.setState({ fetchedTweets: true });
+        }
         this.setState({ rendered: true });
     }
 
     renderTweets = tweets => {
-        const { auth, user } = this.props;
+        const { auth, user, profileTweets, showPinned } = this.props;
+        console.log(profileTweets);
         const { pinnedTweet } = auth || user;
         const pinTweets = tweets.filter(tweet => tweet._id === pinnedTweet);
-        if (pinTweets.length > 0) {
+        if (pinTweets.length > 0 && showPinned) {
             return (
                 <div>
                     <Tweet
@@ -49,13 +54,13 @@ class Feed extends React.Component {
         return tweets
             .sort((a, b) => (a.postedAt > b.postedAt ? -1 : 1))
             .map((tweet, i) => (
-                <Tweet key={i} {...tweet} pinnedID={pinTweets.length > 0 ? pinTweets[0]._id : ""} />
+                <Tweet key={i} {...tweet} />
             ));
     };
 
     render() {
-        const { tweets, showFeed } = this.props;
-        const { rendered } = this.state;
+        const { tweets, showFeed, profileTweets } = this.props;
+        const { rendered, fetchedTweets } = this.state;
 
         const NoTweets = () => (
             <div className="feed--noTweetsContainer">
@@ -95,7 +100,7 @@ class Feed extends React.Component {
                                 ) : null
                             ) : (
                                 <div>
-                                    {this.renderTweets(tweets)}
+                                    {this.renderTweets(fetchedTweets ? tweets : profileTweets)}
                                 </div>
                             )}
                         </div>

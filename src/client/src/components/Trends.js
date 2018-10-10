@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import * as actions from "../actions";
 import twitterLocations from "../services/twitterLocations.json";
 import countryList from "../services/twitterCountryLists";
+import searchLocations from "../services/searchLocation";
 
 class Trends extends React.Component {
     constructor() {
@@ -25,8 +26,7 @@ class Trends extends React.Component {
 
     //! Add mobile styling
 
-    componentDidMount() {
-        console.log("Fetching componentDidMount");
+    async componentDidMount() {
         const { fetchTrends } = this.props;
         const { location, currentCountry } = this.state;
         const currentLocation = JSON.parse(localStorage.getItem("currentLocation"));
@@ -41,7 +41,7 @@ class Trends extends React.Component {
                 nearbyLocations: this.shuffle(nearbyLocations),
             });
         }
-        fetchTrends(location);
+        await fetchTrends(location);
         const recentLocations = JSON.parse(localStorage.getItem("recentLocations"));
         if (recentLocations) this.setState({ recentLocations });
     }
@@ -54,13 +54,6 @@ class Trends extends React.Component {
         this.setState({ modalOpen: false });
     };
 
-    searchLocation = name => {
-        const results = twitterLocations.filter(
-            location => location.name.toLowerCase().indexOf(name.toLowerCase()) > -1,
-        );
-        return results;
-    };
-
     /* eslint-disable */
     shuffle(a) {
         for (let i = a.length - 1; i > 0; i--) {
@@ -71,9 +64,9 @@ class Trends extends React.Component {
     }
     /* eslint-enable */
 
-    handleLocation(location) {
+    async handleLocation(location) {
         const { fetchTrends } = this.props;
-        fetchTrends(location);
+        await fetchTrends(location);
         this.renderTrends();
     }
 
@@ -156,7 +149,7 @@ class Trends extends React.Component {
                     }
                     key={i}
                     onClick={async () => {
-                        const result = await this.searchLocation(location);
+                        const result = await searchLocations(location);
                         await this.handleLocation(result[0].woeid);
                         this.handleLocationClick(result[0]);
                     }}
@@ -171,7 +164,7 @@ class Trends extends React.Component {
         const { searchQuery } = this.state;
         let jsx;
         if (searchQuery.length > 0) {
-            const results = this.searchLocation(searchQuery);
+            const results = searchLocations(searchQuery);
             if (results.length === 0) {
                 return (
                     <div className="trends--searchResultItem">
@@ -296,13 +289,18 @@ class Trends extends React.Component {
             <div className="trends--container">
                 <div className="trends--textContainer">
                     <h4 className="trends--headerText">{`${locationName} trends`}</h4>
-                    <span className="trends--textSeperator">{"·"}</span>
+                    <span className="trends--textSeperator">·</span>
                     <p className="trends--changeText" onClick={this.openModal}>
                         {"Change"}
                     </p>
                 </div>
                 {this.renderTrends()}
-                <Modal isOpen={modalOpen} contentLabel="Trends" style={desktopStyles}>
+                <Modal
+                    isOpen={modalOpen}
+                    appElement={document.getElementById("app")}
+                    contentLabel="Trends"
+                    style={desktopStyles}
+                >
                     <div className="trends--titleContainer">
                         <h4 className="trends--modalTitle text-center">Trends</h4>
                         <div onClick={this.closeModal}>
@@ -350,7 +348,7 @@ class Trends extends React.Component {
                                     <h2 className="trends--nearbyLocationsTitle">
                                         Nearby locations
                                     </h2>
-                                    <span className="trends--textSeperator">{"·"}</span>
+                                    <span className="trends--textSeperator">·</span>
                                     <p
                                         className="trends--searchLocation"
                                         onClick={() => this.setState({ searchLocation: true })}
@@ -369,7 +367,7 @@ class Trends extends React.Component {
                                 <h2 className="trends--searchLocationsTitle">
                                     Select a location for your trends
                                 </h2>
-                                <span className="trends--textSeperator">{"·"}</span>
+                                <span className="trends--textSeperator">·</span>
                                 <p
                                     className="trends--searchLocation"
                                     onClick={() => this.setState({ searchLocation: false })}
@@ -404,9 +402,9 @@ class Trends extends React.Component {
                                             const city = e.target.value;
                                             let data;
                                             if (searchCountry === city) {
-                                                data = await this.searchLocation(searchCountry);
+                                                data = await searchLocations(searchCountry);
                                             } else {
-                                                data = await this.searchLocation(city);
+                                                data = await searchLocations(city);
                                             }
                                             this.handleLocationClick(data[0]);
                                         }}

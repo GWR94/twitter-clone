@@ -47,108 +47,63 @@ class Profile extends React.Component {
         [x] Blur background when in edit mode
         [ ] Set theme color around all site
         [x] Set birthday dropdowns to be default values
-        [ ] Add active border for Tweets / current active toggle
+        [x] Add active border for Tweets / current active toggle
     */
 
     async componentWillMount() {
-        const { user, getUser, auth, fetchUser, match } = this.props;
+        const { user, getUser, auth, match } = this.props;
         const { handle } = match.params;
-        if (handle === auth.handle) {
-            await fetchUser();
-            const {
-                displayName,
-                profileOverview,
-                website,
-                tweets,
-                displayImgSrc,
-                favouritedTweets,
-                retweetedTweets,
-                followers,
-                following,
-                lists,
-                moments,
-                birthday,
-                birthPlace,
-                dateCreated,
-            } = auth;
+        const {
+            displayName,
+            profileOverview,
+            website,
+            tweets,
+            displayImgSrc,
+            favouritedTweets,
+            retweetedTweets,
+            followers,
+            following,
+            lists,
+            moments,
+            birthday,
+            birthPlace,
+            dateCreated,
+        } = handle === auth.handle ? auth : user;
+        console.log(auth.handle === handle);
 
-            document.title = `${displayName} (@${handle}) | Twitter`;
-
-            this.setState({
-                userProfile: true,
-                handle,
-                displayName: displayName || "",
-                profileOverview: profileOverview || "",
-                website,
-                tweets,
-                displayImgSrc: displayImgSrc || null,
-                favouritedTweets,
-                retweetedTweets,
-                followers,
-                following,
-                lists,
-                moments,
-                birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
-                    birthday.yearObj.year
-                }`,
-                month: birthday.monthObj.month,
-                day: birthday.dayObj.day,
-                year: birthday.yearObj.year,
-                birthPlace,
-                dateCreated,
-                numTweets: tweets.length || 0,
-                rendered: true,
-            });
-        } else {
+        if (handle !== auth.handle) {
             if (auth.following.indexOf(handle) > -1) {
                 this.setState({ userFollowing: true });
+            } else {
+                this.setState({ userFollowing: false });
             }
             await getUser(handle);
-            const {
-                displayName,
-                profileOverview,
-                website,
-                tweets,
-                displayImgSrc,
-                favouritedTweets,
-                retweetedTweets,
-                followers,
-                following,
-                lists,
-                moments,
-                birthday,
-                birthPlace,
-                dateCreated,
-            } = user;
-
-            document.title = `${displayName} (@${handle})`;
-
-            this.setState({
-                userProfile: true,
-                handle,
-                displayName: displayName || "",
-                profileOverview: profileOverview || "",
-                website,
-                tweets,
-                displayImgSrc: displayImgSrc || null,
-                favouritedTweets,
-                retweetedTweets,
-                followers,
-                following,
-                lists,
-                moments,
-                birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${
-                    birthday.yearObj.year
-                }`,
-                month: birthday.monthObj.month,
-                day: birthday.dayObj.day,
-                year: birthday.yearObj.year,
-                birthPlace,
-                dateCreated,
-                numTweets: tweets.length || 0,
-                rendered: true,
-            });
         }
+
+        document.title = `${displayName} (@${handle}) | Twitter`;
+
+        this.setState({
+            handle,
+            displayName: displayName || "",
+            profileOverview: profileOverview || "",
+            website,
+            tweets,
+            displayImgSrc: displayImgSrc || null,
+            favouritedTweets,
+            retweetedTweets,
+            followers,
+            following,
+            lists,
+            moments,
+            birthday: `${birthday.monthObj.month} ${birthday.dayObj.day}, ${birthday.yearObj.year}`,
+            month: birthday.monthObj.month,
+            day: birthday.dayObj.day,
+            year: birthday.yearObj.year,
+            birthPlace,
+            dateCreated,
+            numTweets: tweets.length || 0,
+            rendered: true,
+        });
     }
 
     closeModal = () => {
@@ -285,6 +240,7 @@ class Profile extends React.Component {
             websiteErrorOpen,
             birthdayErrorOpen,
             birthdayCheckModalOpen,
+            tweets,
         } = this.state;
 
         const modalStyles = {
@@ -346,19 +302,31 @@ class Profile extends React.Component {
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
                         <div className="profile--imgContainer" id="imgContainer">
-                            <i
-                                className={
-                                    displayImgSrc
-                                        ? "icon__hidden fas fa-camera"
-                                        : "fas fa-camera icon__addPhotoLarge"
-                                }
-                            />
-                            {displayImgSrc && (
-                                <img
-                                    src={displayImgSrc}
-                                    className="profile--displayImg"
-                                    alt="Profile Img"
-                                />
+                            {editMode ? (
+                                <div className="profile--imgInnerContainer">
+                                    {displayImgSrc && (
+                                        <img
+                                            src={displayImgSrc}
+                                            className="profile--displayImg"
+                                            alt="Profile Img"
+                                        />
+                                    )}
+                                </div>
+                            ) : (
+                                <div>
+                                    <i
+                                        className={
+                                            !displayImgSrc && "fa-camera icon__addPhotoLarge"
+                                        }
+                                    />
+                                    {displayImgSrc && (
+                                        <img
+                                            src={displayImgSrc}
+                                            className="profile--displayImg"
+                                            alt="Profile Img"
+                                        />
+                                    )}
+                                </div>
                             )}
                             <Tooltip
                                 placement="right"
@@ -921,8 +889,9 @@ class Profile extends React.Component {
                                     </div>
                                     <Feed
                                         userProfile={userProfile}
-                                        handle={user ? user.handle : auth.handle}
+                                        profileTweets={tweets}
                                         showFeed={false}
+                                        showPinned
                                     />
                                     <div className="profile--footer">
                                         <i className="fab fa-twitter icon__footer" />
@@ -946,6 +915,11 @@ class Profile extends React.Component {
 Profile.propTypes = {
     auth: PropTypes.shape({ isVerified: PropTypes.bool, profileImg: PropTypes.string }).isRequired,
     fetchUser: PropTypes.func.isRequired,
+    user: PropTypes.shape({}),
+};
+
+Profile.defaultProps = {
+    user: null,
 };
 
 const mapStateToProps = ({ auth, user }) => ({ auth, user });

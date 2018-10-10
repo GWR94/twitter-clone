@@ -85,13 +85,14 @@ module.exports = app => {
 
     app.get("/api/get_user/:handle", async (req, res) => {
         const { handle } = req.params;
-        const tweets = await Tweets.find({ handle }, (err, tweets) => {
+        console.log(handle);
+        const tweets = await Tweets.find({ handle: handle }, (err, tweets) => {
             if (err) return res.send(err);
             return tweets;
         });
-        User.findOne(
+        await User.findOne(
             {
-                handle,
+                handle: handle,
             },
             (err, user) => {
                 if (err) return res.json({ error: err });
