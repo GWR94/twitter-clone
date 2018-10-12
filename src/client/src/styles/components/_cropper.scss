@@ -1,0 +1,45 @@
+.cropper--header {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    padding: 14px;
+    width: 100%;
+    border-bottom: 1px solid #e6ecf0;
+}
+
+.cr-boundary {
+    background: #fff !important;
+}
+
+.croppie-container .cr-viewport {
+    box-shadow: 0 0 2000px 2000px rgba(255, 255, 255, 0.4);
+}
+
+.cropper--imgContainer {
+    margin-top: 30px;
+    width: 100%;
+    border-bottom: 1px solid #e6ecf0;
+}
+
+.cropper--buttonContainer {
+    display: inline-flex;
+    margin: 0;
+    float: right;
+    margin: 8px 12px 12px 0;
+}
+
+.cropper--errorCloseIcon {
+    text-align: right !important;
+    margin-right: 10px;
+    color: #aab8c2;
+    font-size: 16px;
+    display: block;
+    margin: 10px;
+    margin-bottom: -30px;
+    > i {
+        cursor: pointer;
+    }
+    &:hover {
+        color: $gray-text;
+    }
+}
