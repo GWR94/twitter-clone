@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Croppie } from "croppie";
+import { PropTypes } from "prop-types";
 
 class Cropper extends Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class Cropper extends Component {
 
     componentDidMount() {
         const { img } = this.props;
-        const c = new Croppie(this.cropperRef.current, {
+        this.c = new Croppie(this.cropperRef.current, {
             viewport: {
                 width: 220,
                 height: 220,
@@ -22,13 +23,24 @@ class Cropper extends Component {
             mouseWheelZoom: false,
         });
 
-        c.bind({
+        this.c.bind({
             url: img,
         });
     }
 
+    handleImage = () => {
+        this.c
+            .result({
+                format: "jpeg",
+            })
+            .then(img => {
+                console.log(img);
+            });
+    };
+
     render() {
         const { closeModal } = this.props;
+
         return (
             <div className="cropper--container">
                 <div className="cropper--errorCloseIcon">
@@ -46,7 +58,13 @@ class Cropper extends Component {
                     >
                         Cancel
                     </button>
-                    <button type="button" className="button__confirm">
+                    <button
+                        type="button"
+                        className="button__confirm"
+                        onClick={() => {
+                            this.handleImage();
+                        }}
+                    >
                         Apply
                     </button>
                 </div>
@@ -54,5 +72,10 @@ class Cropper extends Component {
         );
     }
 }
+
+Cropper.propTypes = {
+    img: PropTypes.string.isRequired,
+    closeModal: PropTypes.func.isRequired,
+};
 
 export default Cropper;
