@@ -5,6 +5,37 @@ const User = mongoose.model("users");
 const { Schema } = mongoose;
 const Tweets = mongoose.model("tweets");
 const moment = require("moment");
+const multer = require("multer");
+
+const path = require("path");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../../../", "public", "Images", "uploads/"));
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname);
+    },
+});
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+        // Accept file
+        // cb(error, true/false)
+        cb(null, true);
+    } else {
+        // Reject file
+        cb(null, false);
+    }
+};
+
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+    fileFilter,
+});
 
 module.exports = app => {
     app.post(
@@ -16,7 +47,7 @@ module.exports = app => {
     );
 
     const formatUserInfo = (user, tweets) => {
-        return {
+        const userInfo = {
             _id: user._id,
             isVerified: user.isVerified || false,
             handle: user.handle,
@@ -30,7 +61,7 @@ module.exports = app => {
             following: user.following || [],
             lists: user.lists || [],
             moments: user.moments || [],
-            tweets: tweets,
+            tweets,
             profileOverview: user.profileOverview || "",
             birthday: user.birthday || "",
             birthPlace: user.birthPlace || "",
@@ -43,6 +74,7 @@ module.exports = app => {
             pinnedTweet: user.pinnedTweet || undefined,
             profileCompleted: user.profileCompleted || false,
         };
+        return userInfo;
     };
 
     app.get("/api/current_user", async (req, res) => {
@@ -65,7 +97,7 @@ module.exports = app => {
                 following: req.user.following,
                 lists: req.user.lists,
                 moments: req.user.moments,
-                tweets: tweets,
+                tweets,
                 profileOverview: req.user.profileOverview,
                 profileCompleted: req.user.profileCompleted,
                 birthday: req.user.birthday,
@@ -86,13 +118,13 @@ module.exports = app => {
     app.get("/api/get_user/:handle", async (req, res) => {
         const { handle } = req.params;
         console.log(handle);
-        const tweets = await Tweets.find({ handle: handle }, (err, tweets) => {
+        const tweets = await Tweets.find({ handle }, (err, tweets) => {
             if (err) return res.send(err);
             return tweets;
         });
         await User.findOne(
             {
-                handle: handle,
+                handle,
             },
             (err, user) => {
                 if (err) return res.json({ error: err });
@@ -123,7 +155,7 @@ module.exports = app => {
     app.post("/api/signup", async (req, res) => {
         try {
             const { handle, email, password, dateCreated } = req.body;
-            const existingUser = await User.findOne({ handle: handle });
+            const existingUser = await User.findOne({ handle });
             if (existingUser) {
                 console.log("Invalid credentials. Email/Username already taken");
                 return res.status(409).send(false);
@@ -274,7 +306,7 @@ module.exports = app => {
 
         await User.findOne(
             {
-                handle: handle,
+                handle,
             },
             async (err, user) => {
                 if (err) return res.status(400).send(err);
@@ -285,13 +317,35 @@ module.exports = app => {
                 }
                 user.save();
 
-                const tweets = await Tweets.find({ handle: handle }, (err, tweets) => {
+                const tweets = await Tweets.find({ handle }, (err, tweets) => {
                     if (err) return res.send(err);
                     return tweets;
                 });
 
                 const userData = formatUserInfo(user, tweets);
                 console.log(userData);
+                res.send(userData);
+            },
+        );
+    });
+
+    app.post("/api/upload_photo", upload.single("photo"), async (req, res, next) => {
+        const { handle, file, type } = req.body;
+        await User.findOne(
+            {
+                handle,
+            },
+            (err, user) => {
+                let userData;
+                if (type === "profile") {
+                    user.displayImgSrc = file;
+                    user.save();
+                    userData = formatUserInfo(user);
+                } else {
+                    user.headerImgSrc = file;
+                    user.save();
+                    userData = formatUserInfo(user);
+                }
                 res.send(userData);
             },
         );

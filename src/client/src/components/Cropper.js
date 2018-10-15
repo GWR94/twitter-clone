@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Croppie } from "croppie";
 import { PropTypes } from "prop-types";
+import { connect } from "react-redux";
+import * as actions from "../actions";
 
 class Cropper extends Component {
     constructor(props) {
@@ -29,12 +31,19 @@ class Cropper extends Component {
     }
 
     handleImage = () => {
+        const { uploadPhoto, auth, setProfileImage } = this.props;
         this.c
             .result({
+                type: "canvas",
                 format: "jpeg",
             })
-            .then(img => {
-                console.log(img);
+            .then(async img => {
+                const formData = new FormData();
+                formData.append("file", img);
+                formData.append("handle", auth.handle);
+                formData.append("type", "profile");
+                await uploadPhoto(formData);
+                setProfileImage(img);
             });
     };
 
@@ -61,8 +70,8 @@ class Cropper extends Component {
                     <button
                         type="button"
                         className="button__confirm"
-                        onClick={() => {
-                            this.handleImage();
+                        onClick={async () => {
+                            await this.handleImage();
                         }}
                     >
                         Apply
@@ -76,6 +85,14 @@ class Cropper extends Component {
 Cropper.propTypes = {
     img: PropTypes.string.isRequired,
     closeModal: PropTypes.func.isRequired,
+    auth: PropTypes.shape({}).isRequired,
+    uploadPhoto: PropTypes.func.isRequired,
+    setProfileImage: PropTypes.func.isRequired
 };
 
-export default Cropper;
+const mapStateToProps = ({ auth }) => ({ auth });
+
+export default connect(
+    mapStateToProps,
+    actions,
+)(Cropper);

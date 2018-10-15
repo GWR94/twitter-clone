@@ -517,9 +517,54 @@ $header-height: 50px;
 
 .profile--uploadDropdown {
     position: relative;
-    top: 0;
-    border: 1px solid red;
-    height: 500px;
+    top: -70px;
+    background: #fff;
+    border: 1px solid #e6ecf0;
+    z-index: 2;
+    width: 220px;
+    padding: 6px 0;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    &:after {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid #fff;
+        left: 100px;
+        top: -19px;
+    }
+    &:before {
+        content: "";
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid #c4c9cc;
+        left: 100px;
+        top: -20px;
+    }
+}
+
+.profile--uploadText {
+    text-align: center;
+    padding: 5px;
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: $gray-text;
+    &:hover {
+        background: $blue;
+        color: #fff;
+    }
 }
 
 .profile--imgCropper {

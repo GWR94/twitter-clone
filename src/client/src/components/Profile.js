@@ -5,7 +5,6 @@ import autosize from "autosize";
 import { YearPicker, MonthPicker, DayPicker } from "react-dropdown-date";
 import { Tooltip } from "reactstrap";
 import validator from "validator";
-import { Croppie } from "croppie";
 import Modal from "react-modal";
 import * as actions from "../actions";
 import Cropper from "./Cropper";
@@ -38,6 +37,7 @@ class Profile extends React.Component {
             websiteErrorOpen: false,
             birthdayCheckModalOpen: false,
             active: "Tweets",
+            uploadDropdownOpen: false
         };
     }
 
@@ -49,9 +49,11 @@ class Profile extends React.Component {
         [x] Remove unused icon when none are used for activity bar
         [ ] Add Media when user has tweeted images/videos
         [x] Blur background when in edit mode
+        [x] Add functionality to upload profile images
         [ ] Set theme color around all site
         [x] Set birthday dropdowns to be default values
         [x] Add active border for Tweets / current active toggle
+        [ ] Sort profile information which is hidden when clicking upload dropdown
     */
 
     async componentWillMount() {
@@ -106,7 +108,6 @@ class Profile extends React.Component {
             dateCreated,
             numTweets: tweets.length || 0,
             rendered: true,
-            uploadDropdownOpen: true,
         });
     }
 
@@ -114,7 +115,7 @@ class Profile extends React.Component {
         this.setState({
             birthdayCheckModalOpen: false,
             imgModalOpen: false,
-            img: undefined
+            img: undefined,
         });
     };
 
@@ -127,6 +128,11 @@ class Profile extends React.Component {
             postedAt: Date.now(),
         });
         this.setState({ numTweets: numTweets + 1 });
+    };
+
+    setProfileImage = img => {
+        this.setState({ displayImgSrc: img });
+        this.closeModal();
     };
 
     /* eslint-disable-next-line */
@@ -219,7 +225,6 @@ class Profile extends React.Component {
     };
 
     onImageChange = e => {
-        const { img } = this.state;
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
             reader.onload = ev => {
@@ -323,27 +328,36 @@ class Profile extends React.Component {
                     <header className="profile--header" />
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
-                        {uploadDropdownOpen && (
-                            <div className="profile--uploadDropdown">
-                                <input
-                                    type="file"
-                                    hidden
-                                    id="fileUpload"
-                                    onChange={this.onImageChange.bind(this)}
-                                />
-                                <p
-                                    onClick={() => {
-                                        document.getElementById("fileUpload").click();
-                                        this.setState({ imgModalOpen: true });
-                                    }}
-                                >
-                                    Upload photo
-                                </p>
-                                <p>Remove</p>
-                                <hr />
-                                <p>Cancel</p>
-                            </div>
-                        )}
+                        {uploadDropdownOpen &&
+                            editMode && (
+                                <div className="profile--uploadDropdown">
+                                    <input
+                                        type="file"
+                                        hidden
+                                        name="photo"
+                                        id="fileUpload"
+                                        accept="image/*"
+                                        onChange={this.onImageChange.bind(this)}
+                                    />
+                                    <p
+                                        className="profile--uploadText"
+                                        onClick={() => {
+                                            document.getElementById("fileUpload").click();
+                                            this.setState({ imgModalOpen: true });
+                                        }}
+                                    >
+                                        Upload photo
+                                    </p>
+                                    <p className="profile--uploadText">Remove</p>
+                                    <hr style={{ margin: "5px 0" }} />
+                                    <p
+                                        className="profile--uploadText"
+                                        onClick={() => this.setState({ uploadDropdownOpen: false })}
+                                    >
+                                        Cancel
+                                    </p>
+                                </div>
+                            )}
                         <Modal
                             isOpen={imgModalOpen && img}
                             style={modalStyles}
@@ -351,7 +365,11 @@ class Profile extends React.Component {
                             onRequestClose={this.closeModal}
                             appElement={document.getElementById("app")}
                         >
-                            <Cropper img={img} closeModal={this.closeModal}/>
+                            <Cropper
+                                img={img}
+                                setProfileImage={this.setProfileImage}
+                                closeModal={this.closeModal}
+                            />
                         </Modal>
 
                         <div className="profile--imgContainer" id="imgContainer">

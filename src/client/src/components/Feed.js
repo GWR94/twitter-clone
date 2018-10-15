@@ -26,8 +26,7 @@ class Feed extends React.Component {
     }
 
     renderTweets = tweets => {
-        const { auth, user, profileTweets, showPinned } = this.props;
-        console.log(profileTweets);
+        const { auth, user, showPinned } = this.props;
         const { pinnedTweet } = auth || user;
         const pinTweets = tweets.filter(tweet => tweet._id === pinnedTweet);
         if (pinTweets.length > 0 && showPinned) {
