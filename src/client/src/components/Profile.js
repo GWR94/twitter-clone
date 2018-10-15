@@ -37,7 +37,7 @@ class Profile extends React.Component {
             websiteErrorOpen: false,
             birthdayCheckModalOpen: false,
             active: "Tweets",
-            uploadDropdownOpen: false
+            uploadDropdownOpen: false,
         };
     }
 
@@ -131,7 +131,10 @@ class Profile extends React.Component {
     };
 
     setProfileImage = img => {
-        this.setState({ displayImgSrc: img });
+        this.setState({
+            displayImgSrc: img,
+            uploadDropdownOpen: false,
+        });
         this.closeModal();
     };
 
@@ -326,38 +329,57 @@ class Profile extends React.Component {
                     }
                 >
                     <header className="profile--header" />
-                    <div className="profile--infoBottomBorder" />
-                    <div className="profile--gridContainer">
-                        {uploadDropdownOpen &&
-                            editMode && (
-                                <div className="profile--uploadDropdown">
-                                    <input
-                                        type="file"
-                                        hidden
-                                        name="photo"
-                                        id="fileUpload"
-                                        accept="image/*"
-                                        onChange={this.onImageChange.bind(this)}
-                                    />
+                    {uploadDropdownOpen &&
+                        editMode && (
+                            <div className="profile--uploadDropdown">
+                                <input
+                                    type="file"
+                                    hidden
+                                    name="photo"
+                                    id="fileUpload"
+                                    accept="image/*"
+                                    onChange={this.onImageChange.bind(this)}
+                                />
+                                <p
+                                    className="profile--uploadText"
+                                    onClick={() => {
+                                        document.getElementById("fileUpload").click();
+                                        this.setState({ imgModalOpen: true });
+                                    }}
+                                >
+                                    Upload photo
+                                </p>
+                                {displayImgSrc && (
                                     <p
                                         className="profile--uploadText"
-                                        onClick={() => {
-                                            document.getElementById("fileUpload").click();
-                                            this.setState({ imgModalOpen: true });
+                                        onClick={async () => {
+                                            const { updateProfile } = this.props;
+                                            const values = {
+                                                field: "displayImgSrc",
+                                                value: null,
+                                                user: auth.handle,
+                                            };
+                                            await updateProfile(values);
+                                            this.setState({
+                                                displayImgSrc: null,
+                                                uploadDropdownOpen: false,
+                                            });
                                         }}
                                     >
-                                        Upload photo
+                                        Remove
                                     </p>
-                                    <p className="profile--uploadText">Remove</p>
-                                    <hr style={{ margin: "5px 0" }} />
-                                    <p
-                                        className="profile--uploadText"
-                                        onClick={() => this.setState({ uploadDropdownOpen: false })}
-                                    >
-                                        Cancel
-                                    </p>
-                                </div>
-                            )}
+                                )}
+                                <hr style={{ margin: "5px 0" }} />
+                                <p
+                                    className="profile--uploadText"
+                                    onClick={() => this.setState({ uploadDropdownOpen: false })}
+                                >
+                                    Cancel
+                                </p>
+                            </div>
+                        )}
+                    <div className="profile--infoBottomBorder" />
+                    <div className="profile--gridContainer">
                         <Modal
                             isOpen={imgModalOpen && img}
                             style={modalStyles}
@@ -372,25 +394,32 @@ class Profile extends React.Component {
                             />
                         </Modal>
 
-                        <div className="profile--imgContainer" id="imgContainer">
+                        <div
+                            className={editMode ? "profile--imgContainer" : "profile--imgContainer"}
+                            id="imgContainer"
+                            onClick={() => this.setState({ uploadDropdownOpen: true })}
+                        >
                             {editMode ? (
-                                <div className="profile--imgInnerContainer">
-                                    {displayImgSrc && (
-                                        <img
-                                            src={displayImgSrc}
-                                            className="profile--displayImg"
-                                            alt="Profile Img"
-                                            onClick={() =>
-                                                this.setState({ uploadDropdownOpen: true })
-                                            }
+                                displayImgSrc ? (
+                                    <img
+                                        src={displayImgSrc}
+                                        className="profile--displayImg"
+                                        alt="Profile Img"
+                                    />
+                                ) : (
+                                    <div className="profile--displayImg">
+                                        <i
+                                            className="fas fa-camera icon__addPhotoLarge"
+                                            style={{ marginTop: "-14px" }}
                                         />
-                                    )}
-                                </div>
+                                        <p className="profile--imgText">Add a profile photo</p>
+                                    </div>
+                                )
                             ) : (
                                 <div>
                                     <i
                                         className={
-                                            !displayImgSrc && "fa-camera icon__addPhotoLarge"
+                                            !displayImgSrc && "fas fa-camera icon__addPhotoLarge"
                                         }
                                     />
                                     {displayImgSrc && (

@@ -3,14 +3,6 @@ const keys = require("../config/keys");
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const Tweet = mongoose.model("tweets");
-const fs = require("fs");
-const path = require("path");
-const cyrpto = require("crypto");
-const multer = require("multer");
-const GridFsStorage = require("multer-gridfs-storage");
-const Grid = require("gridfs-stream");
-const methodOverride = require("method-override");
-const bodyParser = require("body-parser");
 
 module.exports = app => {
     /*

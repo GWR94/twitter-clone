@@ -36,6 +36,8 @@ class Cropper extends Component {
             .result({
                 type: "canvas",
                 format: "jpeg",
+                circle: false,
+                size: "original"
             })
             .then(async img => {
                 const formData = new FormData();

@@ -90,12 +90,28 @@ $header-height: 50px;
     z-index: 1;
     background: $blue;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .profile--displayImg {
-    height: 100%;
-    width: 100%;
+    height: 100% !important;
+    width: 100% !important;
     overflow: hidden !important;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.profile--imgText {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 72px;
+    text-align: center;
 }
 
 /* Information */
@@ -517,7 +533,8 @@ $header-height: 50px;
 
 .profile--uploadDropdown {
     position: relative;
-    top: -70px;
+    top: 10px;
+    left: 376px;
     background: #fff;
     border: 1px solid #e6ecf0;
     z-index: 2;
