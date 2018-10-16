@@ -43,17 +43,10 @@ class Profile extends React.Component {
 
     /*
         TODO
-        [x] setup grid layout css - flexbox? css grid?
         [ ] Change DM icon to activity
         [ ] Add functionality for activity icon
-        [x] Remove unused icon when none are used for activity bar
         [ ] Add Media when user has tweeted images/videos
-        [x] Blur background when in edit mode
-        [x] Add functionality to upload profile images
         [ ] Set theme color around all site
-        [x] Set birthday dropdowns to be default values
-        [x] Add active border for Tweets / current active toggle
-        [ ] Sort profile information which is hidden when clicking upload dropdown
     */
 
     async componentWillMount() {
@@ -329,55 +322,6 @@ class Profile extends React.Component {
                     }
                 >
                     <header className="profile--header" />
-                    {uploadDropdownOpen &&
-                        editMode && (
-                            <div className="profile--uploadDropdown">
-                                <input
-                                    type="file"
-                                    hidden
-                                    name="photo"
-                                    id="fileUpload"
-                                    accept="image/*"
-                                    onChange={this.onImageChange.bind(this)}
-                                />
-                                <p
-                                    className="profile--uploadText"
-                                    onClick={() => {
-                                        document.getElementById("fileUpload").click();
-                                        this.setState({ imgModalOpen: true });
-                                    }}
-                                >
-                                    Upload photo
-                                </p>
-                                {displayImgSrc && (
-                                    <p
-                                        className="profile--uploadText"
-                                        onClick={async () => {
-                                            const { updateProfile } = this.props;
-                                            const values = {
-                                                field: "displayImgSrc",
-                                                value: null,
-                                                user: auth.handle,
-                                            };
-                                            await updateProfile(values);
-                                            this.setState({
-                                                displayImgSrc: null,
-                                                uploadDropdownOpen: false,
-                                            });
-                                        }}
-                                    >
-                                        Remove
-                                    </p>
-                                )}
-                                <hr style={{ margin: "5px 0" }} />
-                                <p
-                                    className="profile--uploadText"
-                                    onClick={() => this.setState({ uploadDropdownOpen: false })}
-                                >
-                                    Cancel
-                                </p>
-                            </div>
-                        )}
                     <div className="profile--infoBottomBorder" />
                     <div className="profile--gridContainer">
                         <Modal
@@ -393,52 +337,105 @@ class Profile extends React.Component {
                                 closeModal={this.closeModal}
                             />
                         </Modal>
-
-                        <div
-                            className={editMode ? "profile--imgContainer" : "profile--imgContainer"}
-                            id="imgContainer"
-                            onClick={() => this.setState({ uploadDropdownOpen: true })}
-                        >
-                            {editMode ? (
-                                displayImgSrc ? (
-                                    <img
-                                        src={displayImgSrc}
-                                        className="profile--displayImg"
-                                        alt="Profile Img"
-                                    />
-                                ) : (
-                                    <div className="profile--displayImg">
-                                        <i
-                                            className="fas fa-camera icon__addPhotoLarge"
-                                            style={{ marginTop: "-14px" }}
-                                        />
-                                        <p className="profile--imgText">Add a profile photo</p>
-                                    </div>
-                                )
-                            ) : (
-                                <div>
-                                    <i
-                                        className={
-                                            !displayImgSrc && "fas fa-camera icon__addPhotoLarge"
-                                        }
-                                    />
-                                    {displayImgSrc && (
+                        <div>
+                            <div
+                                className="profile--imgContainer"
+                                id="imgContainer"
+                                onClick={() => this.setState({ uploadDropdownOpen: true })}
+                            >
+                                {editMode ? (
+                                    displayImgSrc ? (
                                         <img
                                             src={displayImgSrc}
                                             className="profile--displayImg"
                                             alt="Profile Img"
                                         />
-                                    )}
-                                </div>
-                            )}
-                            <Tooltip
-                                placement="right"
-                                isOpen={tooltipOpen}
-                                target="imgContainer"
-                                toggle={this.toggleTooltip}
-                            >
-                                Add a profile photo
-                            </Tooltip>
+                                    ) : (
+                                        <div className="profile--displayImg">
+                                            <i
+                                                className="fas fa-camera icon__addPhotoLarge"
+                                                style={{ marginTop: "-14px" }}
+                                            />
+                                            <p className="profile--imgText">Add a profile photo</p>
+                                        </div>
+                                    )
+                                ) : (
+                                    <div>
+                                        <i
+                                            className={
+                                                !displayImgSrc &&
+                                                "fas fa-camera icon__addPhotoLarge"
+                                            }
+                                        />
+                                        {displayImgSrc && (
+                                            <img
+                                                src={displayImgSrc}
+                                                className="profile--displayImg"
+                                                alt="Profile Img"
+                                            />
+                                        )}
+                                    </div>
+                                )}
+                                <Tooltip
+                                    placement="right"
+                                    isOpen={tooltipOpen}
+                                    target="imgContainer"
+                                    toggle={this.toggleTooltip}
+                                >
+                                    Add a profile photo
+                                </Tooltip>
+                            </div>
+                            {uploadDropdownOpen &&
+                                editMode && (
+                                    <div className="profile--uploadDropdown">
+                                        <input
+                                            type="file"
+                                            hidden
+                                            name="photo"
+                                            id="fileUpload"
+                                            accept="image/*"
+                                            onChange={this.onImageChange.bind(this)}
+                                        />
+                                        <p
+                                            className="profile--uploadText"
+                                            onClick={() => {
+                                                document.getElementById("fileUpload").click();
+                                                this.setState({ imgModalOpen: true });
+                                            }}
+                                        >
+                                            Upload photo
+                                        </p>
+                                        {displayImgSrc && (
+                                            <p
+                                                className="profile--uploadText"
+                                                onClick={async () => {
+                                                    const { updateProfile } = this.props;
+                                                    const values = {
+                                                        field: "displayImgSrc",
+                                                        value: null,
+                                                        user: auth.handle,
+                                                    };
+                                                    await updateProfile(values);
+                                                    this.setState({
+                                                        displayImgSrc: null,
+                                                        uploadDropdownOpen: false,
+                                                    });
+                                                }}
+                                            >
+                                                Remove
+                                            </p>
+                                        )}
+                                        <hr style={{ margin: "5px 0" }} />
+                                        <p
+                                            className="profile--uploadText"
+                                            onClick={() =>
+                                                this.setState({ uploadDropdownOpen: false })
+                                            }
+                                        >
+                                            Cancel
+                                        </p>
+                                    </div>
+                                )}
                         </div>
                         <div className="profile--information">
                             {this.renderProfileInfo()}
@@ -1017,7 +1014,7 @@ class Profile extends React.Component {
 
 Profile.propTypes = {
     auth: PropTypes.shape({ isVerified: PropTypes.bool, profileImg: PropTypes.string }).isRequired,
-    fetchUser: PropTypes.func.isRequired,
+    fetchUser: PropTypes.func,
     user: PropTypes.shape({}),
 };
 

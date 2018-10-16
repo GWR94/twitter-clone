@@ -533,8 +533,8 @@ $header-height: 50px;
 
 .profile--uploadDropdown {
     position: relative;
-    top: 10px;
-    left: 376px;
+    top: -60px;
+    left: -6px;
     background: #fff;
     border: 1px solid #e6ecf0;
     z-index: 2;
@@ -545,6 +545,8 @@ $header-height: 50px;
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
     -o-border-radius: 4px;
+    height: 120px;
+    margin-bottom: -120px;
     &:after {
         content: "";
         width: 0px;
@@ -568,6 +570,9 @@ $header-height: 50px;
         border-bottom: 10px solid #c4c9cc;
         left: 100px;
         top: -20px;
+    }
+    @media screen and (max-width: 1250px) {
+        left: 10px;
     }
 }
 
