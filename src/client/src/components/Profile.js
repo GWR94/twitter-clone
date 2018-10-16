@@ -9,6 +9,7 @@ import Modal from "react-modal";
 import * as actions from "../actions";
 import Cropper from "./Cropper";
 import NavBar from "./NavBar";
+import HeaderCropper from "./HeaderCropper";
 import Trends from "./Trends";
 import Feed from "./Feed";
 import MyFirstTweet from "./MyFirstTweet";
@@ -38,6 +39,8 @@ class Profile extends React.Component {
             birthdayCheckModalOpen: false,
             active: "Tweets",
             uploadDropdownOpen: false,
+            uploadHeaderDropdownOpen: true,
+            headerUpload: false,
         };
     }
 
@@ -47,6 +50,7 @@ class Profile extends React.Component {
         [ ] Add functionality for activity icon
         [ ] Add Media when user has tweeted images/videos
         [ ] Set theme color around all site
+        [ ] Refactor img to be displayImg on file input
     */
 
     async componentWillMount() {
@@ -58,6 +62,7 @@ class Profile extends React.Component {
             website,
             tweets,
             displayImgSrc,
+            headerImgSrc,
             favouritedTweets,
             retweetedTweets,
             followers,
@@ -87,6 +92,7 @@ class Profile extends React.Component {
             website,
             tweets,
             displayImgSrc: displayImgSrc || null,
+            headerImgSrc: headerImgSrc || null,
             favouritedTweets,
             retweetedTweets,
             followers,
@@ -230,6 +236,20 @@ class Profile extends React.Component {
         }
     };
 
+    onImageHeaderChange = e => {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                this.setState({
+                    headerImg: ev.target.result,
+                    headerUpload: true,
+                    uploadHeaderDropdownOpen: false,
+                });
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    };
+
     render() {
         const { auth, user } = this.props;
         const {
@@ -239,6 +259,7 @@ class Profile extends React.Component {
             profileOverview,
             website,
             displayImgSrc,
+            headerImgSrc,
             birthday,
             birthPlace,
             dateCreated,
@@ -264,6 +285,9 @@ class Profile extends React.Component {
             uploadDropdownOpen,
             img,
             imgModalOpen,
+            uploadHeaderDropdownOpen,
+            headerUpload,
+            headerImg,
         } = this.state;
 
         const modalStyles = {
@@ -321,8 +345,84 @@ class Profile extends React.Component {
                             : "profile--container"
                     }
                 >
-                    <header className="profile--header" />
-                    <div className="profile--infoBottomBorder" />
+                    {headerUpload ? (
+                        <div className="profile--headerUploadContainer">
+                            <HeaderCropper img={headerImg} />
+                        </div>
+                    ) : (
+                        <div>
+                            <header
+                                className="profile--header"
+                                id="profile--header"
+                                onClick={() => this.setState({ uploadHeaderDropdownOpen: true })}
+                            >
+                                {editMode && (
+                                    <div className="profile--headerTextContainer">
+                                        <i className="fas fa-camera icon__addPhotoLarge" />
+                                        <p className="profile--imgText">Add a header photo</p>
+                                    </div>
+                                )}
+                            </header>
+
+                            {editMode &&
+                                uploadHeaderDropdownOpen && (
+                                    <div
+                                        className={
+                                            headerImgSrc
+                                                ? "profile--uploadHeaderDropdown"
+                                                : "profile--uploadHeaderDropdown__noImg"
+                                        }
+                                    >
+                                        <input
+                                            type="file"
+                                            hidden
+                                            name="header"
+                                            id="headerUpload"
+                                            accept="image/*"
+                                            onChange={this.onImageHeaderChange}
+                                        />
+                                        <p
+                                            className="profile--uploadText"
+                                            onClick={() => {
+                                                document.getElementById("headerUpload").click();
+                                            }}
+                                        >
+                                            Upload photo
+                                        </p>
+                                        {headerImgSrc && (
+                                            <p
+                                                className="profile--uploadText"
+                                                onClick={async () => {
+                                                    const { updateProfile } = this.props;
+                                                    const values = {
+                                                        field: "headerImgSrc",
+                                                        value: null,
+                                                        user: auth.handle,
+                                                    };
+                                                    await updateProfile(values);
+                                                    this.setState({
+                                                        headerImgSrc: null,
+                                                        uploadHeaderDropdownOpen: false,
+                                                    });
+                                                }}
+                                            >
+                                                Remove
+                                            </p>
+                                        )}
+                                        <hr style={{ margin: "5px 0" }} />
+                                        <p
+                                            className="profile--uploadText"
+                                            onClick={() =>
+                                                this.setState({ uploadHeaderDropdownOpen: false })
+                                            }
+                                        >
+                                            Cancel
+                                        </p>
+                                    </div>
+                                )}
+                            <div className="profile--infoBottomBorder" />
+                        </div>
+                    )}
                     <div className="profile--gridContainer">
                         <Modal
                             isOpen={imgModalOpen && img}
@@ -345,18 +445,38 @@ class Profile extends React.Component {
                             >
                                 {editMode ? (
                                     displayImgSrc ? (
-                                        <img
-                                            src={displayImgSrc}
-                                            className="profile--displayImg"
-                                            alt="Profile Img"
-                                        />
+                                        <div>
+                                            <img
+                                                src={displayImgSrc}
+                                                className="profile--displayImg"
+                                                alt="Profile Img"
+                                            />
+                                            <div
+                                                className="profile--imgTextContainer"
+                                                style={{
+                                                    marginTop: "-220px",
+                                                }}
+                                            >
+                                                <i
+                                                    className="fas fa-camera icon__addPhotoLarge"
+                                                    style={{ marginTop: "-14px" }}
+                                                />
+                                                <p className="profile--imgText">
+                                                    Change your profile photo
+                                                </p>
+                                            </div>
+                                        </div>
                                     ) : (
                                         <div className="profile--displayImg">
-                                            <i
-                                                className="fas fa-camera icon__addPhotoLarge"
-                                                style={{ marginTop: "-14px" }}
-                                            />
-                                            <p className="profile--imgText">Add a profile photo</p>
+                                            <div className="profile--imgTextContainer">
+                                                <i
+                                                    className="fas fa-camera icon__addPhotoLarge"
+                                                    style={{ marginTop: "-14px" }}
+                                                />
+                                                <p className="profile--imgText">
+                                                    Add a profile photo
+                                                </p>
+                                            </div>
                                         </div>
                                     )
                                 ) : (
@@ -387,14 +507,20 @@ class Profile extends React.Component {
                             </div>
                             {uploadDropdownOpen &&
                                 editMode && (
-                                    <div className="profile--uploadDropdown">
+                                    <div
+                                        className={
+                                            displayImgSrc
+                                                ? "profile--uploadDropdown"
+                                                : "profile--uploadDropdown__noImg"
+                                        }
+                                    >
                                         <input
                                             type="file"
                                             hidden
                                             name="photo"
                                             id="fileUpload"
                                             accept="image/*"
-                                            onChange={this.onImageChange.bind(this)}
+                                            onChange={this.onImageChange}
                                         />
                                         <p
                                             className="profile--uploadText"
@@ -444,7 +570,13 @@ class Profile extends React.Component {
                                     <button
                                         className="button__themeColor"
                                         type="button"
-                                        onClick={() => this.setState({ editMode: false })}
+                                        onClick={() => {
+                                            const header = document.getElementById(
+                                                "profile--header",
+                                            );
+                                            header.style.height = "224px";
+                                            this.setState({ editMode: false });
+                                        }}
                                     >
                                         Cancel
                                     </button>
@@ -511,6 +643,10 @@ class Profile extends React.Component {
 
                                             const { updateProfile } = this.props;
                                             await updateProfile(values);
+                                            const header = document.getElementById(
+                                                "profile--header",
+                                            );
+                                            header.style.height = "224px";
                                             return this.setState({
                                                 editMode: false,
                                                 birthday: `${month} ${day}, ${year}`,
@@ -526,7 +662,13 @@ class Profile extends React.Component {
                                     <button
                                         className="button__themeColor"
                                         type="button"
-                                        onClick={() => this.setState({ editMode: true })}
+                                        onClick={() => {
+                                            const header = document.getElementById(
+                                                "profile--header",
+                                            );
+                                            header.style.height = "28vw";
+                                            this.setState({ editMode: true });
+                                        }}
                                     >
                                         Edit Profile
                                     </button>

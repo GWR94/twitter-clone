@@ -51,9 +51,10 @@ $header-height: 50px;
 
 /* Header */
 
+
 .profile--header {
     top: 96px;
-    height: 30vw;
+    height: 224px;
     background: $blue;
     background-size: cover;
     background-position: center center;
@@ -62,7 +63,45 @@ $header-height: 50px;
     transform-origin: center top;
     padding: 0;
     z-index: -1;
+    transition: height 0.5s;
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    -ms-transition: height 0.5s;
+    -o-transition: height 0.5s;
     transform: translateZ(-#{$scroll-factor * 2}px) scale(1 + $scroll-factor * 2);
+}
+
+.profile--headerTextContainer {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+}
+
+.profile--headerUploadContainer {
+    height: 28vw;
+    background: red;
+    z-index: 14;
+    position: relative;
+}
+
+.profile--uploadHeaderDropdown {
+    @extend .profile--uploadDropdown;
+    top: 10px;
+    margin-bottom: 0;
+    background: #fff;
+}
+
+.profile--uploadHeaderDropdown__noImg {
+    @extend .profile--uploadDropdown__noImg;
+    background: #fff;
+    top: -50px !important;
+    z-index: 10;
+    position: relative;
+    margin: 0 auto;
 }
 
 .profile--section {
@@ -94,8 +133,8 @@ $header-height: 50px;
 }
 
 .profile--displayImg {
-    height: 100% !important;
-    width: 100% !important;
+    width: 100%;
+    height: 100%;
     overflow: hidden !important;
     border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -104,6 +143,16 @@ $header-height: 50px;
     -o-border-radius: 50%;
     box-sizing: border-box;
     cursor: pointer;
+    position: relative;
+    top: 0;
+}
+
+.profile--imgTextContainer {
+    background:rgba(0, 0, 0, 0.4);
+    position: relative;
+    height: 220px;
+    z-index: 12;
+
 }
 
 .profile--imgText {
@@ -112,6 +161,8 @@ $header-height: 50px;
     font-weight: 700;
     margin-top: 72px;
     text-align: center;
+    z-index: 11;
+    position: relative;
 }
 
 /* Information */
@@ -534,10 +585,9 @@ $header-height: 50px;
 .profile--uploadDropdown {
     position: relative;
     top: -60px;
-    left: -6px;
     background: #fff;
     border: 1px solid #e6ecf0;
-    z-index: 2;
+    z-index: 13;
     width: 220px;
     padding: 6px 0;
     border-radius: 4px;
@@ -571,9 +621,12 @@ $header-height: 50px;
         left: 100px;
         top: -20px;
     }
-    @media screen and (max-width: 1250px) {
-        left: 10px;
-    }
+}
+
+.profile--uploadDropdown__noImg {
+    @extend .profile--uploadDropdown;
+    height: 86px;
+    margin-bottom: -86px;
 }
 
 .profile--uploadText {
