@@ -97,13 +97,6 @@ class ProfileOverview extends React.Component {
             tooltipOpen,
         } = this.state;
 
-        let imagePreview;
-        if (imagePreviewUrl) {
-            imagePreview = <img alt="Profile Img" src={imagePreviewUrl} />;
-        } else {
-            imagePreview = <div className="previewText">Please select an image to upload</div>;
-        }
-
         const { handle, displayName, displayImgSrc, headerImgSrc, following, followers } = auth;
 
         const progressBar = (
@@ -181,7 +174,7 @@ class ProfileOverview extends React.Component {
                         <div className="profileOverview--tweets">
                             <h6 className="profileOverview--names">Tweets</h6>
                             <h4 className="profileOverview--numbers">
-                                {Number(tweets.length).toLocaleString()}
+                                {Number(tweets.filter(tweet => tweet.handle === auth.handle).length).toLocaleString()}
                             </h4>
                         </div>
                         {following.length > 0 && (

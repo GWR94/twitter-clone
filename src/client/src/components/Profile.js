@@ -16,11 +16,12 @@ import MyFirstTweet from "./MyFirstTweet";
 import formatMonth from "../services/formatMonth";
 import searchLocation from "../services/searchLocation";
 import "croppie/croppie.css";
+import { Croppie } from "croppie";
 
 class Profile extends React.Component {
     constructor() {
         super();
-        this.cropperRef = React.createRef();
+        this.headerRef = React.createRef();
 
         this.state = {
             numTweets: 0,
@@ -236,19 +237,38 @@ class Profile extends React.Component {
         }
     };
 
-    onImageHeaderChange = e => {
+    onImageHeaderChange = async e => {
         if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
+
+            document.getElementById("headerContainer").style.display = "block";
+
             reader.onload = ev => {
                 this.setState({
                     headerImg: ev.target.result,
                     headerUpload: true,
                     uploadHeaderDropdownOpen: false,
                 });
+                this.renderHeaderImg(ev.target.result);
             };
-            reader.readAsDataURL(e.target.files[0]);
+            await reader.readAsDataURL(e.target.files[0]);
         }
     };
+
+    renderHeaderImg(img) {
+        console.log(img);
+        const c = new Croppie(this.headerRef.current, {
+            viewport: {
+                width: "100%",
+                height: "100%",
+            },
+            mouseWheelZoom: false,
+        });
+
+        c.bind({
+            url: img,
+        });
+    }
 
     render() {
         const { auth, user } = this.props;
@@ -345,11 +365,11 @@ class Profile extends React.Component {
                             : "profile--container"
                     }
                 >
-                    {headerUpload ? (
-                        <div className="profile--headerUploadContainer">
-                            <HeaderCropper img={headerImg} />
-                        </div>
-                    ) : (
+                    <div className="profile--headerUploadContainer" id="headerContainer">
+                        <img alt="Profile Image" ref={this.headerRef} />
+                        <div className="profile--headerUploadControls" />
+                    </div>
+                    {!headerUpload && (
                         <div>
                             <header
                                 className="profile--header"

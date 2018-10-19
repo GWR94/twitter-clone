@@ -83,9 +83,9 @@ $header-height: 50px;
 
 .profile--headerUploadContainer {
     height: 28vw;
-    background: red;
     z-index: 14;
     position: relative;
+    display: none;
 }
 
 .profile--uploadHeaderDropdown {
